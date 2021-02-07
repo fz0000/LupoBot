@@ -1,5 +1,6 @@
 package de.nickkel.lupobot.core.util;
 
+import de.nickkel.lupobot.core.LupoBot;
 import lombok.Getter;
 
 import java.io.*;
@@ -91,7 +92,14 @@ public class FileResourcesUtils {
 
 
             while ((line = reader.readLine()) != null) {
-                properties.setProperty(line.split(" = ")[0], line.split(" = ")[1]);
+                try {
+                    if(!line.isEmpty()) {
+                        properties.setProperty(line.split(" = ")[0], line.split(" = ")[1]);
+                    }
+                } catch(ArrayIndexOutOfBoundsException e) {
+                    LupoBot.getInstance().getLogger().error("Failed to load locale file of " + clazz.getName() + " due to line split fail (" + line + ")");
+                }
+
             }
 
             return properties;

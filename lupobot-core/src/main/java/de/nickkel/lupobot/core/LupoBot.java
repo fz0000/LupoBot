@@ -67,6 +67,8 @@ public class LupoBot {
     private final Map<Guild, LupoServer> servers = new HashMap<>();
     @Getter
     private final Map<Long, LupoUser> users = new HashMap<>();
+    @Getter
+    private final long startMilis = System.currentTimeMillis();
 
     public static void main(String[] args) {
         new LupoBot().run(args);

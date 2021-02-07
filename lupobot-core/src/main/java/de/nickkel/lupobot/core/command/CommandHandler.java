@@ -91,15 +91,17 @@ public class CommandHandler {
         }
 
         try {
-            user.getCooldowns().put(command, System.currentTimeMillis());
             command.onCommand(context);
-            LupoCommand finalCommand = command;
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    user.getCooldowns().remove(finalCommand);
-                }
-            }, command.getInfo().cooldown()*1000L);
+            if(command.getInfo().cooldown() != 0) {
+                user.getCooldowns().put(command, System.currentTimeMillis());
+                LupoCommand finalCommand = command;
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        user.getCooldowns().remove(finalCommand);
+                    }
+                }, command.getInfo().cooldown()*1000L);
+            }
 
         } catch(PermissionException permissionException) {
             EmbedBuilder builder = new EmbedBuilder();
@@ -118,7 +120,7 @@ public class CommandHandler {
             builder.setTitle(server.translate(null, "core_command-error-report", LupoBot.getInstance().getConfig().getString("supportServerUrl")));
             builder.setDescription("StackTrace: ```" + stackTrace + "```");
             builder.setColor(Color.RED);
-            builder.setFooter(server.translate(null, server.getPrefix() + "core_used-command", server.getPrefix() + context.getLabel()));
+            builder.setFooter(server.translate(null, "core_used-command", server.getPrefix() + context.getLabel()));
             context.getChannel().sendMessage(builder.build()).queue();
             e.printStackTrace();
         }

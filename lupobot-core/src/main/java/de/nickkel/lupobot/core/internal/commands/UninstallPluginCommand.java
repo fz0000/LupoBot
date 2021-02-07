@@ -9,8 +9,9 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 
 import java.awt.*;
+import java.time.LocalDateTime;
 
-@CommandInfo(name = "uninstallplugin", permissions = Permission.MANAGE_SERVER, cooldown = 5)
+@CommandInfo(name = "uninstallplugin", permissions = Permission.MANAGE_SERVER, cooldown = 5, category = "core")
 public class UninstallPluginCommand extends LupoCommand {
 
     @Override
@@ -28,6 +29,7 @@ public class UninstallPluginCommand extends LupoCommand {
                         builder.setColor(Color.GREEN);
                         builder.setAuthor(context.getGuild().getName(), null, context.getGuild().getIconUrl());
                         builder.setDescription(context.getServer().translate(null, "core_plugin-uninstalled", context.getServer().translatePluginName(plugin)));
+                        builder.setTimestamp(LocalDateTime.now());
                         context.getChannel().sendMessage(builder.build()).queue();
                         return;
                     } else {
@@ -35,11 +37,10 @@ public class UninstallPluginCommand extends LupoCommand {
                         builder.setColor(Color.RED);
                         builder.setAuthor(context.getGuild().getName(), null,  context.getGuild().getIconUrl());
                         builder.setDescription(context.getServer().translate(null, "core_plugin-not-installed", context.getServer().translatePluginName(plugin)));
+                        builder.setTimestamp(LocalDateTime.now());
                         context.getChannel().sendMessage(builder.build()).queue();
                         return;
                     }
-                } else {
-                    sendHelp(context);
                 }
             }
         } else {

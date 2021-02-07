@@ -1,6 +1,5 @@
 package de.nickkel.lupobot.core.plugin;
 
-import de.nickkel.lupobot.core.command.CommandHandler;
 import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.language.LanguageHandler;
 import lombok.Getter;
@@ -13,6 +12,8 @@ import java.util.List;
 
 public abstract class LupoPlugin {
 
+    @Getter
+    private static LupoPlugin instance;
     @Getter @Setter
     private LanguageHandler languageHandler;
     @Getter @Setter
@@ -27,6 +28,10 @@ public abstract class LupoPlugin {
     private List<EventListener> listeners = new ArrayList<>();
     @Getter @Setter
     private List<LupoCommand> commands = new ArrayList<>();
+
+    public LupoPlugin() {
+        instance = this;
+    }
 
     public abstract void onEnable();
 

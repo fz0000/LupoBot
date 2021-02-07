@@ -8,8 +8,9 @@ import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.awt.*;
+import java.time.LocalDateTime;
 
-@CommandInfo(name = "plugins", aliases = "listplugins")
+@CommandInfo(name = "plugins", aliases = "listplugins", category = "core")
 public class PluginsCommand extends LupoCommand {
 
     @Override
@@ -18,6 +19,7 @@ public class PluginsCommand extends LupoCommand {
         builder.setColor(Color.decode("#6495ED"));
         builder.setTitle(context.getServer().translate(null, "core_plugin-list"));
         builder.setDescription(context.getServer().translate(null, "core_plugin-list-description"));
+        builder.setTimestamp(LocalDateTime.now());
 
         for(LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
             String statusKey = "core_plugin-status-uninstalled";

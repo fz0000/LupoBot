@@ -24,6 +24,7 @@ public class LupoServer {
         this.guild = guild;
         this.prefix = "?";
         this.language = "en_US";
+        plugins.addAll(LupoBot.getInstance().getPlugins());
         LupoBot.getInstance().getServers().put(this.guild, this);
     }
 

@@ -41,7 +41,7 @@ public abstract class LupoCommand {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setColor(Color.decode("#6495ED"));
         builder.setTitle(title);
-        builder.setDescription(server.translate(null, "core" + "_" + this.getInfo().name() + "-description"));
+        builder.setDescription(server.translate(context.getPlugin(), pluginName + "_" + this.getInfo().name() + "-description"));
         builder.addField(server.translate(null, "core_command-usage"), server.translate(plugin, pluginName + "_" + this.getInfo().name() + "-usage"), false);
         builder.addField(server.translate(null, "core_command-permission"), permissions, false);
         builder.addField(server.translate(null, "core_command-example"), server.translate(plugin, pluginName + "_" + this.getInfo().name() + "-example"), false);

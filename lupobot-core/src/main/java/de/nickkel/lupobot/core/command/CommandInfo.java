@@ -10,6 +10,8 @@ public @interface CommandInfo {
 
     String name();
 
+    String category();
+
     String[] aliases() default {};
 
     Permission[] permissions() default {};

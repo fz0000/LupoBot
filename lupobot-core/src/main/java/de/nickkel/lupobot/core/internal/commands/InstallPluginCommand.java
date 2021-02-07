@@ -9,8 +9,9 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 
 import java.awt.*;
+import java.time.LocalDateTime;
 
-@CommandInfo(name = "installplugin", permissions = Permission.MANAGE_SERVER, cooldown = 5)
+@CommandInfo(name = "installplugin", permissions = Permission.MANAGE_SERVER, cooldown = 5, category = "core")
 public class InstallPluginCommand extends LupoCommand {
 
     @Override
@@ -27,6 +28,7 @@ public class InstallPluginCommand extends LupoCommand {
                         builder.setColor(Color.RED);
                         builder.setAuthor(context.getGuild().getName(), null, context.getGuild().getIconUrl());
                         builder.setDescription(context.getServer().translate(null, "core_plugin-already-installed", context.getServer().translatePluginName(plugin)));
+                        builder.setTimestamp(LocalDateTime.now());
                         context.getChannel().sendMessage(builder.build()).queue();
                         return;
                     } else {
@@ -38,8 +40,6 @@ public class InstallPluginCommand extends LupoCommand {
                         context.getChannel().sendMessage(builder.build()).queue();
                         return;
                     }
-                } else {
-                    sendHelp(context);
                 }
             }
         } else {
