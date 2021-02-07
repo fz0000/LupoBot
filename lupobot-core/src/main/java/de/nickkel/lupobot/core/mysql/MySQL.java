@@ -43,8 +43,7 @@ public class MySQL {
     public void disconnect() {
         try {
             connection.close();
-        } catch (SQLException e) {
-
+        } catch (SQLException ignored) {
         }
     }
 
@@ -72,6 +71,26 @@ public class MySQL {
             ResultSet result = this.query(statement);
             consumer.accept(result);
         });
+    }
+
+    public ResultSet query(String query) {
+        checkConnection();
+        try {
+            return query(this.connection.prepareStatement(query));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public ResultSet query(PreparedStatement statement) {
+        checkConnection();
+        try {
+            return statement.executeQuery();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public PreparedStatement prepare(String query) {
@@ -106,26 +125,6 @@ public class MySQL {
                 e.printStackTrace();
             }
         }
-    }
-
-    public ResultSet query(String query) {
-        checkConnection();
-        try {
-            return query(this.connection.prepareStatement(query));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public ResultSet query(PreparedStatement statement) {
-        checkConnection();
-        try {
-            return statement.executeQuery();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     private void checkConnection() {

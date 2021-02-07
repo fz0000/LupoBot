@@ -22,7 +22,7 @@ public class MessageHandler extends ListenerAdapter {
 
 	public void removeEvent(Message msg) {
 		switch (msg.getChannelType()) {
-			case TEXT:
+			default:
 				events.remove(msg.getGuild().getId() + msg.getId());
 				break;
 			case PRIVATE:
@@ -37,7 +37,7 @@ public class MessageHandler extends ListenerAdapter {
 			if (u.isBot()) return;
 
 			switch (evt.getChannelType()) {
-				case TEXT:
+				default:
 					if (events.containsKey(evt.getGuild().getId() + evt.getMessageId()))
 						events.get(evt.getGuild().getId() + evt.getMessageId()).accept(evt);
 					break;
@@ -52,7 +52,7 @@ public class MessageHandler extends ListenerAdapter {
 	@Override
 	public void onMessageDelete(@Nonnull MessageDeleteEvent evt) {
 		switch (evt.getChannelType()) {
-			case TEXT:
+			default:
 				events.remove(evt.getGuild().getId() + evt.getMessageId());
 				break;
 			case PRIVATE:
@@ -69,7 +69,7 @@ public class MessageHandler extends ListenerAdapter {
 			if ((Pages.isActivated() && Pages.getPaginator() == null) || (Pages.isActivated() && Pages.getPaginator().isRemoveOnReact())) {
 				evt.getPrivateChannel().retrieveMessageById(evt.getMessageId()).submit().thenAccept(msg -> {
 					switch (evt.getChannelType()) {
-						case TEXT:
+						default:
 							if (events.containsKey(evt.getGuild().getId() + msg.getId()) && !msg.getReactions().contains(evt.getReaction())) {
 								if (evt.getReactionEmote().isEmoji())
 									msg.addReaction(evt.getReactionEmote().getAsCodepoints()).submit();
@@ -89,7 +89,7 @@ public class MessageHandler extends ListenerAdapter {
 				});
 			} else {
 				switch (evt.getChannelType()) {
-					case TEXT:
+					default:
 						if (events.containsKey(evt.getGuild().getId() + evt.getMessageId()))
 							events.get(evt.getGuild().getId() + evt.getMessageId()).accept(evt);
 						break;
