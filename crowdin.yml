@@ -1,12 +1,12 @@
 files:
-  - source: lupobot-core/src/main/resources/locales/en_US.properties
+  - source: /lupobot-core/src/main/resources/locales/en_US.properties
     translation: >-
-      lupobot-core/src/main/resources/locales/%locale_with_underscore%.properties
+      /lupobot-core/src/main/resources/locales/%locale_with_underscore%.properties
   - source: >-
-      lupobot-plugins/lupobot-plugin-help/src/main/resources/locales/en_US.properties
+      /lupobot-plugins/lupobot-plugin-help/src/main/resources/locales/en_US.properties
     translation: >-
-      lupobot-plugins/lupobot-plugin-help/src/main/resources/locales/%locale_with_underscore%.properties
+      /lupobot-plugins/lupobot-plugin-help/src/main/resources/locales/%locale_with_underscore%.properties
   - source: >-
-      lupobot-plugins/lupobot-plugin-music/src/main/resources/locales/en_US.properties
+      /lupobot-plugins/lupobot-plugin-music/src/main/resources/locales/en_US.properties
     translation: >-
-      lupobot-plugins/lupobot-plugin-music/src/main/resources/locales/%locale_with_underscore%.properties
+      /lupobot-plugins/lupobot-plugin-music/src/main/resources/locales/%locale_with_underscore%.properties
