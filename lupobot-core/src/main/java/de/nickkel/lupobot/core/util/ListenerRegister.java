@@ -27,7 +27,7 @@ public class ListenerRegister {
                     final Class<?> clazz = info.load();
                     Object object = clazz.newInstance();
                     EventListener listener = (EventListener) object;
-                    LupoBot.getInstance().getJda().addEventListener(listener);
+                    LupoBot.getInstance().getShardManager().addEventListener(listener);
                     listeners.add(listener);
                     LupoBot.getInstance().getLogger().info("Registered listener " + listener.getClass().getSimpleName());
                 }

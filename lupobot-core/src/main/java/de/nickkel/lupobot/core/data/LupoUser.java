@@ -20,7 +20,7 @@ public class LupoUser {
 
     public LupoUser(long id) {
         this.id = id;
-        this.discordUser = LupoBot.getInstance().getJda().getUserById(id);
+        this.discordUser = LupoBot.getInstance().getShardManager().getUserById(id);
         LupoBot.getInstance().getLogger().info("Loading user " + discordUser.getAsTag() + " " + id + " ...");
         LupoBot.getInstance().getUsers().put(this.id, this);
     }

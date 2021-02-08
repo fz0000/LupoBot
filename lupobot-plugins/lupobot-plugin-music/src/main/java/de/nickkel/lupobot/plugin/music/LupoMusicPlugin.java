@@ -9,7 +9,7 @@ public class LupoMusicPlugin extends LupoPlugin {
 
     @Override
     public void onEnable() {
-        LupoBot.getInstance().getCommandHandler().registerCommands(this, "de.nickkel.lupobot.plugin.music.commands");
+        //LupoBot.getInstance().getCommandHandler().registerCommands(this, "de.nickkel.lupobot.plugin.music.commands");
     }
 
     @Override

@@ -10,7 +10,6 @@ import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ServiceLoader;
 import java.util.jar.JarFile;
 
 public class PluginLoader {
@@ -72,7 +71,7 @@ public class PluginLoader {
 
     public void unloadPlugin(LupoPlugin plugin) {
         if(plugin.isEnabled()) {
-            LupoBot.getInstance().getJda().removeEventListener(plugin.getListeners());
+            LupoBot.getInstance().getShardManager().removeEventListener(plugin.getListeners());
             LupoBot.getInstance().getCommands().removeAll(plugin.getCommands());
             plugin.onDisable();
         }

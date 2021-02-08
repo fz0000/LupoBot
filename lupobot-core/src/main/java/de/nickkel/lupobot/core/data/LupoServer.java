@@ -57,10 +57,11 @@ public class LupoServer {
 
     public Member getMember(String arg) {
         try {
-            if(arg.contains("#") && !arg.startsWith("@")) {
+            if(arg.contains("#") && !arg.startsWith("@")) { // only works if name does not contain any spaces
                 return this.guild.getMemberByTag(arg);
-            } else if(arg.contains("#") && arg.startsWith("@")) {
-                return this.guild.getMemberByTag(arg.replace("@", ""));
+            } else if(arg.startsWith("@")) {
+                String id = arg.replace("@", "").replace("<", "").replace(">", "").replace("!", "");
+                return this.guild.getMemberByTag(id);
             } else {
                 return this.guild.getMemberById(arg);
             }
