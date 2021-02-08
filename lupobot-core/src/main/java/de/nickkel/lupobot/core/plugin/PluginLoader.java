@@ -1,7 +1,9 @@
 package de.nickkel.lupobot.core.plugin;
 
 import de.nickkel.lupobot.core.LupoBot;
+import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.language.LanguageHandler;
+import net.dv8tion.jda.api.hooks.EventListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +26,7 @@ public class PluginLoader {
         }
 
         if(pluginPaths.size() == 0) {
-            LupoBot.getInstance().getLogger().warn("Could not found any plugin!");
+            //LupoBot.getInstance().getLogger().warn("Could not found any plugin!");
         }
 
         for(Path path : pluginPaths) {
@@ -71,7 +73,9 @@ public class PluginLoader {
 
     public void unloadPlugin(LupoPlugin plugin) {
         if(plugin.isEnabled()) {
-            LupoBot.getInstance().getShardManager().removeEventListener(plugin.getListeners());
+            for(EventListener listener : plugin.getListeners()) {
+                LupoBot.getInstance().getShardManager().removeEventListener(listener);
+            }
             LupoBot.getInstance().getCommands().removeAll(plugin.getCommands());
             plugin.onDisable();
         }

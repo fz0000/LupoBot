@@ -33,7 +33,7 @@ public class CommandsCommand extends LupoCommand {
 
                     for(LupoCommand command : plugin.getCommands()) {
                         commands.put(command, command.getInfo().category());
-                        if(!categories.contains(command.getInfo().category())) {
+                        if(!categories.contains(command.getInfo().category()) && !command.getInfo().hidden()) {
                             categories.add(command.getInfo().category());
                         }
                     }

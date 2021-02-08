@@ -16,7 +16,6 @@ import de.nickkel.lupobot.core.plugin.PluginLoader;
 import de.nickkel.lupobot.core.util.FileResourcesUtils;
 import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -100,7 +99,6 @@ public class LupoBot {
 
         Pages.activate(PaginatorBuilder.createSimplePaginator(this.shardManager));
         this.commandHandler.registerCommands(this.getClass().getClassLoader(), "de.nickkel.lupobot.core.internal.commands");
-        this.shardManager.setActivity(Activity.watching(this.shardManager.getGuilds().size() + " Discord servers"));
         this.pluginLoader = new PluginLoader();
     }
 
