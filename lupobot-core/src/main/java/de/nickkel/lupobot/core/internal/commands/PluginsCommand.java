@@ -5,9 +5,9 @@ import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
+import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 
-import java.awt.*;
 import java.time.LocalDateTime;
 
 @CommandInfo(name = "plugins", aliases = "listplugins", category = "core")
@@ -16,7 +16,7 @@ public class PluginsCommand extends LupoCommand {
     @Override
     public void onCommand(CommandContext context) {
         EmbedBuilder builder = new EmbedBuilder();
-        builder.setColor(Color.decode("#6495ED"));
+        builder.setColor(LupoColor.BLUE.getColor());
         builder.setTitle(context.getServer().translate(null, "core_plugin-list"));
         builder.setDescription(context.getServer().translate(null, "core_plugin-list-description"));
         builder.setTimestamp(LocalDateTime.now());

@@ -6,6 +6,7 @@ import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,5 +53,19 @@ public class LupoServer {
             return "Core";
         }
         return this.translate(plugin, plugin.getInfo().name() + "_display-name");
+    }
+
+    public Member getMember(String arg) {
+        try {
+            if(arg.contains("#") && !arg.startsWith("@")) {
+                return this.guild.getMemberByTag(arg);
+            } else if(arg.contains("#") && arg.startsWith("@")) {
+                return this.guild.getMemberByTag(arg.replace("@", ""));
+            } else {
+                return this.guild.getMemberById(arg);
+            }
+        } catch(Exception e) {
+            return null;
+        }
     }
 }

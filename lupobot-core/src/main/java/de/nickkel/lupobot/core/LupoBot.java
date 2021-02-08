@@ -1,6 +1,7 @@
 package de.nickkel.lupobot.core;
 
 import com.google.gson.JsonObject;
+import com.mysql.cj.protocol.MessageListener;
 import de.nickkel.lupobot.core.command.CommandHandler;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.CommandListener;
@@ -79,10 +80,13 @@ public class LupoBot {
         this.executorService = Executors.newCachedThreadPool();
         this.config = new Config(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("config.json"));
 
-        JDABuilder jdaBuilder = JDABuilder.createDefault(this.config .getString("token"));
-        jdaBuilder.enableIntents(GatewayIntent.GUILD_MEMBERS);
-        jdaBuilder.setMemberCachePolicy(MemberCachePolicy.ALL);
-        jdaBuilder.setChunkingFilter(ChunkingFilter.ALL);
+        JDABuilder jdaBuilder = JDABuilder.createDefault(this.config.getString("token"))
+                .enableIntents(GatewayIntent.GUILD_MEMBERS)
+                .enableIntents(GatewayIntent.GUILD_PRESENCES)
+                .setMemberCachePolicy(MemberCachePolicy.ALL)
+                .setChunkingFilter(ChunkingFilter.ALL)
+                .addEventListeners(new CommandListener());
+
         this.languageHandler = new LanguageHandler(this.getClass());
         this.commandHandler = new CommandHandler();
 
@@ -94,7 +98,6 @@ public class LupoBot {
         try {
             this.logger.info("Logging in ...");
             this.jda = jdaBuilder.build();
-            this.jda.addEventListener(new CommandListener());
             this.jda.awaitReady();
             this.logger.info("Ready as " + this.jda.getSelfUser().getAsTag());
         } catch(LoginException | InterruptedException e) {

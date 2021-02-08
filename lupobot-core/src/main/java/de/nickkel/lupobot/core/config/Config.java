@@ -5,6 +5,9 @@ import de.nickkel.lupobot.core.LupoBot;
 import lombok.Getter;
 
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -199,5 +202,34 @@ public class Config implements iConfig {
             return null;
         }
         return this;
+    }
+
+    private String readAll(Reader rd) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        int cp;
+        while ((cp = rd.read()) != -1)
+            sb.append((char)cp);
+        return sb.toString();
+    }
+
+    public Config readJsonFromUrl(String url) {
+        InputStream is = null;
+        try {
+            is = (new URL(url)).openStream();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            String jsonText = readAll(rd);
+            JsonObject json = new JsonObject().getAsJsonObject(jsonText);
+            this.jsonObject = json;
+            return this;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }

@@ -8,18 +8,21 @@ import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
-@CommandInfo(name = "github", category = "general")
-public class GithubCommand extends LupoCommand {
+@CommandInfo(name = "ping", aliases = "pong", category = "general")
+public class PingCommand extends LupoCommand {
     @Override
     public void onCommand(CommandContext context) {
         EmbedBuilder builder = new EmbedBuilder();
-        builder.setColor(LupoColor.BLUE.getColor());
+        builder.setColor(LupoColor.YELLOW.getColor());
         builder.setAuthor(LupoBot.getInstance().getJda().getSelfUser().getName(), null, LupoBot.getInstance().getJda().getSelfUser().getAvatarUrl());
         builder.setTimestamp(LocalDateTime.now());
-        builder.setDescription(context.getServer().translate(context.getPlugin(), "help_github-message"));
-        builder.addField(context.getServer().translate(context.getPlugin(), "help_github-link"),
-                LupoBot.getInstance().getConfig().getString("githubUrl"), false);
+
+        long ping = context.getMessage().getTimeCreated().until(context.getMessage().getTimeCreated(), ChronoUnit.MILLIS);
+        builder.addField(context.getServer().translate(context.getPlugin(), "help_ping-ping") + " ms", String.valueOf(ping), true);
+        builder.addField(context.getServer().translate(context.getPlugin(), "help_ping-websocket") + " ms", String.valueOf(LupoBot.getInstance().getJda().getGatewayPing()), true);
+
         context.getChannel().sendMessage(builder.build()).queue();
     }
 }

@@ -5,6 +5,7 @@ import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
+import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 
@@ -25,7 +26,7 @@ public class InstallPluginCommand extends LupoCommand {
                 if(context.getArgs()[0].equalsIgnoreCase(plugin.getInfo().name()) || context.getArgs()[0].equalsIgnoreCase(context.getServer().translatePluginName(plugin))) {
                     if(context.getServer().getPlugins().contains(plugin)) {
                         EmbedBuilder builder = new EmbedBuilder();
-                        builder.setColor(Color.RED);
+                        builder.setColor(LupoColor.RED.getColor());
                         builder.setAuthor(context.getGuild().getName(), null, context.getGuild().getIconUrl());
                         builder.setDescription(context.getServer().translate(null, "core_plugin-already-installed", context.getServer().translatePluginName(plugin)));
                         builder.setTimestamp(LocalDateTime.now());
@@ -34,7 +35,7 @@ public class InstallPluginCommand extends LupoCommand {
                     } else {
                         context.getServer().getPlugins().add(plugin);
                         EmbedBuilder builder = new EmbedBuilder();
-                        builder.setColor(Color.GREEN);
+                        builder.setColor(LupoColor.GREEN.getColor());
                         builder.setAuthor(context.getGuild().getName(), null, context.getGuild().getIconUrl());
                         builder.setDescription(context.getServer().translate(null, "core_plugin-installed", context.getServer().translatePluginName(plugin)));
                         context.getChannel().sendMessage(builder.build()).queue();

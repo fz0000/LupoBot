@@ -5,6 +5,7 @@ import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
+import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -35,7 +36,7 @@ public class CommandsCommand extends LupoCommand {
 
                     List<MessageEmbed.Field> fields = new ArrayList<>();
                     EmbedBuilder builder = new EmbedBuilder();
-                    builder.setColor(Color.ORANGE);
+                    builder.setColor(LupoColor.ORANGE.getColor());
                     builder.setTitle(context.getServer().translate(context.getPlugin(), "help_commands-plugin", context.getServer().translatePluginName(plugin)));
 
                     for(String category : categories) {

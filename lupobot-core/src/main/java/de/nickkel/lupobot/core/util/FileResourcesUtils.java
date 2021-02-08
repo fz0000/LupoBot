@@ -1,5 +1,7 @@
 package de.nickkel.lupobot.core.util;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import de.nickkel.lupobot.core.LupoBot;
 import lombok.Getter;
 
@@ -23,6 +25,13 @@ public class FileResourcesUtils {
 
     public FileResourcesUtils(Class clazz) {
         this.clazz = clazz;
+    }
+
+    private JsonObject getJsonObjectFromResources(String fileName) {
+        InputStream inputStream = this.clazz.getClassLoader().getResourceAsStream(fileName);
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream,
+                StandardCharsets.UTF_8);
+        return (JsonObject) new JsonParser().parse(inputStreamReader);
     }
 
     // get a file from the resources folder

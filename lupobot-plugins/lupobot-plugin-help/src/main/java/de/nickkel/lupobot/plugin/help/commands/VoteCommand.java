@@ -4,6 +4,7 @@ import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
+import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.awt.*;
@@ -14,7 +15,7 @@ public class VoteCommand extends LupoCommand {
     @Override
     public void onCommand(CommandContext context) {
         EmbedBuilder builder = new EmbedBuilder();
-        builder.setColor(Color.decode("#0066CC"));
+        builder.setColor(LupoColor.YELLOW.getColor());
         builder.setAuthor(LupoBot.getInstance().getJda().getSelfUser().getName(), null, LupoBot.getInstance().getJda().getSelfUser().getAvatarUrl());
         builder.setTimestamp(LocalDateTime.now());
         builder.setDescription(context.getServer().translate(context.getPlugin(), "help_vote-message"));

@@ -4,6 +4,7 @@ import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
+import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.awt.*;
@@ -19,7 +20,7 @@ public class BotinfoCommand extends LupoCommand {
                 TimeUnit.MILLISECONDS.toMinutes(runtime), TimeUnit.MILLISECONDS.toSeconds(runtime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(runtime))
         );
         EmbedBuilder builder = new EmbedBuilder();
-        builder.setColor(Color.decode("#0066CC"));
+        builder.setColor(LupoColor.BLUE.getColor());
         builder.setAuthor(LupoBot.getInstance().getJda().getSelfUser().getName(), null, LupoBot.getInstance().getJda().getSelfUser().getAvatarUrl());
         builder.setTimestamp(LocalDateTime.now());
 

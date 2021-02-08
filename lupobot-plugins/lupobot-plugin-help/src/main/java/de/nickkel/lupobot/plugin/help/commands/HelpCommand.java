@@ -5,6 +5,7 @@ import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
+import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 @CommandInfo(name = "help", category = "general")
@@ -42,6 +43,7 @@ public class HelpCommand extends LupoCommand {
             command.sendHelp(helpContext);
         } else {
             EmbedBuilder builder = new EmbedBuilder();
+            builder.setColor(LupoColor.ORANGE.getColor());
             builder.setAuthor(LupoBot.getInstance().getJda().getSelfUser().getName(), null, LupoBot.getInstance().getJda().getSelfUser().getAvatarUrl());
             builder.addField(context.getServer().translate(context.getPlugin(), "help_help-invite"),
                     LupoBot.getInstance().getConfig().getString("inviteUrl"), false);

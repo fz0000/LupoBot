@@ -5,6 +5,7 @@ import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
+import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 
@@ -26,7 +27,7 @@ public class UninstallPluginCommand extends LupoCommand {
                     if(context.getServer().getPlugins().contains(plugin)) {
                         context.getServer().getPlugins().remove(plugin);
                         EmbedBuilder builder = new EmbedBuilder();
-                        builder.setColor(Color.GREEN);
+                        builder.setColor(LupoColor.GREEN.getColor());
                         builder.setAuthor(context.getGuild().getName(), null, context.getGuild().getIconUrl());
                         builder.setDescription(context.getServer().translate(null, "core_plugin-uninstalled", context.getServer().translatePluginName(plugin)));
                         builder.setTimestamp(LocalDateTime.now());
@@ -34,7 +35,7 @@ public class UninstallPluginCommand extends LupoCommand {
                         return;
                     } else {
                         EmbedBuilder builder = new EmbedBuilder();
-                        builder.setColor(Color.RED);
+                        builder.setColor(LupoColor.RED.getColor());;
                         builder.setAuthor(context.getGuild().getName(), null,  context.getGuild().getIconUrl());
                         builder.setDescription(context.getServer().translate(null, "core_plugin-not-installed", context.getServer().translatePluginName(plugin)));
                         builder.setTimestamp(LocalDateTime.now());
