@@ -22,8 +22,12 @@ public class InstallPluginCommand extends LupoCommand {
                 context.getChannel().sendMessage("**Error:** No plugins loaded! Nothing to install").queue();
                 return;
             }
+            boolean match = false;
+            int plugins = 0;
             for(LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
+                plugins++;
                 if(context.getArgs()[0].equalsIgnoreCase(plugin.getInfo().name()) || context.getArgs()[0].equalsIgnoreCase(context.getServer().translatePluginName(plugin))) {
+                    match = true;
                     if(context.getServer().getPlugins().contains(plugin)) {
                         EmbedBuilder builder = new EmbedBuilder();
                         builder.setColor(LupoColor.RED.getColor());
@@ -42,6 +46,9 @@ public class InstallPluginCommand extends LupoCommand {
                         return;
                     }
                 }
+            }
+            if(!match && plugins == LupoBot.getInstance().getPlugins().size()) {
+                sendSyntaxError(context, "core_installplugin-invalid-plugin");
             }
         } else {
             sendHelp(context);

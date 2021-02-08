@@ -23,7 +23,7 @@ public class MemberinfoCommand extends LupoCommand {
         if(context.getArgs().length == 1) {
             member = context.getServer().getMember(context.getArgs()[0]);
             if(member == null) {
-                sendHelp(context);
+                sendSyntaxError(context, "help_memberinfo-not-found");
                 return;
             }
         }

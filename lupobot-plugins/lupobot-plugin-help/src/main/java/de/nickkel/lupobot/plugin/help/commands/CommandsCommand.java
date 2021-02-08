@@ -22,8 +22,12 @@ public class CommandsCommand extends LupoCommand {
     public void onCommand(CommandContext context) {
 
         if(context.getArgs().length == 1) {
+            boolean match = false;
+            int plugins = 0;
             for(LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
+                plugins++;
                 if(context.getArgs()[0].equalsIgnoreCase(plugin.getInfo().name()) || context.getArgs()[0].equalsIgnoreCase(context.getServer().translatePluginName(plugin))) {
+                    match = true;
                     List<String> categories = new ArrayList<>();
                     Map<LupoCommand, String> commands = new HashMap<>();
 
@@ -58,6 +62,10 @@ public class CommandsCommand extends LupoCommand {
                     builder.setFooter(context.getServer().translate(context.getPlugin(),"help_commands-footer"));
                     context.getChannel().sendMessage(builder.build()).queue();
                 }
+            }
+
+            if(!match && plugins == LupoBot.getInstance().getPlugins().size()) {
+                sendSyntaxError(context, "help_commands-invalid-plugin");
             }
         } else {
             sendHelp(context);

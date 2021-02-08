@@ -2,12 +2,21 @@ package de.nickkel.lupobot.core.command;
 
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.data.LupoServer;
+import de.nickkel.lupobot.core.pagination.method.Pages;
+import de.nickkel.lupobot.core.pagination.model.Page;
+import de.nickkel.lupobot.core.pagination.type.PageType;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
+import de.nickkel.lupobot.core.util.LupoColor;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.awt.*;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 
 public abstract class LupoCommand {
 
@@ -17,6 +26,32 @@ public abstract class LupoCommand {
     public abstract void onCommand(CommandContext context);
 
     public void sendHelp(CommandContext context) {
+        context.getChannel().sendMessage(getHelpBuilder(context).build()).queue();
+    }
+
+    public void sendSyntaxError(CommandContext context, String errorKey, Object... params) {
+        LupoServer server = LupoServer.getByGuild(context.getGuild());
+        LupoPlugin plugin = context.getPlugin();
+
+        ArrayList<Page> pages = new ArrayList<>();
+
+        // Error page
+        EmbedBuilder builder = new EmbedBuilder();
+        builder.setColor(LupoColor.RED.getColor());
+        builder.setTitle(server.translate(null, "core_command-syntax-error"));
+        builder.setFooter(server.translate(null, "core_used-command", server.getPrefix() + context.getLabel()));
+        builder.setDescription(server.translate(plugin, errorKey, params));
+        pages.add(new Page(PageType.EMBED, builder.build()));
+
+        // Help page
+        pages.add(new Page(PageType.EMBED, getHelpBuilder(context).build()));
+
+        context.getChannel().sendMessage((MessageEmbed) pages.get(0).getContent()).queue(success -> {
+            Pages.paginate(success, pages);
+        });
+    }
+
+    private EmbedBuilder getHelpBuilder(CommandContext context) {
         LupoServer server = LupoServer.getByGuild(context.getGuild());
         LupoPlugin plugin = context.getPlugin();
 
@@ -47,6 +82,7 @@ public abstract class LupoCommand {
         builder.addField(server.translate(null, "core_command-example"), server.translate(plugin, pluginName + "_" + this.getInfo().name() + "-example"), false);
         builder.setFooter(server.translate(null, "core_command-plugin") + ": " +
                 server.translatePluginName(plugin));
-        context.getChannel().sendMessage(builder.build()).queue();
+
+        return builder;
     }
 }

@@ -22,8 +22,12 @@ public class UninstallPluginCommand extends LupoCommand {
                 context.getChannel().sendMessage("**Error:** No plugins loaded! Nothing to install").queue();
                 return;
             }
+            boolean match = false;
+            int plugins = 0;
             for(LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
+                plugins++;
                 if(context.getArgs()[0].equalsIgnoreCase(plugin.getInfo().name()) || context.getArgs()[0].equalsIgnoreCase(context.getServer().translatePluginName(plugin))) {
+                    match = true;
                     if(context.getServer().getPlugins().contains(plugin)) {
                         context.getServer().getPlugins().remove(plugin);
                         EmbedBuilder builder = new EmbedBuilder();
@@ -43,6 +47,10 @@ public class UninstallPluginCommand extends LupoCommand {
                         return;
                     }
                 }
+            }
+
+            if(!match && plugins == LupoBot.getInstance().getPlugins().size()) {
+                sendSyntaxError(context, "core_uninstallplugin-invalid-plugin");
             }
         } else {
             sendHelp(context);

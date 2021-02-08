@@ -20,8 +20,8 @@ public class PingCommand extends LupoCommand {
         builder.setTimestamp(LocalDateTime.now());
 
         long ping = context.getMessage().getTimeCreated().until(context.getMessage().getTimeCreated(), ChronoUnit.MILLIS);
-        builder.addField(context.getServer().translate(context.getPlugin(), "help_ping-ping") + " ms", String.valueOf(ping), true);
-        builder.addField(context.getServer().translate(context.getPlugin(), "help_ping-websocket") + " ms", String.valueOf(LupoBot.getInstance().getJda().getGatewayPing()), true);
+        builder.addField(context.getServer().translate(context.getPlugin(), "help_ping-ping"), ping + " ms", true);
+        builder.addField(context.getServer().translate(context.getPlugin(), "help_ping-websocket"), LupoBot.getInstance().getJda().getGatewayPing() + " ms", true);
 
         context.getChannel().sendMessage(builder.build()).queue();
     }
