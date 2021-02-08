@@ -42,7 +42,7 @@ public class MemberinfoCommand extends LupoCommand {
         }
 
         EmbedBuilder builder = new EmbedBuilder();
-        builder.setTimestamp(LocalDateTime.now());
+        builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());;
         builder.setColor(LupoColor.BLUE.getColor());
         builder.setAuthor(member.getUser().getAsTag() + " (" + member.getIdLong() + ")", null, member.getUser().getAvatarUrl());
 

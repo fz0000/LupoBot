@@ -19,7 +19,7 @@ public class PluginsCommand extends LupoCommand {
         builder.setColor(LupoColor.BLUE.getColor());
         builder.setTitle(context.getServer().translate(null, "core_plugin-list"));
         builder.setDescription(context.getServer().translate(null, "core_plugin-list-description"));
-        builder.setTimestamp(LocalDateTime.now());
+        builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
 
         for(LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
             String statusKey = "core_plugin-status-uninstalled";

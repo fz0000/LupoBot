@@ -22,7 +22,7 @@ public class BotinfoCommand extends LupoCommand {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setColor(LupoColor.BLUE.getColor());
         builder.setAuthor(LupoBot.getInstance().getJda().getSelfUser().getName(), null, LupoBot.getInstance().getJda().getSelfUser().getAvatarUrl());
-        builder.setTimestamp(LocalDateTime.now());
+        builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
 
         builder.addField(context.getServer().translate(context.getPlugin(), "help_botinfo-runtime"),
                 context.getServer().translate(context.getPlugin(), "help_botinfo-runtime-value", time), true);

@@ -86,6 +86,10 @@ public class LupoBot {
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
                 .setChunkingFilter(ChunkingFilter.ALL)
                 .addEventListeners(new CommandListener());
+        int shardTotal = this.config.getInt("shardTotal");
+        for (int i = 0; i < shardTotal; i++) {
+            jdaBuilder.useSharding(i, shardTotal);
+        }
 
         this.languageHandler = new LanguageHandler(this.getClass());
         this.commandHandler = new CommandHandler();

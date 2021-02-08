@@ -11,6 +11,8 @@ import net.dv8tion.jda.api.Permission;
 
 import java.awt.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.TimeZone;
 
 @CommandInfo(name = "installplugin", permissions = Permission.MANAGE_SERVER, cooldown = 5, category = "core")
 public class InstallPluginCommand extends LupoCommand {
@@ -33,7 +35,7 @@ public class InstallPluginCommand extends LupoCommand {
                         builder.setColor(LupoColor.RED.getColor());
                         builder.setAuthor(context.getGuild().getName(), null, context.getGuild().getIconUrl());
                         builder.setDescription(context.getServer().translate(null, "core_plugin-already-installed", context.getServer().translatePluginName(plugin)));
-                        builder.setTimestamp(LocalDateTime.now());
+                        builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
                         context.getChannel().sendMessage(builder.build()).queue();
                         return;
                     } else {

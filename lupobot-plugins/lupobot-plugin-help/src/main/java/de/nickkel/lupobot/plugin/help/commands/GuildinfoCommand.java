@@ -28,7 +28,7 @@ public class GuildinfoCommand extends LupoCommand {
         }
 
         EmbedBuilder builder = new EmbedBuilder();
-        builder.setTimestamp(LocalDateTime.now());
+        builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
         builder.setColor(LupoColor.BLUE.getColor());
         builder.setAuthor(context.getGuild().getName() + " (" + context.getGuild().getIdLong() + ")", null, context.getGuild().getIconUrl());
 

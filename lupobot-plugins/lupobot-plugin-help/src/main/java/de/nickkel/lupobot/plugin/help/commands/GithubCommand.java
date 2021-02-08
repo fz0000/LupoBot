@@ -16,7 +16,7 @@ public class GithubCommand extends LupoCommand {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setColor(LupoColor.BLUE.getColor());
         builder.setAuthor(LupoBot.getInstance().getJda().getSelfUser().getName(), null, LupoBot.getInstance().getJda().getSelfUser().getAvatarUrl());
-        builder.setTimestamp(LocalDateTime.now());
+        builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
         builder.setDescription(context.getServer().translate(context.getPlugin(), "help_github-message"));
         builder.addField(context.getServer().translate(context.getPlugin(), "help_github-link"),
                 LupoBot.getInstance().getConfig().getString("githubUrl"), false);

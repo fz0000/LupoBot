@@ -17,7 +17,7 @@ public class PingCommand extends LupoCommand {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setColor(LupoColor.YELLOW.getColor());
         builder.setAuthor(LupoBot.getInstance().getJda().getSelfUser().getName(), null, LupoBot.getInstance().getJda().getSelfUser().getAvatarUrl());
-        builder.setTimestamp(LocalDateTime.now());
+        builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
 
         long ping = context.getMessage().getTimeCreated().until(context.getMessage().getTimeCreated(), ChronoUnit.MILLIS);
         builder.addField(context.getServer().translate(context.getPlugin(), "help_ping-ping"), ping + " ms", true);
