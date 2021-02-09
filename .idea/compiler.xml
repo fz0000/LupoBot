@@ -10,6 +10,7 @@
         <module name="core" />
         <module name="help" />
         <module name="music" />
+        <module name="fun" />
         <module name="launcher" />
       </profile>
     </annotationProcessing>

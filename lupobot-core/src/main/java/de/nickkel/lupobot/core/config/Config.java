@@ -7,6 +7,7 @@ import lombok.Getter;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -27,11 +28,31 @@ public class Config implements iConfig {
     public Config(InputStream inputStream) {
         JsonParser jsonParser = new JsonParser();
         JsonObject jsonObject = null;
+        jsonObject = (JsonObject) jsonParser.parse(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+        this.jsonObject = jsonObject;
+    }
+
+    public Config(String url) {
+        InputStream is = null;
         try {
-            jsonObject = (JsonObject) jsonParser.parse(new InputStreamReader(inputStream, "UTF-8"));
+            URL newUrl = new URL(url);
+            URLConnection request = newUrl.openConnection();
+
+            request.setRequestProperty("User-Agent",
+                    "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
+            is = request.getInputStream();
+            JsonParser jsonParser = new JsonParser();
+            JsonObject jsonObject = null;
+            jsonObject = (JsonObject) jsonParser.parse(new InputStreamReader(is, StandardCharsets.UTF_8));
             this.jsonObject = jsonObject;
-        } catch (UnsupportedEncodingException e) {
+        } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -202,34 +223,5 @@ public class Config implements iConfig {
             return null;
         }
         return this;
-    }
-
-    private String readAll(Reader rd) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        int cp;
-        while ((cp = rd.read()) != -1)
-            sb.append((char)cp);
-        return sb.toString();
-    }
-
-    public Config readJsonFromUrl(String url) {
-        InputStream is = null;
-        try {
-            is = (new URL(url)).openStream();
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-            String jsonText = readAll(rd);
-            JsonObject json = new JsonObject().getAsJsonObject(jsonText);
-            this.jsonObject = json;
-            return this;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
     }
 }

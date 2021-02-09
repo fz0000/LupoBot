@@ -58,7 +58,7 @@ public class PluginLoader {
             plugin.setLanguageHandler(new LanguageHandler(resourcesClass));
             plugin.setResourcesClass(resourcesClass);
             LupoBot.getInstance().getPlugins().add(plugin);
-            LupoBot.getInstance().getLogger().info("Loaded plugin " + plugin.getInfo().name() + " version " + plugin.getInfo().version());
+            LupoBot.getInstance().getLogger().info("Loaded plugin " + plugin.getInfo().name() + " version " + plugin.getInfo().version() + " by " + plugin.getInfo().author());
 
             if(!plugin.isEnabled()) {
                 plugin.onEnable();
