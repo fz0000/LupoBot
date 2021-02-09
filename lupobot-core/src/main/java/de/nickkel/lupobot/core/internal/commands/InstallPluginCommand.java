@@ -9,12 +9,7 @@ import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 
-import java.awt.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.TimeZone;
-
-@CommandInfo(name = "installplugin", permissions = Permission.MANAGE_SERVER, cooldown = 5, category = "core")
+@CommandInfo(name = "installplugin", permissions = Permission.ADMINISTRATOR, cooldown = 5, category = "core")
 public class InstallPluginCommand extends LupoCommand {
 
     @Override

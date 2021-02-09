@@ -5,13 +5,11 @@ import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.util.LupoColor;
+import de.nickkel.lupobot.core.util.TimeUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 
-import java.awt.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @CommandInfo(name = "memberinfo", category = "information")
 public class MemberinfoCommand extends LupoCommand {
@@ -46,8 +44,8 @@ public class MemberinfoCommand extends LupoCommand {
         builder.setColor(LupoColor.BLUE.getColor());
         builder.setAuthor(member.getUser().getAsTag() + " (" + member.getIdLong() + ")", null, member.getUser().getAvatarUrl());
 
-        builder.addField(context.getServer().translate(context.getPlugin(), "help_memberinfo-creation"), member.getUser().getTimeCreated().format(DateTimeFormatter.ISO_DATE_TIME), false);
-        builder.addField(context.getServer().translate(context.getPlugin(), "help_memberinfo-joined"), member.getTimeJoined().format(DateTimeFormatter.ISO_DATE_TIME), false);
+        builder.addField(context.getServer().translate(context.getPlugin(), "help_memberinfo-creation"), TimeUtils.format(member.getUser().getTimeCreated()), false);
+        builder.addField(context.getServer().translate(context.getPlugin(), "help_memberinfo-joined"), TimeUtils.format(member.getTimeJoined()), false);
         builder.addField(context.getServer().translate(context.getPlugin(), "help_memberinfo-status"), member.getOnlineStatus().name(), false);
         builder.addField(context.getServer().translate(context.getPlugin(), "help_memberinfo-activity"), activity, false);
         builder.addField(context.getServer().translate(context.getPlugin(), "help_memberinfo-roles"), roles, false);

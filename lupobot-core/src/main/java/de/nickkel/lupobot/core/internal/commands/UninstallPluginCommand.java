@@ -9,10 +9,7 @@ import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 
-import java.awt.*;
-import java.time.LocalDateTime;
-
-@CommandInfo(name = "uninstallplugin", permissions = Permission.MANAGE_SERVER, cooldown = 5, category = "core")
+@CommandInfo(name = "uninstallplugin", permissions = Permission.ADMINISTRATOR, cooldown = 5, category = "core")
 public class UninstallPluginCommand extends LupoCommand {
 
     @Override

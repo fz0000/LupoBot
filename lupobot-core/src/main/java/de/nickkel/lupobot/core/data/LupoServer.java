@@ -1,10 +1,9 @@
 package de.nickkel.lupobot.core.data;
 
-import com.iwebpp.crypto.TweetNaclFast;
 import de.nickkel.lupobot.core.LupoBot;
-import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import lombok.Getter;
+import lombok.Setter;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 
@@ -17,8 +16,8 @@ public class LupoServer {
     private final Guild guild;
     @Getter
     private final List<LupoPlugin> plugins = new ArrayList<>();
-    @Getter
-    private final String prefix, language;
+    @Getter @Setter
+    private String prefix, language;
 
     public LupoServer(Guild guild) {
         LupoBot.getInstance().getLogger().info("Loading server " + guild.getName() + " " + guild.getIdLong() + " ...");
@@ -36,7 +35,7 @@ public class LupoServer {
         } else {
             translation = plugin.getLanguageHandler().translate(this.language, key, params); // get plugins language handler
         }
-        translation = translation.replace("%prefix%", this.prefix).replace("\n", "\n");
+        translation = translation.replace("%prefix%", this.prefix).replace("\\n", "\n");
         return  translation;
     }
 

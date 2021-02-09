@@ -8,8 +8,6 @@ import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 
-import java.time.LocalDateTime;
-
 @CommandInfo(name = "plugins", aliases = "listplugins", category = "core")
 public class PluginsCommand extends LupoCommand {
 

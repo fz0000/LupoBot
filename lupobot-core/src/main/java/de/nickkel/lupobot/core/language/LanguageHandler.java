@@ -45,6 +45,9 @@ public class LanguageHandler {
             translations.put(key, properties.getProperty(key));
         }
         languages.put(language, new Language(language, translations));
+        if(!LupoBot.getInstance().getAvailableLanguages().contains(language)) {
+            LupoBot.getInstance().getAvailableLanguages().add(language);
+        }
         LupoBot.getInstance().getLogger().info("Loaded language " + language + " with " + translations.size() + " strings");
     }
 

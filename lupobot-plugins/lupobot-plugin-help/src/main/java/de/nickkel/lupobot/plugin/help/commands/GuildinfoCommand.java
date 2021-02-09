@@ -5,6 +5,7 @@ import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.util.LupoColor;
+import de.nickkel.lupobot.core.util.TimeUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emote;
 
@@ -32,7 +33,7 @@ public class GuildinfoCommand extends LupoCommand {
         builder.setColor(LupoColor.BLUE.getColor());
         builder.setAuthor(context.getGuild().getName() + " (" + context.getGuild().getIdLong() + ")", null, context.getGuild().getIconUrl());
 
-        builder.addField(context.getServer().translate(context.getPlugin(), "help_guildinfo-creation"), context.getGuild().getTimeCreated().format(DateTimeFormatter.ISO_DATE_TIME), true);
+        builder.addField(context.getServer().translate(context.getPlugin(), "help_guildinfo-creation"), TimeUtils.format(context.getGuild().getTimeCreated()), true);
         builder.addField(context.getServer().translate(context.getPlugin(), "help_guildinfo-members"), String.valueOf(context.getGuild().getMemberCount()), false);
         builder.addField(context.getServer().translate(context.getPlugin(), "help_guildinfo-region"), context.getGuild().getRegion().getName(), false);
         builder.addField(context.getServer().translate(context.getPlugin(), "help_guildinfo-owner"), context.getGuild().getOwner().getAsMention(), false);

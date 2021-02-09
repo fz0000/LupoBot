@@ -51,7 +51,7 @@ public abstract class LupoCommand {
         });
     }
 
-    private EmbedBuilder getHelpBuilder(CommandContext context) {
+    public EmbedBuilder getHelpBuilder(CommandContext context) {
         LupoServer server = LupoServer.getByGuild(context.getGuild());
         LupoPlugin plugin = context.getPlugin();
 

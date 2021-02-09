@@ -63,6 +63,8 @@ public class LupoBot {
     @Getter
     private final Map<Long, LupoUser> users = new HashMap<>();
     @Getter
+    private final List<String> availableLanguages = new ArrayList<>();
+    @Getter
     private final long startMilis = System.currentTimeMillis();
 
     public static void main(String[] args) {
@@ -112,13 +114,6 @@ public class LupoBot {
     }
 
     public SelfUser getSelfUser() {
-        if(this.shardManager.getShards().get(0) != null) {
-            return this.shardManager.getShards().get(0).getSelfUser();
-        } else {
-            for(JDA jda : this.shardManager.getShards()) {
-                return jda.getSelfUser();
-            }
-        }
-        return null;
+        return this.shardManager.getShards().get(0).getSelfUser();
     }
 }
