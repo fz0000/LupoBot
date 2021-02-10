@@ -75,7 +75,6 @@ public class TicTacToeGame {
             }
 
             if(end) {
-                System.out.println("End!");
                 this.message.editMessage(builder.build()).queue();
                 return;
             }
