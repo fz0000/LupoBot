@@ -63,11 +63,14 @@ public class LanguageHandler {
     }
 
     public int maximum(String language, String locale) {
-        int max = 0, i;
-
-        for(i = 1; !translate(language, locale + "_" + i).startsWith("N/A"); i++) {
-            max = i;
+        int max = 0;
+        for(int i = 1; !this.translate(language, locale + "_" + i ).startsWith("N/A"); max = i++) {
         }
         return max;
+    }
+
+    public String getRandomTranslation(String language, String locale, Object... params) {
+        int random = new Random().nextInt(maximum(language, locale))+1;
+        return translate(language, locale + "_" + random, params);
     }
 }

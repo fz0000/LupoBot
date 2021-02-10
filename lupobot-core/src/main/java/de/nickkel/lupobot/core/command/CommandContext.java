@@ -42,4 +42,12 @@ public class CommandContext {
         this.server = LupoServer.getByGuild(this.guild);
         this.user = LupoUser.getByMember(this.member);
     }
+
+    public String getArgsAsString() {
+        String argString = "";
+        for(String arg : this.args) {
+            argString = argString + arg + " ";
+        }
+        return argString;
+    }
 }

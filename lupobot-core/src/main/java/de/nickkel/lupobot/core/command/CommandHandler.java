@@ -112,6 +112,7 @@ public class CommandHandler {
             builder.setFooter(server.translate(null, server.getPrefix() + "core_used-command", server.getPrefix() + context.getLabel()));
             context.getChannel().sendMessage(builder.build()).queue();
         } catch(Exception e) {
+            e.printStackTrace();
             String stackTrace = "";
             for(StackTraceElement element : e.getStackTrace()) {
                 stackTrace = stackTrace + "\n" + element.toString();
@@ -122,7 +123,6 @@ public class CommandHandler {
             builder.setColor(LupoColor.RED.getColor());
             builder.setFooter(server.translate(null, "core_used-command", server.getPrefix() + context.getLabel()));
             context.getChannel().sendMessage(builder.build()).queue();
-            e.printStackTrace();
         }
 
     }
