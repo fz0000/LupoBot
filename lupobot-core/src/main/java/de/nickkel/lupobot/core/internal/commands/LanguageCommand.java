@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 @CommandInfo(name = "language", aliases = "lang", permissions = Permission.ADMINISTRATOR, category = "core")
 public class LanguageCommand extends LupoCommand {
@@ -60,7 +61,7 @@ public class LanguageCommand extends LupoCommand {
             pages.add(new Page(PageType.EMBED, getHelpBuilder(context).build()));
 
             context.getChannel().sendMessage((MessageEmbed) pages.get(0).getContent()).queue(success -> {
-                Pages.paginate(success, pages);
+                Pages.paginate(success, pages, 120, TimeUnit.SECONDS, user -> context.getUser().getId() == user.getIdLong());
             });
         }
     }

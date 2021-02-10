@@ -1,6 +1,5 @@
 package de.nickkel.lupobot.core.command;
 
-import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.data.LupoServer;
 import de.nickkel.lupobot.core.pagination.method.Pages;
 import de.nickkel.lupobot.core.pagination.model.Page;
@@ -10,13 +9,13 @@ import de.nickkel.lupobot.core.util.LupoColor;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.User;
 
 import java.awt.*;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 public abstract class LupoCommand {
 
@@ -47,7 +46,7 @@ public abstract class LupoCommand {
         pages.add(new Page(PageType.EMBED, getHelpBuilder(context).build()));
 
         context.getChannel().sendMessage((MessageEmbed) pages.get(0).getContent()).queue(success -> {
-            Pages.paginate(success, pages);
+            Pages.paginate(success, pages, 60, TimeUnit.SECONDS, user -> context.getUser().getId() == user.getIdLong());
         });
     }
 

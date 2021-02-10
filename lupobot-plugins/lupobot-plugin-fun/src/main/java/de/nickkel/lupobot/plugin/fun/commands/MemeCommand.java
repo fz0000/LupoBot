@@ -15,7 +15,7 @@ public class MemeCommand extends LupoCommand {
     public void onCommand(CommandContext context) {
         Config config = new Config(("https://apis.duncte123.me/meme?nsfw=false"));
         if(!config.getBoolean("success")) {
-            context.getChannel().sendMessage(context.getServer().translate(context.getPlugin(), "fun_meme-requests", config.getString("type"), config.getString("message"))).queue();
+            context.getChannel().sendMessage(context.getServer().translate(context.getPlugin(), "fun_meme-requests")).queue();
             LupoBot.getInstance().getLogger().error("Error using meme command: " + config.convertToJsonString());
         } else {
             JsonObject jsonObject = config.getJsonElement("data").getAsJsonObject();
