@@ -12,8 +12,6 @@ import java.util.List;
 
 public abstract class LupoPlugin {
 
-    @Getter
-    private static LupoPlugin instance;
     @Getter @Setter
     private LanguageHandler languageHandler;
     @Getter @Setter
@@ -28,10 +26,6 @@ public abstract class LupoPlugin {
     private List<EventListener> listeners = new ArrayList<>();
     @Getter @Setter
     private List<LupoCommand> commands = new ArrayList<>();
-
-    public LupoPlugin() {
-        instance = this;
-    }
 
     public abstract void onEnable();
 
