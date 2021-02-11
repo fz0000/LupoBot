@@ -5,6 +5,7 @@ import de.nickkel.lupobot.core.language.LanguageHandler;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.hooks.EventListener;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public abstract class LupoPlugin {
     @Getter @Setter
     private Path path;
     @Getter @Setter
-    private List<EventListener> listeners = new ArrayList<>();
+    private List<ListenerAdapter> listeners = new ArrayList<>();
     @Getter @Setter
     private List<LupoCommand> commands = new ArrayList<>();
 

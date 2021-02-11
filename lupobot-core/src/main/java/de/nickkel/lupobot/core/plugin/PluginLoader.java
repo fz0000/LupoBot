@@ -4,6 +4,7 @@ import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.language.LanguageHandler;
 import net.dv8tion.jda.api.hooks.EventListener;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,7 +74,7 @@ public class PluginLoader {
 
     public void unloadPlugin(LupoPlugin plugin) {
         if(plugin.isEnabled()) {
-            for(EventListener listener : plugin.getListeners()) {
+            for(ListenerAdapter listener : plugin.getListeners()) {
                 LupoBot.getInstance().getShardManager().removeEventListener(listener);
             }
             LupoBot.getInstance().getCommands().removeAll(plugin.getCommands());

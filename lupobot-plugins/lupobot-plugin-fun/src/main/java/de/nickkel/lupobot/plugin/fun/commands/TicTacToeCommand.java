@@ -10,7 +10,7 @@ import de.nickkel.lupobot.plugin.fun.game.TicTacToeGame;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 
@@ -51,9 +51,12 @@ public class TicTacToeCommand extends LupoCommand {
                 }
             };
 
+            HashMap<String, BiConsumer<Member, Message>> buttons = new HashMap<>();
+            buttons.put("✅", accept);
+            buttons.put("❌", deny);
+
             context.getChannel().sendMessage(context.getServer().translate(context.getPlugin(), "fun_tictactoe-request", member.getAsMention(), context.getMember().getAsMention())).queue(success -> {
-                Pages.buttonize(success, Collections.singletonMap("❌", deny), false, 60, TimeUnit.SECONDS);
-                Pages.buttonize(success, Collections.singletonMap("✅", accept), false, 60, TimeUnit.SECONDS);
+                Pages.buttonize(success, buttons, false, 120, TimeUnit.SECONDS);
             });
         } else {
             sendSyntaxError(context, "fun_tictactoe-no-player");

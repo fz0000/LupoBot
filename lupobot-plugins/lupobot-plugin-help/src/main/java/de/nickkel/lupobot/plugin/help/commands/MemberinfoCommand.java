@@ -1,6 +1,5 @@
 package de.nickkel.lupobot.plugin.help.commands;
 
-import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
@@ -32,6 +31,9 @@ public class MemberinfoCommand extends LupoCommand {
         }
         for(Role role : member.getRoles()) {
             roles = roles + role.getName() + ", ";
+        }
+        if(!roles.equals("/")) {
+            roles = roles.substring(0, roles.length() - 2);
         }
 
         String activity = "/";
