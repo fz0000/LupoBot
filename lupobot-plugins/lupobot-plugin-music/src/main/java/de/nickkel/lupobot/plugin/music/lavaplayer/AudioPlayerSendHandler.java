@@ -29,7 +29,7 @@ public class AudioPlayerSendHandler implements AudioSendHandler {
     @Nullable
     @Override
     public ByteBuffer provide20MsAudio() {
-        return this.buffer;
+        return ByteBuffer.wrap(this.frame.getData());
     }
 
     @Override

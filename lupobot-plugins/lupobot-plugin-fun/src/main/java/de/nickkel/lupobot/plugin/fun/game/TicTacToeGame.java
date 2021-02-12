@@ -212,6 +212,7 @@ public class TicTacToeGame {
             return this.participant;
         }
     }
+
     public String getEmoji(int number) {
         switch(number) {
             case 2:

@@ -15,6 +15,7 @@ import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.plugin.PluginLoader;
 import de.nickkel.lupobot.core.util.FileResourcesUtils;
 import lombok.Getter;
+import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -80,7 +81,8 @@ public class LupoBot {
                 .enableIntents(GatewayIntent.GUILD_PRESENCES)
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
                 .setChunkingFilter(ChunkingFilter.ALL)
-                .addEventListeners(new CommandListener());
+                .addEventListeners(new CommandListener())
+                .setActivity(Activity.watching("?help"));
 
         this.languageHandler = new LanguageHandler(this.getClass());
         this.commandHandler = new CommandHandler();

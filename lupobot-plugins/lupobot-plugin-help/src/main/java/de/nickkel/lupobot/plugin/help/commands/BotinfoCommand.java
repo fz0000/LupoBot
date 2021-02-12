@@ -23,19 +23,20 @@ public class BotinfoCommand extends LupoCommand {
         builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
 
         builder.addField(context.getServer().translate(context.getPlugin(), "help_botinfo-runtime"),
-                context.getServer().translate(context.getPlugin(), "help_botinfo-runtime-value", time), true);
+                context.getServer().translate(context.getPlugin(), "help_botinfo-runtime-value", time), false);
 
         builder.addField(context.getServer().translate(context.getPlugin(), "help_botinfo-stats"),
-                context.getServer().translate(context.getPlugin(), "help_botinfo-stats-value", LupoBot.getInstance().getShardManager().getGuilds().size(), LupoBot.getInstance().getShardManager().getShardsTotal()), true);
+                context.getServer().translate(context.getPlugin(), "help_botinfo-stats-value",
+                        LupoBot.getInstance().getShardManager().getGuilds().size(), LupoBot.getInstance().getShardManager().getShardsTotal()), false);
 
         builder.addField(context.getServer().translate(context.getPlugin(), "help_botinfo-version"),
-                LupoBot.getInstance().getClass().getPackage().getImplementationVersion(), true);
+                LupoBot.getInstance().getClass().getPackage().getImplementationVersion(), false);
 
         builder.addField(context.getServer().translate(context.getPlugin(), "help_botinfo-support"),
-                LupoBot.getInstance().getConfig().getString("supportServerUrl"), true);
+                LupoBot.getInstance().getConfig().getString("supportServerUrl"), false);
 
         builder.addField(context.getServer().translate(context.getPlugin(), "help_botinfo-invite"),
-                LupoBot.getInstance().getConfig().getString("inviteUrl"), true);
+                LupoBot.getInstance().getConfig().getString("inviteUrl"), false);
 
         context.getChannel().sendMessage(builder.build()).queue();
     }

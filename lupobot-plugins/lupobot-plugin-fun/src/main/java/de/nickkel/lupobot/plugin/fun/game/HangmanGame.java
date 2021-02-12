@@ -57,7 +57,7 @@ public class HangmanGame {
     }
 
     public void tryCharacter(String character) {
-        if(this.characters.containsValue(character)) {
+        if(this.characters.containsValue(character) || this.triedCharacter.contains(character)) {
             this.context.getChannel().sendMessage(this.context.getServer().translate(this.context.getPlugin(), "fun_hangman-already-guessed", this.context.getMember().getAsMention())).queue();
             return;
         }
