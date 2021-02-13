@@ -5,7 +5,10 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import lombok.Getter;
+import net.dv8tion.jda.api.entities.Member;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -15,6 +18,8 @@ public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer player;
     @Getter
     private final BlockingQueue<AudioTrack> queue;
+    @Getter
+    private final List<Member> voteSkip = new ArrayList<>();
 
     public TrackScheduler(AudioPlayer player) {
         this.player = player;
@@ -22,6 +27,7 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public void next() {
+        this.voteSkip.clear();
         this.player.startTrack(this.queue.poll(), false);
     }
 
