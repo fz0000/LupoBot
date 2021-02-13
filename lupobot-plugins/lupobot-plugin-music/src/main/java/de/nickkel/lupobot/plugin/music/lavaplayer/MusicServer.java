@@ -6,7 +6,6 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.data.LupoServer;
@@ -17,8 +16,6 @@ import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 
 import java.util.List;
@@ -79,7 +76,7 @@ public class MusicServer {
         });
     }
 
-    public void joinVoiceChannel(CommandContext context) {
+    public boolean joinedVoiceChannel(CommandContext context) {
         GuildVoiceState memberVoiceState = context.getMember().getVoiceState();
         GuildVoiceState selfVoiceState = this.guild.getSelfMember().getVoiceState();
         AudioManager audioManager = this.guild.getAudioManager();
@@ -87,15 +84,16 @@ public class MusicServer {
         if(!memberVoiceState.inVoiceChannel()) {
             context.getChannel().sendMessage(this.server.translate(context.getPlugin(), "music_member-not-in-voicechannel",
                     context.getMember().getAsMention())).queue();
-            return;
+            return false;
         }
         if(selfVoiceState.inVoiceChannel() && memberVoiceState.getChannel().getIdLong() != selfVoiceState.getChannel().getIdLong()) {
             context.getChannel().sendMessage(this.server.translate(context.getPlugin(), "music_bot-already-in-voicechannel",
                     context.getMember().getAsMention())).queue();
-            return;
+            return false;
         }
 
         audioManager.openAudioConnection(memberVoiceState.getChannel());
+        return true;
     }
 
     public void onQueue(CommandContext context, AudioTrack track) {

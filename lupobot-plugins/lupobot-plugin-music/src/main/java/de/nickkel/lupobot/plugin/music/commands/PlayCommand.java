@@ -9,7 +9,6 @@ import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.pagination.method.Pages;
 import de.nickkel.lupobot.core.util.LupoColor;
-import de.nickkel.lupobot.core.util.TimeUtils;
 import de.nickkel.lupobot.plugin.music.LupoMusicPlugin;
 import de.nickkel.lupobot.plugin.music.lavaplayer.MusicServer;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -29,7 +28,9 @@ public class PlayCommand extends LupoCommand {
         if(context.getArgs().length >= 1) {
             String arg = context.getArgsAsString();
             MusicServer server = LupoMusicPlugin.getInstance().getMusicServer(context.getGuild());
-            server.joinVoiceChannel(context);
+            if(!server.joinedVoiceChannel(context)) {
+                return;
+            }
             if(context.getArgs()[0].startsWith("http") && context.getArgs()[0].contains("/")) {
                 server.play(this, context, context.getArgs()[0]);
             } else {
