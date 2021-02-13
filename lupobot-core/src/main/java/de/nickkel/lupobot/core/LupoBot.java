@@ -8,7 +8,6 @@ import de.nickkel.lupobot.core.config.Config;
 import de.nickkel.lupobot.core.data.LupoServer;
 import de.nickkel.lupobot.core.data.LupoUser;
 import de.nickkel.lupobot.core.language.LanguageHandler;
-import de.nickkel.lupobot.core.mysql.MySQL;
 import de.nickkel.lupobot.core.pagination.method.Pages;
 import de.nickkel.lupobot.core.pagination.model.PaginatorBuilder;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
@@ -42,8 +41,6 @@ public class LupoBot {
     private final Logger logger = LoggerFactory.getLogger("LupoBot");
     @Getter
     private ShardManager shardManager;
-    @Getter
-    private MySQL mySQL;
     @Getter
     private LanguageHandler languageHandler;
     @Getter
@@ -87,10 +84,7 @@ public class LupoBot {
         this.languageHandler = new LanguageHandler(this.getClass());
         this.commandHandler = new CommandHandler();
 
-        JsonObject jsonObject = this.config.getJsonElement("mysql").getAsJsonObject();
-        this.mySQL = new MySQL(jsonObject.get("host").getAsString(), jsonObject.get("user").getAsString(), jsonObject.get("password").getAsString(),
-                jsonObject.get("database").getAsString(), jsonObject.get("port").getAsString());
-        //MySQL.connect();
+        JsonObject jsonObject = this.config.getJsonElement("database").getAsJsonObject();
 
         try {
             this.logger.info("Logging in ...");
