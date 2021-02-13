@@ -22,7 +22,7 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public void next() {
-        this.player.startTrack(this.queue.poll().makeClone(), false);
+        this.player.startTrack(this.queue.poll(), false);
     }
 
     public void queue(AudioTrack track) {

@@ -52,7 +52,7 @@ public class PlayCommand extends LupoCommand {
                         String description = "";
 
                         for(int i=1; i < 10; i++) {
-                            if(tracks.get(i) != null) {
+                            try {
                                 AudioTrack track = tracks.get(i-1);
                                 description = description + "**" + i + ":** " + track.getInfo().title + "\n";
 
@@ -61,7 +61,7 @@ public class PlayCommand extends LupoCommand {
                                     server.onQueue(context, track);
                                 };
                                 consumers.put(i, consumer);
-                            } else {
+                            } catch(IndexOutOfBoundsException e) {
                                 break;
                             }
                         }
