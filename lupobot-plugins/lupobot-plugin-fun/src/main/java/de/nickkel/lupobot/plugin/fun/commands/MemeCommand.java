@@ -5,7 +5,7 @@ import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
-import de.nickkel.lupobot.core.config.Config;
+import de.nickkel.lupobot.core.config.Document;
 import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 
@@ -13,7 +13,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 public class MemeCommand extends LupoCommand {
     @Override
     public void onCommand(CommandContext context) {
-        Config config = new Config(("https://apis.duncte123.me/meme?nsfw=false"));
+        Document config = new Document(("https://apis.duncte123.me/meme?nsfw=false"));
         if(!config.getBoolean("success")) {
             context.getChannel().sendMessage(context.getServer().translate(context.getPlugin(), "fun_meme-requests")).queue();
             LupoBot.getInstance().getLogger().error("Error using meme command: " + config.convertToJsonString());

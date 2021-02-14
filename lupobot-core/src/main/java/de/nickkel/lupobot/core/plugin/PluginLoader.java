@@ -27,7 +27,7 @@ public class PluginLoader {
         }
 
         if(pluginPaths.size() == 0) {
-            //LupoBot.getInstance().getLogger().warn("Could not found any plugin!");
+            LupoBot.getInstance().getLogger().warn("Could not found any plugin!");
         }
 
         for(Path path : pluginPaths) {

@@ -1,20 +1,17 @@
 package de.nickkel.lupobot.core.config;
 
 import com.google.gson.*;
-import de.nickkel.lupobot.core.LupoBot;
 import lombok.Getter;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Config implements iConfig {
+public class Document implements iDocument {
 
     public static Gson GSON = new GsonBuilder().serializeNulls().setPrettyPrinting().disableHtmlEscaping().create();
     public static final JsonParser PARSER = new JsonParser();
@@ -23,16 +20,16 @@ public class Config implements iConfig {
     private JsonObject jsonObject;
     private File file;
 
-    public Config() { }
+    public Document() { }
 
-    public Config(InputStream inputStream) {
+    public Document(InputStream inputStream) {
         JsonParser jsonParser = new JsonParser();
         JsonObject jsonObject = null;
         jsonObject = (JsonObject) jsonParser.parse(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
         this.jsonObject = jsonObject;
     }
 
-    public Config(String url) {
+    public Document(String url) {
         InputStream is = null;
         try {
             URL newUrl = new URL(url);
@@ -56,21 +53,21 @@ public class Config implements iConfig {
         }
     }
 
-    public Config(File file) {
+    public Document(File file) {
         this.file = file;
     }
 
-    public Config(JsonObject jsonObject) {
+    public Document(JsonObject jsonObject) {
         this.jsonObject = jsonObject;
     }
 
-    public Config(File file, JsonObject jsonObject) {
+    public Document(File file, JsonObject jsonObject) {
         this.file = file;
         this.jsonObject = jsonObject;
     }
 
     @Override
-    public Config append(String key, String value) {
+    public Document append(String key, String value) {
         if(value == null)
             return this;
         this.jsonObject.addProperty(key, value);
@@ -78,7 +75,7 @@ public class Config implements iConfig {
     }
 
     @Override
-    public Config append(String key, Number value) {
+    public Document append(String key, Number value) {
         if(value == null)
             return this;
         this.jsonObject.addProperty(key, value);
@@ -86,7 +83,7 @@ public class Config implements iConfig {
     }
 
     @Override
-    public Config append(String key, Integer value) {
+    public Document append(String key, Integer value) {
         if(value == null)
             return this;
         this.jsonObject.addProperty(key, value);
@@ -94,7 +91,7 @@ public class Config implements iConfig {
     }
 
     @Override
-    public Config append(String key, Boolean value) {
+    public Document append(String key, Boolean value) {
         if(value == null)
             return this;
         this.jsonObject.addProperty(key, value);
@@ -102,7 +99,7 @@ public class Config implements iConfig {
     }
 
     @Override
-    public Config append(String key, Long value) {
+    public Document append(String key, Long value) {
         if(value == null)
             return this;
         this.jsonObject.addProperty(key, value);
@@ -110,7 +107,7 @@ public class Config implements iConfig {
     }
 
     @Override
-    public Config append(String key, Object value) {
+    public Document append(String key, Object value) {
         if(value == null)
             return this;
         this.jsonObject.add(key, GSON.toJsonTree(value));
@@ -118,7 +115,7 @@ public class Config implements iConfig {
     }
 
     @Override
-    public Config append(String key, List<String> value) {
+    public Document append(String key, List<String> value) {
         if(value == null)
             return this;
         JsonArray jsonElements = new JsonArray();
@@ -131,14 +128,14 @@ public class Config implements iConfig {
     }
 
     @Override
-    public Config append(String key, JsonElement value) {
+    public Document append(String key, JsonElement value) {
         if(value == null)
             return this;
         this.jsonObject.add(key, value);
         return this;
     }
 
-    public Config remove(String key) {
+    public Document remove(String key) {
         this.jsonObject.remove(key);
         return this;
     }
@@ -207,7 +204,12 @@ public class Config implements iConfig {
         return jsonObject.toString();
     }
 
-    public Config saveAsConfig() {
+    public Document loadJsonFromString(String json) {
+        this.jsonObject = (JsonObject) PARSER.parse(json);
+        return this;
+    }
+
+    public Document saveAsConfig() {
         try(PrintWriter printWriter = new PrintWriter(file, "UTF-8")) {
             printWriter.write(GSON.toJson(jsonObject));
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
@@ -216,7 +218,7 @@ public class Config implements iConfig {
         return this;
     }
 
-    public Config loadDocument() {
+    public Document loadDocument() {
         try {
             this.jsonObject = (JsonObject) PARSER.parse(new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8));
         } catch (IOException e) {

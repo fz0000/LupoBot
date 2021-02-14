@@ -1,10 +1,14 @@
 package de.nickkel.lupobot.core;
 
 import com.google.gson.JsonObject;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import de.nickkel.lupobot.core.command.CommandHandler;
 import de.nickkel.lupobot.core.command.CommandListener;
 import de.nickkel.lupobot.core.command.LupoCommand;
-import de.nickkel.lupobot.core.config.Config;
+import de.nickkel.lupobot.core.config.Document;
 import de.nickkel.lupobot.core.data.LupoServer;
 import de.nickkel.lupobot.core.data.LupoUser;
 import de.nickkel.lupobot.core.language.LanguageHandler;
@@ -12,6 +16,7 @@ import de.nickkel.lupobot.core.pagination.method.Pages;
 import de.nickkel.lupobot.core.pagination.model.PaginatorBuilder;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.plugin.PluginLoader;
+import de.nickkel.lupobot.core.tasks.SaveDataTask;
 import de.nickkel.lupobot.core.util.FileResourcesUtils;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Activity;
@@ -26,10 +31,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.net.UnknownHostException;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -50,7 +53,9 @@ public class LupoBot {
     @Getter
     private ExecutorService executorService;
     @Getter
-    private Config config;
+    private Document config, userConfig, serverConfig;
+    @Getter
+    private MongoClient mongoClient;
     @Getter
     private final List<LupoPlugin> plugins = new ArrayList<>();
     @Getter
@@ -59,6 +64,10 @@ public class LupoBot {
     private final Map<Guild, LupoServer> servers = new HashMap<>();
     @Getter
     private final Map<Long, LupoUser> users = new HashMap<>();
+    @Getter
+    private final List<LupoServer> saveQueuedServers = new ArrayList<>();
+    @Getter
+    private final List<LupoUser> saveQueuedUsers = new ArrayList<>();
     @Getter
     private final List<String> availableLanguages = new ArrayList<>();
     @Getter
@@ -71,7 +80,9 @@ public class LupoBot {
     public void run(String[] args) {
         instance = this;
         this.executorService = Executors.newCachedThreadPool();
-        this.config = new Config(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("config.json"));
+        this.config = new Document(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("config.json"));
+        this.userConfig = new Document(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("user.json"));
+        this.serverConfig = new Document(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("server.json"));
 
         DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(this.config.getString("token"))
                 .enableIntents(GatewayIntent.GUILD_MEMBERS)
@@ -85,6 +96,11 @@ public class LupoBot {
         this.commandHandler = new CommandHandler();
 
         JsonObject jsonObject = this.config.getJsonElement("database").getAsJsonObject();
+        try {
+            this.mongoClient = new MongoClient(new MongoClientURI("mongodb://localhost:27017"));
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
 
         try {
             this.logger.info("Logging in ...");
@@ -97,6 +113,9 @@ public class LupoBot {
         Pages.activate(PaginatorBuilder.createSimplePaginator(this.shardManager));
         this.commandHandler.registerCommands(this.getClass().getClassLoader(), "de.nickkel.lupobot.core.internal.commands");
         this.pluginLoader = new PluginLoader();
+
+        Timer timer = new Timer("DataSaver");
+        timer.schedule(new SaveDataTask(), 5*1000, 600*1000);
     }
 
     public LupoPlugin getPlugin(String name) {
