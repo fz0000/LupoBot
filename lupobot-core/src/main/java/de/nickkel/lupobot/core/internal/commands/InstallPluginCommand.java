@@ -9,6 +9,9 @@ import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @CommandInfo(name = "installplugin", permissions = Permission.ADMINISTRATOR, cooldown = 5, category = "core")
 public class InstallPluginCommand extends LupoCommand {
 
@@ -24,23 +27,29 @@ public class InstallPluginCommand extends LupoCommand {
             for(LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
                 plugins++;
                 if(context.getArgs()[0].equalsIgnoreCase(plugin.getInfo().name()) || context.getArgs()[0].equalsIgnoreCase(context.getServer().translatePluginName(plugin))) {
-                    match = true;
-                    if(context.getServer().getPlugins().contains(plugin)) {
-                        EmbedBuilder builder = new EmbedBuilder();
-                        builder.setColor(LupoColor.RED.getColor());
-                        builder.setAuthor(context.getGuild().getName(), null, context.getGuild().getIconUrl());
-                        builder.setDescription(context.getServer().translate(null, "core_plugin-already-installed", context.getServer().translatePluginName(plugin)));
-                        builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
-                        context.getChannel().sendMessage(builder.build()).queue();
-                        return;
-                    } else {
-                        context.getServer().installPlugin(plugin);
-                        EmbedBuilder builder = new EmbedBuilder();
-                        builder.setColor(LupoColor.GREEN.getColor());
-                        builder.setAuthor(context.getGuild().getName(), null, context.getGuild().getIconUrl());
-                        builder.setDescription(context.getServer().translate(null, "core_plugin-installed", context.getServer().translatePluginName(plugin)));
-                        context.getChannel().sendMessage(builder.build()).queue();
-                        return;
+                    List<Long> guilds = new ArrayList<>();
+                    for(long l : plugin.getInfo().guilds()) {
+                        guilds.add(l);
+                    }
+                    if(guilds.size() == 0 || guilds.contains(context.getGuild().getIdLong())) {
+                        match = true;
+                        if(context.getServer().getPlugins().contains(plugin)) {
+                            EmbedBuilder builder = new EmbedBuilder();
+                            builder.setColor(LupoColor.RED.getColor());
+                            builder.setAuthor(context.getGuild().getName(), null, context.getGuild().getIconUrl());
+                            builder.setDescription(context.getServer().translate(null, "core_plugin-already-installed", context.getServer().translatePluginName(plugin)));
+                            builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
+                            context.getChannel().sendMessage(builder.build()).queue();
+                            return;
+                        } else {
+                            context.getServer().installPlugin(plugin);
+                            EmbedBuilder builder = new EmbedBuilder();
+                            builder.setColor(LupoColor.GREEN.getColor());
+                            builder.setAuthor(context.getGuild().getName(), null, context.getGuild().getIconUrl());
+                            builder.setDescription(context.getServer().translate(null, "core_plugin-installed", context.getServer().translatePluginName(plugin)));
+                            context.getChannel().sendMessage(builder.build()).queue();
+                            return;
+                        }
                     }
                 }
             }

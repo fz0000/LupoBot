@@ -1,13 +1,17 @@
 package de.nickkel.lupobot.core.data;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
 import de.nickkel.lupobot.core.LupoBot;
+import de.nickkel.lupobot.core.config.Document;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 
+import javax.print.Doc;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,12 +39,22 @@ public class LupoServer {
         try {
             BasicDBObject dbObject = (BasicDBObject) JSON.parse(LupoBot.getInstance().getServerConfig().convertToJsonString());
             dbObject.append("_id", guild.getIdLong());
+            // merge data file of all plugins into one file
+            for(LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
+                if(plugin.getServerConfig() != null) {
+                    Document document = new Document(new JsonObject());
+                    for(String key : plugin.getServerConfig().getJsonObject().keySet()) {
+                        document.append(key, plugin.getServerConfig().getJsonElement(key));
+                    }
+                    BasicDBObject basic = (BasicDBObject) JSON.parse(document.convertToJsonString());
+                    dbObject.append(plugin.getInfo().name(), basic);
+                }
+            }
             collection.insert(dbObject);
             this.data = dbObject;
         } catch(DuplicateKeyException e) {
             this.data = (BasicDBObject) cursor.one();
         }
-
         this.prefix = this.data.getString("prefix");
         this.language = this.data.getString("language");
         BasicDBList dbList = (BasicDBList) this.data.get("plugins");
@@ -52,8 +66,15 @@ public class LupoServer {
                 this.data.append("plugins", dbList);
             }
         }
+
+        // TODO: set absent keys in the data from the default config file
         LupoBot.getInstance().getServers().put(this.guild, this);
     }
+
+    public void appendPluginData(LupoPlugin plugin, String key, Object val) {
+        BasicDBObject dbObject = (BasicDBObject) this.data.get(plugin.getInfo().name());
+        dbObject.append(key, val);
+     }
 
     public void installPlugin(LupoPlugin plugin) {
         this.plugins.add(plugin);

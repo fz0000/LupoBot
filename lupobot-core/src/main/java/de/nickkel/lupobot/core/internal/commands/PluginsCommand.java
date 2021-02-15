@@ -20,12 +20,14 @@ public class PluginsCommand extends LupoCommand {
         builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
 
         for(LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
-            String statusKey = "core_plugin-status-uninstalled";
-            if(context.getServer().getPlugins().contains(plugin)) {
-                statusKey = "core_plugin-status-installed";
+            if(!plugin.getInfo().hidden()) {
+                String statusKey = "core_plugin-status-uninstalled";
+                if(context.getServer().getPlugins().contains(plugin)) {
+                    statusKey = "core_plugin-status-installed";
+                }
+                builder.addField(context.getServer().translatePluginName(plugin), context.getServer().translate(null, statusKey) + "\n"
+                        + context.getServer().translate(plugin, plugin.getInfo().name() + "_description"), false);
             }
-            builder.addField(context.getServer().translatePluginName(plugin), context.getServer().translate(null, statusKey) + "\n"
-                    + context.getServer().translate(plugin, plugin.getInfo().name() + "_description"), false);
         }
 
         context.getChannel().sendMessage(builder.build()).queue();

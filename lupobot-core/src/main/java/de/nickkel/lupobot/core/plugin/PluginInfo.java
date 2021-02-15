@@ -12,8 +12,8 @@ public @interface PluginInfo {
 
     String author() default "Unknown";
 
-    boolean autoEnabled() default false;
+    long[] guilds() default {};
 
-    boolean hidden() default  false;
+    boolean hidden() default false;
 
 }

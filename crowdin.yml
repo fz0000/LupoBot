@@ -1,4 +1,4 @@
-export_languages: ["en_US", "de_DE"]
+export_languages: ["de_DE"]
 append_commit_message: false
 commit_message: 'New translations (%language%)'
 files:

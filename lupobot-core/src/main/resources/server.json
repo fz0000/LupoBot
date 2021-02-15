@@ -1,5 +1,5 @@
 {
   "prefix": "?",
   "language": "en_US",
-  "plugins": []
+  "plugins": ["help"]
 }

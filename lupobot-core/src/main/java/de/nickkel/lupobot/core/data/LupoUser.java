@@ -1,9 +1,12 @@
 package de.nickkel.lupobot.core.data;
 
+import com.google.gson.JsonObject;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.LupoCommand;
+import de.nickkel.lupobot.core.config.Document;
+import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
@@ -36,12 +39,30 @@ public class LupoUser {
         try {
             BasicDBObject dbObject = (BasicDBObject) JSON.parse(LupoBot.getInstance().getUserConfig().convertToJsonString());
             dbObject.append("_id", id);
+            // merge data file of all plugins into one file
+            for(LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
+                if(plugin.getUserConfig() != null) {
+                    Document document = new Document(new JsonObject());
+                    for(String key : plugin.getUserConfig().getJsonObject().keySet()) {
+                        document.append(key, plugin.getUserConfig().getJsonElement(key));
+                    }
+                    BasicDBObject basic = (BasicDBObject) JSON.parse(document.convertToJsonString());
+                    dbObject.append(plugin.getInfo().name(), basic);
+                }
+            }
             collection.insert(dbObject);
             this.data = dbObject;
         } catch(DuplicateKeyException e) {
             this.data = (BasicDBObject) cursor.one();
         }
+
+        // TODO: set absent keys in the data from the default config file
         LupoBot.getInstance().getUsers().put(this.id, this);
+    }
+
+    public void appendPluginData(LupoPlugin plugin, String key, Object val) {
+        BasicDBObject dbObject = (BasicDBObject) this.data.get(plugin.getInfo().name());
+        dbObject.append(key, val);
     }
 
     public void saveData() {

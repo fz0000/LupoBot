@@ -9,6 +9,9 @@ import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @CommandInfo(name = "uninstallplugin", permissions = Permission.ADMINISTRATOR, cooldown = 5, category = "core")
 public class UninstallPluginCommand extends LupoCommand {
 
@@ -24,24 +27,30 @@ public class UninstallPluginCommand extends LupoCommand {
             for(LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
                 plugins++;
                 if(context.getArgs()[0].equalsIgnoreCase(plugin.getInfo().name()) || context.getArgs()[0].equalsIgnoreCase(context.getServer().translatePluginName(plugin))) {
-                    match = true;
-                    if(context.getServer().getPlugins().contains(plugin)) {
-                        context.getServer().uninstallPlugin(plugin);
-                        EmbedBuilder builder = new EmbedBuilder();
-                        builder.setColor(LupoColor.GREEN.getColor());
-                        builder.setAuthor(context.getGuild().getName(), null, context.getGuild().getIconUrl());
-                        builder.setDescription(context.getServer().translate(null, "core_plugin-uninstalled", context.getServer().translatePluginName(plugin)));
-                        builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
-                        context.getChannel().sendMessage(builder.build()).queue();
-                        return;
-                    } else {
-                        EmbedBuilder builder = new EmbedBuilder();
-                        builder.setColor(LupoColor.RED.getColor());
-                        builder.setAuthor(context.getGuild().getName(), null,  context.getGuild().getIconUrl());
-                        builder.setDescription(context.getServer().translate(null, "core_plugin-not-installed", context.getServer().translatePluginName(plugin)));
-                        builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
-                        context.getChannel().sendMessage(builder.build()).queue();
-                        return;
+                    List<Long> guilds = new ArrayList<>();
+                    for(long l : plugin.getInfo().guilds()) {
+                        guilds.add(l);
+                    }
+                    if(guilds.size() == 0 || guilds.contains(context.getGuild().getIdLong())) {
+                        match = true;
+                        if(context.getServer().getPlugins().contains(plugin)) {
+                            context.getServer().uninstallPlugin(plugin);
+                            EmbedBuilder builder = new EmbedBuilder();
+                            builder.setColor(LupoColor.GREEN.getColor());
+                            builder.setAuthor(context.getGuild().getName(), null, context.getGuild().getIconUrl());
+                            builder.setDescription(context.getServer().translate(null, "core_plugin-uninstalled", context.getServer().translatePluginName(plugin)));
+                            builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
+                            context.getChannel().sendMessage(builder.build()).queue();
+                            return;
+                        } else {
+                            EmbedBuilder builder = new EmbedBuilder();
+                            builder.setColor(LupoColor.RED.getColor());
+                            builder.setAuthor(context.getGuild().getName(), null,  context.getGuild().getIconUrl());
+                            builder.setDescription(context.getServer().translate(null, "core_plugin-not-installed", context.getServer().translatePluginName(plugin)));
+                            builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
+                            context.getChannel().sendMessage(builder.build()).queue();
+                            return;
+                        }
                     }
                 }
             }

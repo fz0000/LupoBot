@@ -95,12 +95,8 @@ public class LupoBot {
         this.languageHandler = new LanguageHandler(this.getClass());
         this.commandHandler = new CommandHandler();
 
-        JsonObject jsonObject = this.config.getJsonElement("database").getAsJsonObject();
-        try {
-            this.mongoClient = new MongoClient(new MongoClientURI("mongodb://localhost:27017"));
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+        JsonObject database = this.config.getJsonElement("database").getAsJsonObject();
+        this.mongoClient = new MongoClient(new MongoClientURI("mongodb://localhost:27017"));
 
         try {
             this.logger.info("Logging in ...");
