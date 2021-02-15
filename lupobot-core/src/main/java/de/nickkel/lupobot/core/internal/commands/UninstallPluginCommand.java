@@ -26,7 +26,7 @@ public class UninstallPluginCommand extends LupoCommand {
                 if(context.getArgs()[0].equalsIgnoreCase(plugin.getInfo().name()) || context.getArgs()[0].equalsIgnoreCase(context.getServer().translatePluginName(plugin))) {
                     match = true;
                     if(context.getServer().getPlugins().contains(plugin)) {
-                        context.getServer().getPlugins().remove(plugin);
+                        context.getServer().uninstallPlugin(plugin);
                         EmbedBuilder builder = new EmbedBuilder();
                         builder.setColor(LupoColor.GREEN.getColor());
                         builder.setAuthor(context.getGuild().getName(), null, context.getGuild().getIconUrl());

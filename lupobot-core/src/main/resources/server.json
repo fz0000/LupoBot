@@ -1,4 +1,5 @@
 {
   "prefix": "?",
-  "language": "en_US"
+  "language": "en_US",
+  "plugins": []
 }

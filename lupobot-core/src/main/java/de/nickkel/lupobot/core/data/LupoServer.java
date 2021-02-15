@@ -43,8 +43,30 @@ public class LupoServer {
 
         this.prefix = this.data.getString("prefix");
         this.language = this.data.getString("language");
-        plugins.addAll(LupoBot.getInstance().getPlugins());
+        BasicDBList dbList = (BasicDBList) this.data.get("plugins");
+        for(Object name : dbList) {
+            if(LupoBot.getInstance().getPlugin((String) name) != null) {
+                this.plugins.add(LupoBot.getInstance().getPlugin((String) name));
+            } else { // remove plugin if it doesn't exist anymore
+                dbList.remove(name);
+                this.data.append("plugins", dbList);
+            }
+        }
         LupoBot.getInstance().getServers().put(this.guild, this);
+    }
+
+    public void installPlugin(LupoPlugin plugin) {
+        this.plugins.add(plugin);
+        BasicDBList dbList = (BasicDBList) this.data.get("plugins");
+        dbList.add(plugin.getInfo().name());
+        this.data.append("plugins", dbList);
+    }
+
+    public void uninstallPlugin(LupoPlugin plugin) {
+        this.plugins.remove(plugin);
+        BasicDBList dbList = (BasicDBList) this.data.get("plugins");
+        dbList.remove(plugin.getInfo().name());
+        this.data.append("plugins", dbList);
     }
 
     public void setPrefix(String prefix) {
