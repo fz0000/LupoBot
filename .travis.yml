@@ -1,4 +1,0 @@
-if: commit_message !~ /(New translations)/
-language: java
-jdk:
- - openjdk8
