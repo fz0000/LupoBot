@@ -16,6 +16,7 @@
         <module>lupobot-plugin-music</module>
         <module>lupobot-plugin-help</module>
         <module>lupobot-plugin-fun</module>
+        <module>lupobot-plugin-logging</module>
     </modules>
 
     <properties>

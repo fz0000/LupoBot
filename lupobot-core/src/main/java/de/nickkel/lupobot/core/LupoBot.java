@@ -3,8 +3,6 @@ package de.nickkel.lupobot.core;
 import com.google.gson.JsonObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
 import de.nickkel.lupobot.core.command.CommandHandler;
 import de.nickkel.lupobot.core.command.CommandListener;
 import de.nickkel.lupobot.core.command.LupoCommand;

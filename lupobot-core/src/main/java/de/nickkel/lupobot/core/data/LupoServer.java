@@ -10,6 +10,7 @@ import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.TextChannel;
 
 import javax.print.Doc;
 import java.util.ArrayList;
@@ -75,6 +76,11 @@ public class LupoServer {
         BasicDBObject dbObject = (BasicDBObject) this.data.get(plugin.getInfo().name());
         dbObject.append(key, val);
      }
+
+    public Object getPluginData(LupoPlugin plugin, String key) {
+        BasicDBObject dbObject = (BasicDBObject) this.data.get(plugin.getInfo().name());
+        return dbObject.get(key);
+    }
 
     public void installPlugin(LupoPlugin plugin) {
         this.plugins.add(plugin);
@@ -143,6 +149,20 @@ public class LupoServer {
             }
         } catch(Exception e) {
             e.printStackTrace();
+            return null;
+        }
+    }
+
+    public TextChannel getTextChannel(String arg) {
+        System.out.println(arg);
+        if(arg.startsWith("<#")) {
+            String id = arg.replace("#", "").replace("<", "").replace(">", "").replace("!", "");
+            if(this.guild.getTextChannelById(id) != null) {
+                return this.guild.getTextChannelById(id);
+            } else {
+                return null;
+            }
+        } else {
             return null;
         }
     }

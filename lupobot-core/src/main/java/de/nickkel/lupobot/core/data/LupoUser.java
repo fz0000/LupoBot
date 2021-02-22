@@ -65,6 +65,11 @@ public class LupoUser {
         dbObject.append(key, val);
     }
 
+    public Object getPluginData(LupoPlugin plugin, String key) {
+        BasicDBObject dbObject = (BasicDBObject) this.data.get(plugin.getInfo().name());
+        return dbObject.get(key);
+    }
+
     public void saveData() {
         DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
                 .getAsJsonObject().get("database").getAsString());
