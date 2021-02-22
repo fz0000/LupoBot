@@ -12,6 +12,7 @@
         <module>lupobot-core</module>
         <module>lupobot-launcher</module>
         <module>lupobot-plugins</module>
+        <module>lupobot-plugin-ticket</module>
     </modules>
 
     <properties>
