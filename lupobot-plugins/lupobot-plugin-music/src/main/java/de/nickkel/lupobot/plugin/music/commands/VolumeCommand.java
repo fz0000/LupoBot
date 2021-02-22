@@ -22,6 +22,7 @@ public class VolumeCommand extends LupoCommand {
                 }
                 int volume = Integer.parseInt(context.getArgs()[0]);
                 if(volume > 0 && volume < 101) {
+                    context.getServer().appendPluginData(context.getPlugin(), "volume", volume);
                     server.getAudioPlayer().setVolume(volume);
                     EmbedBuilder builder = new EmbedBuilder();
                     builder.setColor(LupoColor.GREEN.getColor());
