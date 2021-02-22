@@ -1,4 +1,4 @@
-package de.nickkel.lupobot.plugin.logging.listener;
+package de.nickkel.lupobot.plugin.logging.listener.message;
 
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.data.LupoServer;
