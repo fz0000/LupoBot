@@ -35,7 +35,7 @@ public class LanguageCommand extends LupoCommand {
                 context.getServer().setLanguage(languageCode);
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setColor(LupoColor.GREEN.getColor());
-                builder.setAuthor(LupoBot.getInstance().getSelfUser().getName(), null, LupoBot.getInstance().getSelfUser().getAvatarUrl());
+                builder.setAuthor(LupoBot.getInstance().getSelfUser().getName() + " (" + context.getGuild().getId() + ")", null, LupoBot.getInstance().getSelfUser().getAvatarUrl());
                 builder.setDescription(context.getServer().translate(null, "core_language-changed", locale.getDisplayName(locale)));
                 builder.setTimestamp(context.getMessage().getTimeCreated());
                 context.getChannel().sendMessage(builder.build()).queue();

@@ -36,7 +36,7 @@ public class InstallPluginCommand extends LupoCommand {
                         if(context.getServer().getPlugins().contains(plugin)) {
                             EmbedBuilder builder = new EmbedBuilder();
                             builder.setColor(LupoColor.RED.getColor());
-                            builder.setAuthor(context.getGuild().getName(), null, context.getGuild().getIconUrl());
+                            builder.setAuthor(context.getGuild().getName() + " (" + context.getGuild().getId() + ")", null, context.getGuild().getIconUrl());
                             builder.setDescription(context.getServer().translate(null, "core_plugin-already-installed", context.getServer().translatePluginName(plugin)));
                             builder.setTimestamp(context.getMessage().getTimeCreated());
                             context.getChannel().sendMessage(builder.build()).queue();
@@ -45,7 +45,7 @@ public class InstallPluginCommand extends LupoCommand {
                             context.getServer().installPlugin(plugin);
                             EmbedBuilder builder = new EmbedBuilder();
                             builder.setColor(LupoColor.GREEN.getColor());
-                            builder.setAuthor(context.getGuild().getName(), null, context.getGuild().getIconUrl());
+                            builder.setAuthor(context.getGuild().getName() + " (" + context.getGuild().getId() + ")", null, context.getGuild().getIconUrl());
                             builder.setDescription(context.getServer().translate(null, "core_plugin-installed", context.getServer().translatePluginName(plugin)));
                             context.getChannel().sendMessage(builder.build()).queue();
                             return;

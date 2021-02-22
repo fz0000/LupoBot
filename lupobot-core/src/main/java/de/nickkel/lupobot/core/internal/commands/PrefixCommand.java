@@ -22,7 +22,7 @@ public class PrefixCommand extends LupoCommand {
                 context.getServer().setPrefix(prefix);
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setColor(LupoColor.GREEN.getColor());
-                builder.setAuthor(LupoBot.getInstance().getSelfUser().getName(), null, LupoBot.getInstance().getSelfUser().getAvatarUrl());
+                builder.setAuthor(LupoBot.getInstance().getSelfUser().getName() + " (" + context.getGuild().getId() + ")", null, LupoBot.getInstance().getSelfUser().getAvatarUrl());
                 builder.setDescription(context.getServer().translate(null, "core_prefix-changed", prefix));
                 builder.setTimestamp(context.getMessage().getTimeCreated());
                 context.getChannel().sendMessage(builder.build()).queue();

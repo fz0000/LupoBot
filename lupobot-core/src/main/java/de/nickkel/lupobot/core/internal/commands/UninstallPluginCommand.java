@@ -37,7 +37,7 @@ public class UninstallPluginCommand extends LupoCommand {
                             context.getServer().uninstallPlugin(plugin);
                             EmbedBuilder builder = new EmbedBuilder();
                             builder.setColor(LupoColor.GREEN.getColor());
-                            builder.setAuthor(context.getGuild().getName(), null, context.getGuild().getIconUrl());
+                            builder.setAuthor(context.getGuild().getName() + " (" + context.getGuild().getId() + ")", null, context.getGuild().getIconUrl());
                             builder.setDescription(context.getServer().translate(null, "core_plugin-uninstalled", context.getServer().translatePluginName(plugin)));
                             builder.setTimestamp(context.getMessage().getTimeCreated());
                             context.getChannel().sendMessage(builder.build()).queue();
@@ -45,7 +45,7 @@ public class UninstallPluginCommand extends LupoCommand {
                         } else {
                             EmbedBuilder builder = new EmbedBuilder();
                             builder.setColor(LupoColor.RED.getColor());
-                            builder.setAuthor(context.getGuild().getName(), null,  context.getGuild().getIconUrl());
+                            builder.setAuthor(context.getGuild().getName() + " (" + context.getGuild().getId() + ")", null,  context.getGuild().getIconUrl());
                             builder.setDescription(context.getServer().translate(null, "core_plugin-not-installed", context.getServer().translatePluginName(plugin)));
                             builder.setTimestamp(context.getMessage().getTimeCreated());
                             context.getChannel().sendMessage(builder.build()).queue();
