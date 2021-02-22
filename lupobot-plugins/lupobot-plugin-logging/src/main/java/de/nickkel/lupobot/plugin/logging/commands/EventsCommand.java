@@ -16,7 +16,7 @@ public class EventsCommand extends LupoCommand {
     public void onCommand(CommandContext context) {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle(context.getServer().translate(context.getPlugin(), "logging_events-title"));
-        builder.setDescription(context.getServer().translate(context.getPlugin(), "logging_events-description"));
+        builder.setDescription(context.getServer().translate(context.getPlugin(), "logging_events-info"));
         builder.setTimestamp(context.getMessage().getTimeCreated());
         builder.setColor(LupoColor.ORANGE.getColor());
 
