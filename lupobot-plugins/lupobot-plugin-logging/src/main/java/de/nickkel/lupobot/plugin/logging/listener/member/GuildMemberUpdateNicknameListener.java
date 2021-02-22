@@ -18,11 +18,20 @@ public class GuildMemberUpdateNicknameListener extends ListenerAdapter {
         LupoServer server = LupoServer.getByGuild(event.getGuild());
         LupoPlugin plugin = LupoBot.getInstance().getPlugin("logging");
 
+        String old = event.getOldNickname();
+        if(event.getOldNickname() == null || event.getOldNickname().equals("")) {
+            old = "/";
+        }
+        String current = event.getNewNickname();
+        if(event.getNewNickname() == null || event.getNewNickname().equals("")) {
+            current = "/";
+        }
+
         EmbedBuilder builder = new EmbedBuilder();
         builder.setAuthor(event.getMember().getUser().getAsTag() + " (" + event.getMember().getId() + ")",
                 null, event.getMember().getUser().getAvatarUrl());
-        builder.addField(server.translate(plugin, "logging_nickname-old"), event.getOldNickname(), false);
-        builder.addField(server.translate(plugin, "logging_nickname-new"), event.getNewNickname(), false);
+        builder.addField(server.translate(plugin, "logging_nickname-old"), old, false);
+        builder.addField(server.translate(plugin, "logging_nickname-new"), current, false);
         builder.setColor(LupoColor.ORANGE.getColor());
 
         LupoLoggingPlugin.getInstance().sendLog(LogEvent.NICKNAME_UPDATE, event.getGuild(), builder);

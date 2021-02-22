@@ -6,11 +6,11 @@ import java.awt.*;
 
 public enum LupoColor {
 
-    BLUE("#0066CC"),
     RED("#DE3A18"),
+    GREEN("#2EDC23"),
+    BLUE("#0066CC"),
     YELLOW("#F5E40E"),
     DARK_GRAY("#4a4a4a"),
-    GREEN("#2EDC23"),
     AQUA("#0DD5B4"),
     PURPLE("#B737E7"),
     PINK("#EB3CD8"),
