@@ -4,7 +4,14 @@ import lombok.Getter;
 
 public enum LogEvent {
 
-    MESSAGE_UPDATE("messageUpdate");
+    MESSAGE_UPDATE("messageUpdate"),
+    NICKNAME_UPDATE("nicknameUpdate"),
+    ONLINESTATUS_UPDATE("onlineStatusUpdate"),
+    ACTIVITY_UPDATE("activityUpdate"),
+    ROLE_ADD("roleAdd"),
+    ROLE_REMOVE("roleRemove"),
+    MEMBER_JOIN("memberJoin"),
+    MEMBER_LEAVE("memberLeave");
 
     @Getter
     public final String key;

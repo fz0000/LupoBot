@@ -1,3 +1,10 @@
 {
-  "messageUpdate": -1
+  "messageUpdate": -1,
+  "nicknameUpdate": -1,
+  "onlineStatusUpdate": -1,
+  "activityUpdate": -1,
+  "roleAdd": -1,
+  "roleRemove": -1,
+  "memberJoin": -1,
+  "memberLeave": -1
 }
