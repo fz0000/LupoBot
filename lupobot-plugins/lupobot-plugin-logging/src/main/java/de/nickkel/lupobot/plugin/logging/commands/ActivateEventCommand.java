@@ -21,10 +21,14 @@ public class ActivateEventCommand extends LupoCommand {
         }
 
         String key = args[0];
-        TextChannel channel = null;
-        if(args.length == 2) {
-            key = args[0];
+        TextChannel channel;
+        if(args.length == 1) {
+            channel = context.getChannel();
+        } else if(args.length == 2) {
             channel = context.getServer().getTextChannel(args[1]);
+        } else {
+            sendHelp(context);
+            return;
         }
 
         LogEvent event = null;
@@ -46,7 +50,7 @@ public class ActivateEventCommand extends LupoCommand {
 
         EmbedBuilder builder = new EmbedBuilder();
         builder.setAuthor(context.getGuild().getName() + " (" + context.getGuild().getId() + ")", null, context.getGuild().getIconUrl());
-        builder.setDescription(context.getServer().translate(context.getPlugin(), "logging_activateevent-description"));
+        builder.setDescription(context.getServer().translate(context.getPlugin(), "logging_activateevent-info"));
         builder.addField(context.getServer().translate(context.getPlugin(), "logging_activateevent-channel"),
                 channel.getAsMention() + " (" + channel.getId() + ")", false);
         builder.addField(context.getServer().translate(context.getPlugin(), "logging_activateevent-event"),

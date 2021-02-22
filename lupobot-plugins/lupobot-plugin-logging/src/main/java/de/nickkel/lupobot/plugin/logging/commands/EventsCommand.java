@@ -17,18 +17,19 @@ public class EventsCommand extends LupoCommand {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle(context.getServer().translate(context.getPlugin(), "logging_events-title"));
         builder.setDescription(context.getServer().translate(context.getPlugin(), "logging_events-description"));
-        builder.setTimestamp(context.getMember().getTimeCreated());
+        builder.setTimestamp(context.getMessage().getTimeCreated());
         builder.setColor(LupoColor.ORANGE.getColor());
 
         for(LogEvent event : LogEvent.values()) {
             long channelId = LupoLoggingPlugin.getInstance().getChannelId(event, context.getGuild());
+            String key = context.getServer().translate(context.getPlugin(), "logging_events-key", event.getKey());
             if(channelId == -1) {
                builder.addField(":x: " + context.getServer().translate(context.getPlugin(), event.getLocale())
-                        + " " + context.getServer().translate(context.getPlugin(), "logging_events-deactivated"), "/", false);
+                        + " " + context.getServer().translate(context.getPlugin(), "logging_events-deactivated"), key, false);
             } else {
                 builder.addField(":white_check_mark: " + context.getServer().translate(context.getPlugin(), event.getLocale())
                         + " " + context.getServer().translate(context.getPlugin(), "logging_events-activated"),
-                        context.getGuild().getTextChannelById(channelId).getAsMention() + " (" + channelId + ")",false);
+                        key + "\n" + context.getGuild().getTextChannelById(channelId).getAsMention() + " (" + channelId + ")",false);
             }
         }
 
