@@ -9,6 +9,7 @@ import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.config.Document;
 import de.nickkel.lupobot.core.data.LupoServer;
 import de.nickkel.lupobot.core.data.LupoUser;
+import de.nickkel.lupobot.core.internal.listener.MaintenanceListener;
 import de.nickkel.lupobot.core.language.LanguageHandler;
 import de.nickkel.lupobot.core.pagination.method.Pages;
 import de.nickkel.lupobot.core.pagination.model.PaginatorBuilder;
@@ -17,6 +18,7 @@ import de.nickkel.lupobot.core.plugin.PluginLoader;
 import de.nickkel.lupobot.core.tasks.SaveDataTask;
 import de.nickkel.lupobot.core.util.FileResourcesUtils;
 import lombok.Getter;
+import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.SelfUser;
@@ -79,6 +81,19 @@ public class LupoBot {
         instance = this;
         this.executorService = Executors.newCachedThreadPool();
         this.config = new Document(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("config.json"));
+
+        for(String arg : args) {
+            if(arg.equalsIgnoreCase("--activate-maintenance")) {
+                DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(this.config.getString("token"))
+                        .addEventListeners(new MaintenanceListener())
+                        .setStatus(OnlineStatus.DO_NOT_DISTURB)
+                        .setActivity(Activity.watching("Maintenance"));
+                this.logger.info("Running in maintenance mode!");
+                this.login(builder);
+                return;
+            }
+        }
+
         this.userConfig = new Document(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("user.json"));
         this.serverConfig = new Document(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("server.json"));
 
@@ -95,14 +110,7 @@ public class LupoBot {
 
         JsonObject database = this.config.getJsonElement("database").getAsJsonObject();
         this.mongoClient = new MongoClient(new MongoClientURI("mongodb://localhost:27017"));
-
-        try {
-            this.logger.info("Logging in ...");
-            this.shardManager = builder.build();
-            this.logger.info("Ready as " + this.shardManager.getShards().get(0).getSelfUser().getAsTag());
-        } catch(LoginException e) {
-            throw new RuntimeException("Failed to log in!", e);
-        }
+        this.login(builder);
 
         Pages.activate(PaginatorBuilder.createSimplePaginator(this.shardManager));
         this.commandHandler.registerCommands(this.getClass().getClassLoader(), "de.nickkel.lupobot.core.internal.commands");
@@ -110,6 +118,16 @@ public class LupoBot {
 
         Timer timer = new Timer("DataSaver");
         timer.schedule(new SaveDataTask(), 10*1000, 600*1000);
+    }
+
+    private void login(DefaultShardManagerBuilder builder) {
+        try {
+            this.logger.info("Logging in ...");
+            this.shardManager = builder.build();
+            this.logger.info("Ready as " + this.shardManager.getShards().get(0).getSelfUser().getAsTag());
+        } catch(LoginException e) {
+            throw new RuntimeException("Failed to log in!", e);
+        }
     }
 
     public LupoPlugin getPlugin(String name) {
