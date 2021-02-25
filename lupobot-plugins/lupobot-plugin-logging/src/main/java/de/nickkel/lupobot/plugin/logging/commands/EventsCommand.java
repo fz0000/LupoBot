@@ -4,7 +4,7 @@ import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.util.LupoColor;
-import de.nickkel.lupobot.plugin.logging.LogEvent;
+import de.nickkel.lupobot.plugin.logging.log.LogEvent;
 import de.nickkel.lupobot.plugin.logging.LupoLoggingPlugin;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;

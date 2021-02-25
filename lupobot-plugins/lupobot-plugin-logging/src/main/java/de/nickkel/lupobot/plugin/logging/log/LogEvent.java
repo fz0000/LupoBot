@@ -1,10 +1,11 @@
-package de.nickkel.lupobot.plugin.logging;
+package de.nickkel.lupobot.plugin.logging.log;
 
 import lombok.Getter;
 
 public enum LogEvent {
 
     MESSAGE_UPDATE("messageUpdate"),
+    MESSAGE_DELETE("messageDelete"),
     NICKNAME_UPDATE("nicknameUpdate"),
     ONLINESTATUS_UPDATE("onlineStatusUpdate"),
     ACTIVITY_UPDATE("activityUpdate"),

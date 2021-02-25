@@ -5,6 +5,7 @@ import de.nickkel.lupobot.core.data.LupoServer;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.plugin.PluginInfo;
 import de.nickkel.lupobot.core.util.ListenerRegister;
+import de.nickkel.lupobot.plugin.logging.log.LogEvent;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;

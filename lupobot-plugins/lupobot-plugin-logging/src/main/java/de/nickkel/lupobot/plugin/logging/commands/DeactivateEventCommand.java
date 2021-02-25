@@ -4,10 +4,9 @@ import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.util.LupoColor;
-import de.nickkel.lupobot.plugin.logging.LogEvent;
+import de.nickkel.lupobot.plugin.logging.log.LogEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.TextChannel;
 
 @CommandInfo(name = "deactivateevent", aliases = "de", category = "general", permissions = Permission.ADMINISTRATOR)
 public class DeactivateEventCommand extends LupoCommand {

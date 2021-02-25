@@ -1,7 +1,7 @@
 package de.nickkel.lupobot.plugin.logging.listener.member;
 
 import de.nickkel.lupobot.core.util.LupoColor;
-import de.nickkel.lupobot.plugin.logging.LogEvent;
+import de.nickkel.lupobot.plugin.logging.log.LogEvent;
 import de.nickkel.lupobot.plugin.logging.LupoLoggingPlugin;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
