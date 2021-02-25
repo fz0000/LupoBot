@@ -75,8 +75,7 @@ public class LupoUser {
                 .getAsJsonObject().get("database").getAsString());
         DBCollection collection = database.getCollection("users");
         DBObject query = new BasicDBObject("_id", this.id);
-        DBCursor cursor = collection.find(query);
-        collection.update(cursor.one(), this.data);
+        collection.update(query, this.data);
     }
 
     public static LupoUser getByMember(Member member) {

@@ -111,8 +111,7 @@ public class LupoServer {
                 .getAsJsonObject().get("database").getAsString());
         DBCollection collection = database.getCollection("servers");
         DBObject query = new BasicDBObject("_id", guild.getIdLong());
-        DBCursor cursor = collection.find(query);
-        collection.update(cursor.one(), this.data);
+        collection.update(query, this.data);
     }
 
     public String translate(LupoPlugin plugin, String key, Object... params) {
