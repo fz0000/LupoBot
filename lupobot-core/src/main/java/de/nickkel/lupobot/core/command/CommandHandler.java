@@ -77,7 +77,7 @@ public class CommandHandler {
 
         if(user.getCooldowns().containsKey(command)) {
             long leftCooldown = (user.getCooldowns().get(command)+command.getInfo().cooldown()*1000L)-System.currentTimeMillis();
-            String time = String.format("%d " + server.translate(null, "core_command-cooldown-minutes") + ", %d " + server.translate(null, "core_command-cooldown-seconds"),
+            String time = String.format("%d " + server.translate(null, "core_minutes") + ", %d " + server.translate(null, "core_seconds"),
                     TimeUnit.MILLISECONDS.toMinutes(leftCooldown),
                     TimeUnit.MILLISECONDS.toSeconds(leftCooldown) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(leftCooldown))
             );
