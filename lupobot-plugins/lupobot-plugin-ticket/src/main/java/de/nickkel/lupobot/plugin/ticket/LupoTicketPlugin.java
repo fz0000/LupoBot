@@ -2,9 +2,16 @@ package de.nickkel.lupobot.plugin.ticket;
 
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.plugin.PluginInfo;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @PluginInfo(name = "ticket", version = "1.0.0", author = "Nickkel")
 public class LupoTicketPlugin extends LupoPlugin {
+
+    private final Map<Long, TicketServer> ticketServer = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -14,5 +21,12 @@ public class LupoTicketPlugin extends LupoPlugin {
     @Override
     public void onDisable() {
 
+    }
+
+    public TicketServer getTicketServer(Guild guild) {
+        if(!this.ticketServer.containsKey(guild.getIdLong())) {
+            this.ticketServer.put(guild.getIdLong(), new TicketServer(guild));
+        }
+        return this.ticketServer.get(guild.getIdLong());
     }
 }

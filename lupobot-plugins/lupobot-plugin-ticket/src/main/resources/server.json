@@ -1,4 +1,11 @@
 {
-  "panels": {},
+  "supportTeamRoles": [],
+  "limitAmount": 1,
+  "visibleEveryone": false,
+  "creationChannel": -1,
+  "notifyChannel": -1,
+  "claimedCategory": -1,
+  "openedCategory": -1,
+  "closedCategory": -1,
   "tickets": {}
 }
