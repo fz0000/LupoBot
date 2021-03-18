@@ -69,8 +69,10 @@ public class ExportDataCommand extends LupoCommand {
 
             if(context.getMember().isOwner()) {
                 channel.sendMessage(dataBuilder.build()).addFile(userFile).addFile(serverFile).queue();
+                userFile.deleteOnExit();
             } else {
                 channel.sendMessage(dataBuilder.build()).addFile(userFile).queue();
+                serverFile.deleteOnExit();
             }
         });
     }
