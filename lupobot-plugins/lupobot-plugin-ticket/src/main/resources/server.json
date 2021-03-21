@@ -2,7 +2,7 @@
   "supportTeamRoles": [],
   "limitAmount": 1,
   "visibleEveryone": false,
-  "creationChannel": -1,
+  "creationMessage": -1,
   "notifyChannel": -1,
   "claimedCategory": -1,
   "openedCategory": -1,

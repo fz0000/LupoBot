@@ -1,5 +1,6 @@
 package de.nickkel.lupobot.plugin.ticket;
 
+import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.plugin.PluginInfo;
 import net.dv8tion.jda.api.entities.Guild;
@@ -15,7 +16,7 @@ public class LupoTicketPlugin extends LupoPlugin {
 
     @Override
     public void onEnable() {
-
+        LupoBot.getInstance().getCommandHandler().registerCommands(this, "de.nickkel.lupobot.plugin.ticket.commands");
     }
 
     @Override
