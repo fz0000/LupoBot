@@ -117,7 +117,7 @@ public class LupoBot {
         this.pluginLoader = new PluginLoader();
 
         Timer timer = new Timer("DataSaver");
-        timer.schedule(new SaveDataTask(), 10*1000, 600*1000);
+        timer.schedule(new SaveDataTask(), 600*1000, 600*1000);
     }
 
     private void login(DefaultShardManagerBuilder builder) {
