@@ -28,7 +28,7 @@ public class LupoUser {
     public LupoUser(long id) {
         this.id = id;
         this.discordUser = LupoBot.getInstance().getShardManager().getUserById(id);
-        LupoBot.getInstance().getLogger().info("Loading user " + discordUser.getAsTag() + " " + id + " ...");
+        LupoBot.getInstance().getLogger().info("Loading user " + discordUser.getAsTag() + " (" + id + ") ...");
 
         DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
                 .getAsJsonObject().get("database").getAsString());

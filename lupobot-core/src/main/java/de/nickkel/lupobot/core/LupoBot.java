@@ -118,6 +118,7 @@ public class LupoBot {
 
         Timer timer = new Timer("DataSaver");
         timer.schedule(new SaveDataTask(), 600*1000, 600*1000);
+        this.logger.info("LupoBot is running on " + this.shardManager.getGuilds().size() + " servers");
     }
 
     private void login(DefaultShardManagerBuilder builder) {

@@ -29,7 +29,7 @@ public class LupoServer {
     private BasicDBObject data;
 
     public LupoServer(Guild guild) {
-        LupoBot.getInstance().getLogger().info("Loading server " + guild.getName() + " " + guild.getIdLong() + " ...");
+        LupoBot.getInstance().getLogger().info("Loading server " + guild.getName() + " (" + guild.getIdLong() + ") " + "with " + guild.getMembers().size() + " members ...");
         this.guild = guild;
 
         DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
