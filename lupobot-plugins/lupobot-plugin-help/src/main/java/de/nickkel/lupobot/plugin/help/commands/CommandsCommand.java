@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CommandInfo(name = "commands", category = "general")
+@CommandInfo(name = "commands", category = "general", aliases = "cmds")
 public class CommandsCommand extends LupoCommand {
 
     @Override
