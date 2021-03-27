@@ -10,6 +10,7 @@ import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import javax.print.Doc;
@@ -153,7 +154,6 @@ public class LupoServer {
     }
 
     public TextChannel getTextChannel(String arg) {
-        System.out.println(arg);
         if(arg.startsWith("<#")) {
             String id = arg.replace("#", "").replace("<", "").replace(">", "").replace("!", "");
             if(this.guild.getTextChannelById(id) != null) {
@@ -161,6 +161,21 @@ public class LupoServer {
             } else {
                 return null;
             }
+        } else {
+            return null;
+        }
+    }
+
+    public Role getRole(String arg) {
+        if(arg.startsWith("<@&")) {
+            String id = arg.replace("@", "").replace("<", "").replace(">", "").replace("&", "");
+            if (this.guild.getRoleById(id) != null) {
+                return this.guild.getRoleById(id);
+            } else {
+                return null;
+            }
+        } else if(this.guild.getRolesByName(arg, true).size() != 0) {
+            return this.guild.getRolesByName(arg, true).get(0);
         } else {
             return null;
         }
