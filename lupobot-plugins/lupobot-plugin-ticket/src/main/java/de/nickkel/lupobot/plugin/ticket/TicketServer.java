@@ -41,7 +41,8 @@ public class TicketServer {
 
     public List<Role> getSupportTeamRoles() {
         List<Role> roles = new ArrayList<>();
-        BasicDBList dbList = (BasicDBList) this.server.getPluginData(this.plugin, "supportTeamRoles");
+        BasicDBList dbList = new BasicDBList();
+        dbList.addAll((ArrayList) this.server.getPluginData(this.plugin, "supportTeamRoles"));
         for(Object id : dbList) {
             if(this.guild.getRoleById((long) id) != null) {
                 roles.add(this.guild.getRoleById((long) id));
