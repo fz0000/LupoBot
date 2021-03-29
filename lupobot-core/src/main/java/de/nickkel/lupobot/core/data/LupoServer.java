@@ -14,8 +14,11 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import javax.print.Doc;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class LupoServer {
 
@@ -190,6 +193,19 @@ public class LupoServer {
         }
         saveQueue(server);
         return server;
+    }
+
+    public String formatLong(Long value) {
+        Locale locale = new Locale(this.language.split("_")[0]);
+        NumberFormat anotherFormat = NumberFormat.getNumberInstance(locale);
+
+        if(anotherFormat instanceof DecimalFormat) {
+            DecimalFormat anotherDFormat = (DecimalFormat) anotherFormat;
+            anotherDFormat.setGroupingUsed(true);
+            anotherDFormat.setGroupingSize(3);
+            return anotherDFormat.format(value);
+        }
+        return String.valueOf(value);
     }
 
     public static void saveQueue(LupoServer server) {

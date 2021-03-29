@@ -12,6 +12,7 @@
         <module name="music" />
         <module name="ticket" />
         <module name="logging" />
+        <module name="leveling" />
         <module name="fun" />
         <module name="launcher" />
       </profile>
