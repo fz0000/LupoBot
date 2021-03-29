@@ -41,7 +41,7 @@ public class RemoveXpCommand extends LupoCommand {
             LupoLevelingPlugin.getInstance().addXP(context.getServer(), context.getUser(), -xp);
             EmbedBuilder builder = new EmbedBuilder();
             builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
-            builder.setColor(LupoColor.GREEN.getColor());
+            builder.setColor(LupoColor.RED.getColor());
             builder.setAuthor(member.getUser().getAsTag() + " (" + member.getIdLong() + ")", null, member.getUser().getAvatarUrl());
             builder.setDescription(context.getServer().translate(context.getPlugin(), "leveling_removexp-success", context.getServer().formatLong(xp)));
             builder.addField(context.getServer().translate(context.getPlugin(), "leveling_removexp-new-xp"),
