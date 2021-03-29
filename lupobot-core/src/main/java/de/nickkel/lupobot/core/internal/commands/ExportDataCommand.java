@@ -5,18 +5,33 @@ import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.util.LupoColor;
+import de.nickkel.lupobot.core.util.TimeUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.*;
 
-@CommandInfo(name = "exportdata", category = "core", cooldown = 86400)
+@CommandInfo(name = "exportdata", category = "core")
 public class ExportDataCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
+        if(context.getUser().getData().getLong("lastDataExport") != -1 && context.getUser().getData().getLong("lastDataExport")-System.currentTimeMillis() < 0) {
+            EmbedBuilder builder = new EmbedBuilder();
+            builder.setColor(LupoColor.RED.getColor());
+            builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null,
+                    context.getMember().getUser().getAvatarUrl());
+            builder.setTimestamp(context.getMessage().getTimeCreated());
+            LocalDateTime.ofInstant(Instant.ofEpochMilli(1), ZoneId.systemDefault());
+            builder.setDescription(context.getServer().translate(context.getPlugin(), "core_exportdata-already-requested",
+                    TimeUtils.format(LocalDateTime.ofInstant(Instant.ofEpochMilli(context.getUser().getData().getLong("lastDataExport")), ZoneId.systemDefault()).atOffset(ZoneOffset.MAX))));
+            context.getChannel().sendMessage(builder.build()).queue();
+            return;
+        }
+
         EmbedBuilder builder = new EmbedBuilder();
         builder.setColor(LupoColor.ORANGE.getColor());
         builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null,
@@ -74,6 +89,7 @@ public class ExportDataCommand extends LupoCommand {
                 channel.sendMessage(dataBuilder.build()).addFile(userFile).queue();
                 serverFile.deleteOnExit();
             }
+            context.getUser().getData().append("lastDataExport", System.currentTimeMillis());
         });
     }
 }
