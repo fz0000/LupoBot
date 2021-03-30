@@ -79,6 +79,7 @@ public class LupoLevelingPlugin extends LupoPlugin {
     public void addXP(LupoServer server, LupoUser user, long xp) {
         addXP(server, user, xp, null);
     }
+
     public void addXP(LupoServer server, LupoUser user, long xp, TextChannel channel) {
         checkIfDataExists(server, user);
 
@@ -89,8 +90,13 @@ public class LupoLevelingPlugin extends LupoPlugin {
         while(getXP(server, user)+xp >= getRequiredXP(getLevel(server, user)+1)) {
             addLevel(server, user);
             if(channel != null) {
-                channel.sendMessage(server.translate(LupoBot.getInstance().getPlugin(this.getInfo().name()), "leveling_level-up",
-                        user.getDiscordUser().getAsMention(), getLevel(server, user))).queue();
+                if(server.getPluginData(LupoBot.getInstance().getPlugin(this.getInfo().name()), "levelUpMessage") == null) {
+                    channel.sendMessage(server.translate(LupoBot.getInstance().getPlugin(this.getInfo().name()), "leveling_level-up",
+                            user.getDiscordUser().getAsMention(), getLevel(server, user))).queue();
+                } else {
+                    String message = (String) server.getPluginData(LupoBot.getInstance().getPlugin(this.getInfo().name()), "levelUpMessage");
+                    channel.sendMessage(message.replace("%member%", user.getDiscordUser().getAsMention()).replace("%level%", String.valueOf(getLevel(server, user)))).queue();
+                }
             }
         }
 

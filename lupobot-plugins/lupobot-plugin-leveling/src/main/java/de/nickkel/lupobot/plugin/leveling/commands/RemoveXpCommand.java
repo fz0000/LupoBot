@@ -33,7 +33,7 @@ public class RemoveXpCommand extends LupoCommand {
                 sendSyntaxError(context, "leveling_removexp-only-positive-numbers");
                 return;
             }
-            if(LupoLevelingPlugin.getInstance().getXP(context.getServer(), context.getUser())-xp <= 0) {
+            if(LupoLevelingPlugin.getInstance().getXP(context.getServer(), context.getUser())-xp < 0) {
                 sendSyntaxError(context, "leveling_removexp-too-big-number", LupoLevelingPlugin.getInstance().getXP(context.getServer(), context.getUser()));
                 return;
             }
