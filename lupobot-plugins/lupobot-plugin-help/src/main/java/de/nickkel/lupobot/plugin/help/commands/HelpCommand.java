@@ -43,18 +43,23 @@ public class HelpCommand extends LupoCommand {
             command.sendHelp(helpContext);
         } else {
             EmbedBuilder builder = new EmbedBuilder();
+            builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
             builder.setColor(LupoColor.ORANGE.getColor());
             builder.setAuthor(LupoBot.getInstance().getSelfUser().getName(), null, LupoBot.getInstance().getSelfUser().getAvatarUrl());
+
             builder.addField(context.getServer().translate(context.getPlugin(), "help_help-invite"),
                     LupoBot.getInstance().getConfig().getString("inviteUrl"), false);
             builder.addField(context.getServer().translate(context.getPlugin(), "help_help-server"),
                     LupoBot.getInstance().getConfig().getString("supportServerUrl"), false);
             builder.addField(context.getServer().translate(context.getPlugin(), "help_help-all-plugins"),
                     context.getServer().translate(context.getPlugin(), "help_help-all-plugins-description"), false);
+            builder.addField(context.getServer().translate(context.getPlugin(), "help_help-install-plugins"),
+                    context.getServer().translate(context.getPlugin(), "help_help-install-plugins-description"), false);
             builder.addField(context.getServer().translate(context.getPlugin(), "help_help-all-commands"),
                     context.getServer().translate(context.getPlugin(), "help_help-all-commands-description"), false);
             builder.addField(context.getServer().translate(context.getPlugin(), "help_help-all-details"),
                     context.getServer().translate(context.getPlugin(), "help_help-all-details-description"), false);
+            
             context.getChannel().sendMessage(builder.build()).queue();
         }
     }
