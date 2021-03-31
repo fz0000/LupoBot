@@ -47,6 +47,8 @@ public class InstallPluginCommand extends LupoCommand {
                             builder.setColor(LupoColor.GREEN.getColor());
                             builder.setAuthor(context.getGuild().getName() + " (" + context.getGuild().getId() + ")", null, context.getGuild().getIconUrl());
                             builder.setDescription(context.getServer().translate(null, "core_plugin-installed", context.getServer().translatePluginName(plugin)));
+                            builder.addField(context.getServer().translate(null, "core_plugin"), context.getServer().translatePluginName(plugin), false);
+                            builder.addField(context.getServer().translate(null, "core_description"), context.getServer().translate(plugin, plugin.getInfo().name() + "_description"), false);
                             context.getChannel().sendMessage(builder.build()).queue();
                             return;
                         }

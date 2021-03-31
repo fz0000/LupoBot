@@ -21,12 +21,11 @@ public class PluginsCommand extends LupoCommand {
 
         for(LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
             if(!plugin.getInfo().hidden()) {
-                String statusKey = "core_plugin-status-uninstalled";
+                String statusKey = ":x:";
                 if(context.getServer().getPlugins().contains(plugin)) {
-                    statusKey = "core_plugin-status-installed";
+                    statusKey = ":white_check_mark:";
                 }
-                builder.addField(context.getServer().translatePluginName(plugin), context.getServer().translate(null, statusKey) + "\n"
-                        + context.getServer().translate(plugin, plugin.getInfo().name() + "_description"), false);
+                builder.addField(statusKey + " " + context.getServer().translatePluginName(plugin), context.getServer().translate(plugin, plugin.getInfo().name() + "_description"), false);
             }
         }
 
