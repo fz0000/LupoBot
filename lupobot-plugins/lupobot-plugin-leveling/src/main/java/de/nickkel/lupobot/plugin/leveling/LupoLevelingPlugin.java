@@ -8,6 +8,7 @@ import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.plugin.PluginInfo;
 import de.nickkel.lupobot.core.util.ListenerRegister;
 import lombok.Getter;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.HashMap;
@@ -65,15 +66,24 @@ public class LupoLevelingPlugin extends LupoPlugin {
 
     public void addLevel(LupoServer server, LupoUser user) {
         checkIfDataExists(server, user);
+        long level = getLevel(server, user)+1;
+
         BasicDBObject pluginObject = (BasicDBObject) server.getData().get(this.getInfo().name());
         BasicDBObject xpObject = (BasicDBObject) pluginObject.get("xp");
 
         BasicDBObject data = (BasicDBObject) xpObject.get(String.valueOf(user.getId()));
-        data.append("level", getLevel(server, user)+1);
+        data.append("level", level);
 
         pluginObject.append("xp", xpObject);
         server.getData().append(this.getInfo().name(), pluginObject);
         this.lastReceivedXP.put(server.getGuild().getIdLong()+user.getId(), System.currentTimeMillis()+60000);
+
+        BasicDBObject rewardObject = (BasicDBObject) pluginObject.get("rewardRoles");
+        if(rewardObject.containsKey(String.valueOf(level))) {
+            if(existsRewardRole(server, level)) {
+                server.getGuild().addRoleToMember(user.getId(), server.getGuild().getRoleById(rewardObject.getLong(String.valueOf(level)))).queue();
+            }
+        }
     }
 
     public void addXP(LupoServer server, LupoUser user, long xp) {
@@ -95,7 +105,8 @@ public class LupoLevelingPlugin extends LupoPlugin {
                             user.getDiscordUser().getAsMention(), getLevel(server, user))).queue();
                 } else {
                     String message = (String) server.getPluginData(LupoBot.getInstance().getPlugin(this.getInfo().name()), "levelUpMessage");
-                    channel.sendMessage(message.replace("%member%", user.getDiscordUser().getAsMention()).replace("%level%", String.valueOf(getLevel(server, user)))).queue();
+                    channel.sendMessage(message.replace("%member%", user.getDiscordUser().getAsMention())
+                            .replace("%level%", String.valueOf(getLevel(server, user)))).queue();
                 }
             }
         }
@@ -109,6 +120,20 @@ public class LupoLevelingPlugin extends LupoPlugin {
         pluginObject.append("xp", xpObject);
         server.getData().append(this.getInfo().name(), pluginObject);
         this.lastReceivedXP.put(server.getGuild().getIdLong()+user.getId(), System.currentTimeMillis()+60000);
+    }
+
+    public boolean existsRewardRole(LupoServer server, long level) {
+        BasicDBObject pluginObject = (BasicDBObject) server.getData().get(LupoLevelingPlugin.getInstance().getInfo().name());
+        BasicDBObject rewardObject = (BasicDBObject) pluginObject.get("rewardRoles");
+        if(rewardObject.containsKey(String.valueOf(level))) {
+            if(server.getGuild().getRoleById(rewardObject.getLong(String.valueOf(level))) == null) {
+                rewardObject.remove(String.valueOf(level));
+                pluginObject.append("rewardRoles", rewardObject);
+                server.getData().append(this.getInfo().name(), pluginObject);
+                return false;
+            }
+        }
+        return true;
     }
 
     public void checkIfDataExists(LupoServer server, LupoUser user) {
