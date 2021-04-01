@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
+import java.io.File;
 import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -71,7 +72,7 @@ public class LupoBot {
     @Getter
     private final List<String> availableLanguages = new ArrayList<>();
     @Getter
-    private final long startMilis = System.currentTimeMillis();
+    private final long startMillis = System.currentTimeMillis();
 
     public static void main(String[] args) {
         new LupoBot().run(args);
@@ -80,10 +81,14 @@ public class LupoBot {
     public void run(String[] args) {
         instance = this;
         this.executorService = Executors.newCachedThreadPool();
-        this.config = new Document(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("config.json"));
+        if(new File("storage/config.json").exists()) {
+            this.config = new Document(new File("storage/config.json"));
+        } else {
+            this.config = new Document(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("config.json"));
+        }
 
         for(String arg : args) {
-            if(arg.equalsIgnoreCase("--activate-maintenance")) {
+            if(arg.equalsIgnoreCase("--maintenance")) {
                 DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(this.config.getString("token"))
                         .addEventListeners(new MaintenanceListener())
                         .setStatus(OnlineStatus.DO_NOT_DISTURB)
@@ -108,7 +113,6 @@ public class LupoBot {
         this.languageHandler = new LanguageHandler(this.getClass());
         this.commandHandler = new CommandHandler();
 
-        JsonObject database = this.config.getJsonElement("database").getAsJsonObject();
         this.mongoClient = new MongoClient(new MongoClientURI("mongodb://localhost:27017"));
         this.login(builder);
 

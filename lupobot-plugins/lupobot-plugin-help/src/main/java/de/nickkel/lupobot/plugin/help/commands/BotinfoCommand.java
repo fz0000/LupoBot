@@ -8,13 +8,11 @@ import de.nickkel.lupobot.core.util.LupoColor;
 import de.nickkel.lupobot.core.util.TimeUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 
-import java.util.concurrent.TimeUnit;
-
 @CommandInfo(name = "botinfo", category = "information")
 public class BotinfoCommand extends LupoCommand {
     @Override
     public void onCommand(CommandContext context) {
-        long runtime = System.currentTimeMillis()-LupoBot.getInstance().getStartMilis();
+        long runtime = System.currentTimeMillis()-LupoBot.getInstance().getStartMillis();
         EmbedBuilder builder = new EmbedBuilder();
         builder.setColor(LupoColor.BLUE.getColor());
         builder.setAuthor(LupoBot.getInstance().getSelfUser().getName(), null, LupoBot.getInstance().getSelfUser().getAvatarUrl());
