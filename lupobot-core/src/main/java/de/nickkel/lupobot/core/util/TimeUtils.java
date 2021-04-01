@@ -17,8 +17,8 @@ public class TimeUtils {
     }
 
     public static String format(CommandContext context, long millis) {
-        return String.format("%d " + context.getServer().translate(null, "core_minutes") + ", %d "
+        return String.format("%d " + context.getServer().translate(null, "core_hours") + ", %d " + context.getServer().translate(null, "core_minutes") + ", %d "
                         + context.getServer().translate(null, "core_seconds"),
-                TimeUnit.MILLISECONDS.toMinutes(millis), TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+                TimeUnit.MILLISECONDS.toHours(millis), TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.MINUTES.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)), TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
     }
 }
