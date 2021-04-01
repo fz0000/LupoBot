@@ -16,3 +16,5 @@ files:
     translation: /lupobot-plugins/lupobot-plugin-ticket/src/main/resources/locales/%locale_with_underscore%.properties
   - source: /lupobot-plugins/lupobot-plugin-leveling/src/main/resources/locales/en_US.properties
     translation: /lupobot-plugins/lupobot-plugin-leveling/src/main/resources/locales/%locale_with_underscore%.properties
+  - source: /lupobot-plugins/lupobot-plugin-currency/src/main/resources/locales/en_US.properties
+    translation: /lupobot-plugins/lupobot-plugin-currency/src/main/resources/locales/%locale_with_underscore%.properties

@@ -46,7 +46,7 @@ public class HelpCommand extends LupoCommand {
             builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
             builder.setColor(LupoColor.ORANGE.getColor());
             builder.setAuthor(LupoBot.getInstance().getSelfUser().getName(), null, LupoBot.getInstance().getSelfUser().getAvatarUrl());
-
+            
             builder.addField(context.getServer().translate(context.getPlugin(), "help_help-invite"),
                     LupoBot.getInstance().getConfig().getString("inviteUrl"), false);
             builder.addField(context.getServer().translate(context.getPlugin(), "help_help-server"),

@@ -13,6 +13,7 @@
     <artifactId>plugins</artifactId>
     <packaging>pom</packaging>
     <modules>
+        <module>lupobot-plugin-currency</module>
         <module>lupobot-plugin-leveling</module>
         <module>lupobot-plugin-music</module>
         <module>lupobot-plugin-help</module>
