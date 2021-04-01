@@ -32,7 +32,6 @@ public class DailyCommand extends LupoCommand {
                     context.getMember().getUser().getAvatarUrl());
             builder.setTimestamp(context.getMessage().getTimeCreated());
             builder.setDescription(context.getServer().translate(context.getPlugin(), "currency_daily-already-received",
-                    TimeUtils.format(LocalDateTime.ofInstant(Instant.ofEpochMilli(context.getUser().getPluginLong(context.getPlugin(), "lastDailyCoins")), ZoneId.systemDefault()).atOffset(ZoneOffset.MAX)),
                     TimeUtils.format(context, context.getUser().getPluginLong(context.getPlugin(), "lastDailyCoins")+86400000 -System.currentTimeMillis())));
             context.getChannel().sendMessage(builder.build()).queue();
             return;

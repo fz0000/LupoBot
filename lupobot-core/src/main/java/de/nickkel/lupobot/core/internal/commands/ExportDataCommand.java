@@ -19,15 +19,15 @@ public class ExportDataCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        if(context.getUser().getData().getLong("lastDataExport") != -1 && context.getUser().getData().getLong("lastDataExport")-System.currentTimeMillis() < 0) {
+        long lastDataExport = context.getUser().getData().getLong("lastDataExport");
+        if(lastDataExport != -1 && lastDataExport+7776000000L-System.currentTimeMillis() > 0) {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setColor(LupoColor.RED.getColor());
             builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null,
                     context.getMember().getUser().getAvatarUrl());
             builder.setTimestamp(context.getMessage().getTimeCreated());
-            LocalDateTime.ofInstant(Instant.ofEpochMilli(1), ZoneId.systemDefault());
             builder.setDescription(context.getServer().translate(context.getPlugin(), "core_exportdata-already-requested",
-                    TimeUtils.format(LocalDateTime.ofInstant(Instant.ofEpochMilli(context.getUser().getData().getLong("lastDataExport")), ZoneId.systemDefault()).atOffset(ZoneOffset.MAX))));
+                    TimeUtils.format(context, lastDataExport+7776000000L-System.currentTimeMillis())));
             context.getChannel().sendMessage(builder.build()).queue();
             return;
         }
