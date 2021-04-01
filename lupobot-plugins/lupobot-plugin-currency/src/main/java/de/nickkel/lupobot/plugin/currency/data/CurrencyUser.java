@@ -26,10 +26,14 @@ public class CurrencyUser {
     }
 
     public long getCoins() {
-        return (long) (int) this.user.getPluginData(this.plugin, "coins");
+        return this.user.getPluginLong(this.plugin, "coins");
     }
 
     public void addCoins(long amount) {
-        this.user.appendPluginData(this.plugin, "coins", (long) this.user.getPluginData(this.plugin, "coins")+amount);
+        this.user.appendPluginData(this.plugin, "coins", this.user.getPluginLong(this.plugin, "coins")+amount);
+    }
+
+    public void addStreak() {
+        this.user.appendPluginData(this.plugin, "dailyCoinStreak", this.user.getPluginLong(this.plugin, "dailyCoinStreak")+1);
     }
 }

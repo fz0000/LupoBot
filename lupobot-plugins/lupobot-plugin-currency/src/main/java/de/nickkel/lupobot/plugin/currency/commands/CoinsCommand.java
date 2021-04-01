@@ -1,6 +1,5 @@
 package de.nickkel.lupobot.plugin.currency.commands;
 
-import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
@@ -30,8 +29,9 @@ public class CoinsCommand extends LupoCommand {
         builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
         builder.setColor(LupoColor.ORANGE.getColor());
         builder.setAuthor(member.getUser().getAsTag() + " (" + member.getIdLong() + ")", null, member.getUser().getAvatarUrl());
-
         builder.setDescription(context.getServer().translate(context.getPlugin(), "currency_coins-amount",
                 context.getServer().formatLong(user.getCoins())));
+
+        context.getChannel().sendMessage(builder.build()).queue();
     }
 }

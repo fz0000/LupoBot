@@ -86,6 +86,11 @@ public class LupoServer {
         return dbObject.get(key);
     }
 
+    public Long getPluginLong(LupoPlugin plugin, String key) {
+        BasicDBObject dbObject = (BasicDBObject) this.data.get(plugin.getInfo().name());
+        return dbObject.getLong(key);
+    }
+
     public void installPlugin(LupoPlugin plugin) {
         this.plugins.add(plugin);
         BasicDBList dbList = (BasicDBList) this.data.get("plugins");
