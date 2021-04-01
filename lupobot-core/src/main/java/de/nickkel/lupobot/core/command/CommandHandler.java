@@ -76,33 +76,29 @@ public class CommandHandler {
         }
 
         if(user.getCooldowns().containsKey(command)) {
-            long leftCooldown = (user.getCooldowns().get(command)+command.getInfo().cooldown()*1000L)-System.currentTimeMillis();
-            String time = String.format("%d " + server.translate(null, "core_minutes") + ", %d " + server.translate(null, "core_seconds"),
-                    TimeUnit.MILLISECONDS.toMinutes(leftCooldown),
-                    TimeUnit.MILLISECONDS.toSeconds(leftCooldown) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(leftCooldown))
-            );
-            EmbedBuilder builder = new EmbedBuilder();
-            builder.setColor(LupoColor.DARK_GRAY.getColor());
-            builder.setAuthor(context.getMember().getUser().getAsTag(), null, context.getMember().getUser().getAvatarUrl());
-            builder.setDescription(context.getServer().translate(null, "core_command-cooldown", time));
-            builder.setFooter(server.translate(null, "core_used-command", server.getPrefix() + context.getLabel()));
-            context.getChannel().sendMessage(builder.build()).queue();
-            return;
+            long leftCooldown = user.getCooldowns().get(command)+command.getInfo().cooldown()*1000L-System.currentTimeMillis();
+            if(leftCooldown > 0) {
+                String time = String.format("%d " + server.translate(null, "core_minutes") + ", %d " + server.translate(null, "core_seconds"),
+                        TimeUnit.MILLISECONDS.toMinutes(leftCooldown),
+                        TimeUnit.MILLISECONDS.toSeconds(leftCooldown) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(leftCooldown))
+                );
+                EmbedBuilder builder = new EmbedBuilder();
+                builder.setColor(LupoColor.DARK_GRAY.getColor());
+                builder.setAuthor(context.getMember().getUser().getAsTag(), null, context.getMember().getUser().getAvatarUrl());
+                builder.setDescription(context.getServer().translate(null, "core_command-cooldown", time));
+                builder.setFooter(server.translate(null, "core_used-command", server.getPrefix() + context.getLabel()));
+                context.getChannel().sendMessage(builder.build()).queue();
+                return;
+            } else {
+                user.getCooldowns().remove(command);
+            }
         }
 
         try {
             command.onCommand(context);
             if(command.getInfo().cooldown() != 0) {
                 user.getCooldowns().put(command, System.currentTimeMillis());
-                LupoCommand finalCommand = command;
-                new Timer().schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        user.getCooldowns().remove(finalCommand);
-                    }
-                }, command.getInfo().cooldown()*1000L);
             }
-
         } catch(PermissionException permissionException) {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setTitle(server.translate(null, "core_command-error"));
