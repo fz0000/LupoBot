@@ -1,5 +1,7 @@
 {
   "coins": 0,
   "lastDailyCoins": -1,
-  "dailyCoinStreak": 0
+  "dailyCoinStreak": 0,
+  "inventorySlots": 30,
+  "inventory": {}
 }
