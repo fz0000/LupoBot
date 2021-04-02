@@ -86,7 +86,7 @@ public class ShopCommand extends LupoCommand {
             builder.setDescription(context.getServer().translate(context.getPlugin(), "currency_shop-buy-sell"));
 
             for(int i=0; i < LupoCurrencyPlugin.getInstance().getItems().size(); i++) {
-                if(String.valueOf(i).length() != 1 && (String.valueOf(i).endsWith("1") || i == LupoCurrencyPlugin.getInstance().getItems().size()-1)) {
+                if(String.valueOf(i).length() != 1 && (String.valueOf(i).endsWith("0") || i == LupoCurrencyPlugin.getInstance().getItems().size()-1)) {
                     pages.add(new Page(PageType.EMBED, builder.build()));
                     builder.clearFields();
                 }

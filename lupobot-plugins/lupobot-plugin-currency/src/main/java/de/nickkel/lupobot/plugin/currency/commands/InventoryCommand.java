@@ -16,7 +16,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-@CommandInfo(name = "inventory", category = "items")
+@CommandInfo(name = "inventory", aliases = "inv", category = "items")
 public class InventoryCommand extends LupoCommand {
 
     @Override
@@ -59,24 +59,31 @@ public class InventoryCommand extends LupoCommand {
             builder.setColor(LupoColor.ORANGE.getColor());
             builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getIdLong() + ")", null, context.getMember().getUser().getAvatarUrl());
 
-            int i = 0;
-            for(Item item : LupoCurrencyPlugin.getInstance().getItems()) {
-                if(user.getItem(item) != 0) {
-                    i++;
-                    if(String.valueOf(i).length() != 1 && (String.valueOf(i).endsWith("1") || i == LupoCurrencyPlugin.getInstance().getItems().size()-1)) {
-                        pages.add(new Page(PageType.EMBED, builder.build()));
-                        builder.clearFields();
-                    }
-                    builder.addField(item.getIcon() + " " + user.getItem(item) + "x " + item.getName(), context.getServer().translate(context.getPlugin(), "currency_inventory-price",
-                            context.getServer().formatLong(item.getBuy()), context.getServer().formatLong(item.getSell())), false);
-                }
-            }
-
             if(user.getUsedInventorySlots() == 0) {
                 builder.setDescription(context.getServer().translate(context.getPlugin(), "currency_inventory-empty"));
             } else {
                 builder.setDescription(context.getServer().translate(context.getPlugin(), "currency_inventory-inventoryslots",
                         user.getUsedInventorySlots(), context.getServer().formatLong(user.getInventorySlots())));
+            }
+
+            int max = 0;
+            for(Item item : LupoCurrencyPlugin.getInstance().getItems()) {
+                if (user.getItem(item) != 0) {
+                    max++;
+                }
+            }
+
+            int i = 0;
+            for(Item item : LupoCurrencyPlugin.getInstance().getItems()) {
+                if(user.getItem(item) != 0) {
+                    if(String.valueOf(i).length() != 1 && (String.valueOf(i).endsWith("0") || i == max-1)) {
+                        pages.add(new Page(PageType.EMBED, builder.build()));
+                        builder.clearFields();
+                    }
+                    builder.addField(item.getIcon() + " " + user.getItem(item) + "x " + item.getName(), context.getServer().translate(context.getPlugin(), "currency_inventory-price",
+                            context.getServer().formatLong(item.getBuy()), context.getServer().formatLong(item.getSell())), false);
+                    i++;
+                }
             }
 
             if(pages.size() != 0) {
