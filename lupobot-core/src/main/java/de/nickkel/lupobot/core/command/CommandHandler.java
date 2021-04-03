@@ -36,7 +36,7 @@ public class CommandHandler {
 
         if (command == null) {
             EmbedBuilder builder = new EmbedBuilder();
-            builder.setTitle(server.translate(null, "core_command-error"));
+            builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null, context.getMember().getUser().getAvatarUrl());
             builder.setDescription(server.translate(null, "core_command-not-found"));
             builder.setColor(LupoColor.DARK_GRAY.getColor());
             builder.setFooter(server.translate(null, "core_tried-command", server.getPrefix() + context.getLabel()));
@@ -55,7 +55,7 @@ public class CommandHandler {
         for(Permission permission : command.getInfo().permissions()) {
             if(!context.getMember().getPermissions().contains(permission)) {
                 EmbedBuilder builder = new EmbedBuilder();
-                builder.setTitle(server.translate(null, "core_command-error"));
+                builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null, context.getMember().getUser().getAvatarUrl());
                 builder.setDescription(server.translate(null, "core_command-no-user-permission"));
                 builder.addField(server.translate(null, "core_command-permission"), permission.toString(), false);
                 builder.setColor(LupoColor.DARK_GRAY.getColor());
@@ -66,7 +66,7 @@ public class CommandHandler {
         }
         if(plugin != null && !server.getPlugins().contains(plugin)) {
             EmbedBuilder builder = new EmbedBuilder();
-            builder.setTitle(server.translate(null, "core_command-error"));
+            builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null, context.getMember().getUser().getAvatarUrl());
             builder.setDescription(server.translate(null, "core_command-no-plugin"));
             builder.addField(server.translate(null, "core_command-plugin"), server.translatePluginName(plugin), false);
             builder.setColor(LupoColor.DARK_GRAY.getColor());
@@ -84,7 +84,7 @@ public class CommandHandler {
                 );
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setColor(LupoColor.DARK_GRAY.getColor());
-                builder.setAuthor(context.getMember().getUser().getAsTag(), null, context.getMember().getUser().getAvatarUrl());
+                builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null, context.getMember().getUser().getAvatarUrl());
                 builder.setDescription(context.getServer().translate(null, "core_command-cooldown", time));
                 builder.setFooter(server.translate(null, "core_used-command", server.getPrefix() + context.getLabel()));
                 context.getChannel().sendMessage(builder.build()).queue();
@@ -101,7 +101,7 @@ public class CommandHandler {
             }
         } catch(PermissionException permissionException) {
             EmbedBuilder builder = new EmbedBuilder();
-            builder.setTitle(server.translate(null, "core_command-error"));
+            builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null, context.getMember().getUser().getAvatarUrl());
             builder.setDescription(server.translate(null, "core_command-no-bot-permission"));
             builder.addField(server.translate(null, "core_command-permission"), permissionException.getPermission().toString(), false);
             builder.setColor(LupoColor.DARK_GRAY.getColor());
@@ -114,7 +114,8 @@ public class CommandHandler {
                 stackTrace = stackTrace + "\n" + element.toString();
             }
             EmbedBuilder builder = new EmbedBuilder();
-            builder.setTitle(server.translate(null, "core_command-error-report", LupoBot.getInstance().getConfig().getString("supportServerUrl")));
+            builder.setAuthor(server.translate(null, "core_command-error-report"), LupoBot.getInstance().getConfig().getString("supportServerUrl"),
+                    LupoBot.getInstance().getSelfUser().getAvatarUrl());
             builder.setDescription("StackTrace: ```" + stackTrace + "```");
             builder.setColor(LupoColor.RED.getColor());
             builder.setFooter(server.translate(null, "core_used-command", server.getPrefix() + context.getLabel()));
