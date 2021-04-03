@@ -12,10 +12,7 @@ import de.nickkel.lupobot.plugin.currency.LupoCurrencyPlugin;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CurrencyUser {
 
@@ -54,6 +51,33 @@ public class CurrencyUser {
         } else {
             return 0L;
         }
+    }
+
+    public Item getRandomItem(int cheapPercent, int middlePercent, int expensivePercent) {
+        List<Item> cheapItems = new ArrayList<>(), middleItems = new ArrayList<>(), expensiveItems = new ArrayList<>();
+        for(Item item : LupoCurrencyPlugin.getInstance().getItems()) {
+            if(item.getBuy() >= 2000) { // from 2000
+                expensiveItems.add(item);
+            } else if(item.getBuy() >= 500 && item.getBuy() < 2000) { // between 500-1999
+                middleItems.add(item);
+            } else if(item.getBuy() > 0 && item.getBuy() < 500) { // between 0-500
+                cheapItems.add(item);
+            }
+        }
+
+        int percent = new Random().nextInt(100);
+
+        if(percent < cheapPercent){
+            int index = new Random().nextInt(cheapItems.size());
+            return cheapItems.get(index);
+        } else if(percent < cheapPercent+middlePercent){
+            int index = new Random().nextInt(middleItems.size());
+            return middleItems.get(index);
+        } else if(percent < cheapPercent+middlePercent+expensivePercent){
+            int index = new Random().nextInt(expensiveItems.size());
+            return expensiveItems.get(index);
+        }
+        return cheapItems.get(new Random().nextInt(cheapItems.size()));
     }
 
     public long getInventorySlots() {
