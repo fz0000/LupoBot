@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 
-@CommandInfo(name = "daily", category = "reward")
+@CommandInfo(name = "daily", aliases = "d", category = "reward")
 public class DailyCommand extends LupoCommand {
 
     @Override
