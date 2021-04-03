@@ -36,13 +36,17 @@ public class DailyCommand extends LupoCommand {
             context.getChannel().sendMessage(builder.build()).queue();
             return;
         }
+        CurrencyUser user = LupoCurrencyPlugin.getInstance().getCurrencyUser(context.getMember());
+
+        if(lastDailyCoins != -1 && System.currentTimeMillis()-lastDailyCoins > 86400000*2) {
+            user.setStreak(0);
+        }
 
         long coins = 200 + context.getUser().getPluginLong(context.getPlugin(), "dailyCoinStreak")*2;
         if(coins > 1000) {
             coins = 1000;
         }
 
-        CurrencyUser user = LupoCurrencyPlugin.getInstance().getCurrencyUser(context.getMember());
         user.addCoins(coins);
         user.addStreak();
         context.getUser().appendPluginData(context.getPlugin(), "lastDailyCoins", System.currentTimeMillis());

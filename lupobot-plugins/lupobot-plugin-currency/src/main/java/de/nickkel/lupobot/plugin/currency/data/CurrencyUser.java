@@ -101,4 +101,8 @@ public class CurrencyUser {
     public void addStreak() {
         this.user.appendPluginData(this.plugin, "dailyCoinStreak", this.user.getPluginLong(this.plugin, "dailyCoinStreak")+1);
     }
+
+    public void setStreak(long streak) {
+        this.user.appendPluginData(this.plugin, "dailyCoinStreak", streak);
+    }
 }
