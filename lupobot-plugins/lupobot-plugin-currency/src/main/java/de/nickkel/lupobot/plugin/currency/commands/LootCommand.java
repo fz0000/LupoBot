@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.util.Random;
 
-@CommandInfo(name = "loot", category = "reward", cooldown = 600)
+@CommandInfo(name = "loot", aliases = "l", category = "reward", cooldown = 600)
 public class LootCommand extends LupoCommand {
 
     @Override
