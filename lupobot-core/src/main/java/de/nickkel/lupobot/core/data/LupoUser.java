@@ -56,7 +56,24 @@ public class LupoUser {
             this.data = (BasicDBObject) cursor.one();
         }
 
-        // TODO: set absent keys in the data from the default config file
+        // merge missing plugin or core data if missing
+        for(String key : LupoBot.getInstance().getUserConfig().getJsonObject().keySet()) {
+            if(!this.data.containsKey(key)) {
+                this.data.append(key, JSON.parse(new Document(LupoBot.getInstance().getUserConfig().getJsonElement(key).getAsJsonObject()).convertToJsonString()));
+            }
+        }
+        for(LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
+            if(plugin.getUserConfig() != null) {
+                for(String key : plugin.getUserConfig().getJsonObject().keySet()) {
+                    BasicDBObject dbObject = (BasicDBObject) this.data.get(plugin.getInfo().name());
+                    if(!dbObject.containsKey(key)) {
+                        dbObject.append(key, JSON.parse(new Document(plugin.getUserConfig().getJsonElement(key).getAsJsonObject()).convertToJsonString()));
+                        this.data.append(plugin.getInfo().name(), dbObject);
+                    }
+                }
+            }
+        }
+
         LupoBot.getInstance().getUsers().put(this.id, this);
     }
 

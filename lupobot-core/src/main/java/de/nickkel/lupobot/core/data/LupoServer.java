@@ -72,7 +72,24 @@ public class LupoServer {
             }
         }
 
-        // TODO: set absent keys in the data from the default config file
+        // merge missing plugin or core data if missing
+        for(String key : LupoBot.getInstance().getServerConfig().getJsonObject().keySet()) {
+            if(!this.data.containsKey(key)) {
+                this.data.append(key, JSON.parse(new Document(LupoBot.getInstance().getServerConfig().getJsonElement(key).getAsJsonObject()).convertToJsonString()));
+            }
+        }
+        for(LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
+            if(plugin.getServerConfig() != null) {
+                for(String key : plugin.getServerConfig().getJsonObject().keySet()) {
+                    BasicDBObject dbObject = (BasicDBObject) this.data.get(plugin.getInfo().name());
+                    if(!dbObject.containsKey(key)) {
+                        dbObject.append(key, JSON.parse(new Document(plugin.getServerConfig().getJsonElement(key).getAsJsonObject()).convertToJsonString()));
+                        this.data.append(plugin.getInfo().name(), dbObject);
+                    }
+                }
+            }
+        }
+
         LupoBot.getInstance().getServers().put(this.guild, this);
     }
 
