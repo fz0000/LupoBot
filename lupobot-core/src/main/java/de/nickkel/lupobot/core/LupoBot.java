@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
-import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -189,11 +188,20 @@ public class LupoBot {
                 for(String key : plugin.getBotConfig().getJsonObject().keySet()) {
                     BasicDBObject dbObject = (BasicDBObject) this.data.get(plugin.getInfo().name());
                     if(!dbObject.containsKey(key)) {
-                        dbObject.append(key, JSON.parse(new Document(plugin.getBotConfig().getJsonElement(key).getAsJsonObject()).convertToJsonString()));
+                        BasicDBObject config = (BasicDBObject) JSON.parse(new Document(plugin.getBotConfig().getJsonObject()).convertToJsonString());
+                        dbObject.append(key, config.get(key));
                         this.data.append(plugin.getInfo().name(), dbObject);
                     }
                 }
             }
         }
+    }
+
+    public void saveData() {
+        DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
+                .getAsJsonObject().get("database").getAsString());
+        DBCollection collection = database.getCollection("bot");
+        DBObject query = new BasicDBObject("_id", this.getSelfUser().getIdLong());
+        collection.update(query, this.data);
     }
 }

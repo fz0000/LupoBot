@@ -5,7 +5,6 @@ import de.nickkel.lupobot.core.data.LupoServer;
 import de.nickkel.lupobot.core.data.LupoUser;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.TimerTask;
 
@@ -31,5 +30,9 @@ public class SaveDataTask extends TimerTask {
             user.saveData();
         }
         LupoBot.getInstance().getLogger().info("Saved data of " + userAmount + " users!");
+
+        LupoBot.getInstance().getLogger().info("Trying to save bot data ...");
+        LupoBot.getInstance().saveData();
+        LupoBot.getInstance().getLogger().info("Saved bot data!");
     }
 }

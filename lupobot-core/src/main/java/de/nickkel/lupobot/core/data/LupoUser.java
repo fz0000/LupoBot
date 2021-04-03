@@ -67,7 +67,8 @@ public class LupoUser {
                 for(String key : plugin.getUserConfig().getJsonObject().keySet()) {
                     BasicDBObject dbObject = (BasicDBObject) this.data.get(plugin.getInfo().name());
                     if(!dbObject.containsKey(key)) {
-                        dbObject.append(key, JSON.parse(new Document(plugin.getUserConfig().getJsonElement(key).getAsJsonObject()).convertToJsonString()));
+                        BasicDBObject config = (BasicDBObject) JSON.parse(new Document(plugin.getUserConfig().getJsonObject()).convertToJsonString());
+                        dbObject.append(key, config.get(key));
                         this.data.append(plugin.getInfo().name(), dbObject);
                     }
                 }

@@ -83,7 +83,8 @@ public class LupoServer {
                 for(String key : plugin.getServerConfig().getJsonObject().keySet()) {
                     BasicDBObject dbObject = (BasicDBObject) this.data.get(plugin.getInfo().name());
                     if(!dbObject.containsKey(key)) {
-                        dbObject.append(key, JSON.parse(new Document(plugin.getServerConfig().getJsonElement(key).getAsJsonObject()).convertToJsonString()));
+                        BasicDBObject config = (BasicDBObject) JSON.parse(new Document(plugin.getServerConfig().getJsonObject()).convertToJsonString());
+                        dbObject.append(key, config.get(key));
                         this.data.append(plugin.getInfo().name(), dbObject);
                     }
                 }
