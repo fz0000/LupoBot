@@ -30,7 +30,7 @@ public abstract class LupoPlugin {
     @Getter @Setter
     private List<LupoCommand> commands = new ArrayList<>();
     @Getter
-    private Document userConfig, serverConfig;
+    private Document userConfig, serverConfig, botConfig;
 
     public abstract void onEnable();
 
@@ -46,6 +46,11 @@ public abstract class LupoPlugin {
             this.serverConfig = new Document(new FileResourcesUtils(this.resourcesClass).getFileFromResourceAsStream("server.json"));
         } catch(IllegalArgumentException e) {
             LupoBot.getInstance().getLogger().warn("Could not find server.json file of plugin  " + this.info.name());
+        }
+        try {
+            this.botConfig = new Document(new FileResourcesUtils(this.resourcesClass).getFileFromResourceAsStream("bot.json"));
+        } catch(IllegalArgumentException e) {
+            LupoBot.getInstance().getLogger().warn("Could not find bot.json file of plugin  " + this.info.name());
         }
     }
 }

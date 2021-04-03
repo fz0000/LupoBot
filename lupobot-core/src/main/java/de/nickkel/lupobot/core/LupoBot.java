@@ -1,8 +1,8 @@
 package de.nickkel.lupobot.core;
 
 import com.google.gson.JsonObject;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
+import com.mongodb.*;
+import com.mongodb.util.JSON;
 import de.nickkel.lupobot.core.command.CommandHandler;
 import de.nickkel.lupobot.core.command.CommandListener;
 import de.nickkel.lupobot.core.command.LupoCommand;
@@ -57,6 +57,8 @@ public class LupoBot {
     private Document config, userConfig, serverConfig;
     @Getter
     private MongoClient mongoClient;
+    @Getter
+    private BasicDBObject data;
     @Getter
     private final List<LupoPlugin> plugins = new ArrayList<>();
     @Getter
@@ -115,6 +117,7 @@ public class LupoBot {
 
         this.mongoClient = new MongoClient(new MongoClientURI("mongodb://localhost:27017"));
         this.login(builder);
+        this.loadBotData();
 
         Pages.activate(PaginatorBuilder.createSimplePaginator(this.shardManager));
         this.commandHandler.registerCommands(this.getClass().getClassLoader(), "de.nickkel.lupobot.core.internal.commands");
@@ -146,5 +149,51 @@ public class LupoBot {
 
     public SelfUser getSelfUser() {
         return this.shardManager.getShards().get(0).getSelfUser();
+    }
+
+    private void loadBotData() {
+        DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
+                .getAsJsonObject().get("database").getAsString());
+        DBCollection collection = database.getCollection("bot");
+        DBObject query = new BasicDBObject("_id", this.getSelfUser().getIdLong());
+        DBCursor cursor = collection.find(query);
+        Document botConfig = new Document(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("bot.json"));
+        try {
+            BasicDBObject dbObject = (BasicDBObject) JSON.parse(botConfig.convertToJsonString());
+            dbObject.append("_id", this.getSelfUser().getIdLong());
+            // merge data file of all plugins into one file
+            for(LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
+                if(plugin.getBotConfig() != null) {
+                    Document document = new Document(new JsonObject());
+                    for(String key : plugin.getBotConfig().getJsonObject().keySet()) {
+                        document.append(key, plugin.getBotConfig().getJsonElement(key));
+                    }
+                    BasicDBObject basic = (BasicDBObject) JSON.parse(document.convertToJsonString());
+                    dbObject.append(plugin.getInfo().name(), basic);
+                }
+            }
+            collection.insert(dbObject);
+            this.data = dbObject;
+        } catch(DuplicateKeyException e) {
+            this.data = (BasicDBObject) cursor.one();
+        }
+
+        // merge missing plugin or core data if missing
+        for(String key : botConfig.getJsonObject().keySet()) {
+            if(!this.data.containsKey(key)) {
+                this.data.append(key, JSON.parse(new Document(botConfig.getJsonElement(key).getAsJsonObject()).convertToJsonString()));
+            }
+        }
+        for(LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
+            if(plugin.getBotConfig() != null) {
+                for(String key : plugin.getBotConfig().getJsonObject().keySet()) {
+                    BasicDBObject dbObject = (BasicDBObject) this.data.get(plugin.getInfo().name());
+                    if(!dbObject.containsKey(key)) {
+                        dbObject.append(key, JSON.parse(new Document(plugin.getBotConfig().getJsonElement(key).getAsJsonObject()).convertToJsonString()));
+                        this.data.append(plugin.getInfo().name(), dbObject);
+                    }
+                }
+            }
+        }
     }
 }
