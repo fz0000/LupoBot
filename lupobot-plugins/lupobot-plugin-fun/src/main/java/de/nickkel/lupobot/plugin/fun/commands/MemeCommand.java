@@ -35,6 +35,6 @@ public class MemeCommand extends LupoCommand {
     }
 
     private void failure(CommandContext context) {
-        context.getChannel().sendMessage(context.getServer().translate(context.getPlugin(), "fun_meme-requests")).queue();
+        context.getChannel().sendMessage(context.getServer().translate(context.getPlugin(), "fun_api-requests")).queue();
     }
 }
