@@ -22,7 +22,7 @@ public class ShopCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        if(context.getArgs().length == 3) {
+        if(context.getArgs().length == 2 || context.getArgs().length == 3) {
             CurrencyUser user = LupoCurrencyPlugin.getInstance().getCurrencyUser(context.getMember());
             Item item = LupoCurrencyPlugin.getInstance().getItem(context.getArgs()[1]);
             if(item == null) {
@@ -31,12 +31,21 @@ public class ShopCommand extends LupoCommand {
             }
 
             long amount = 0;
-            try {
-                amount = Long.parseLong(context.getArgs()[2]);
-            } catch(NumberFormatException e) {
-                sendSyntaxError(context, "currency_shop-invalid-amount");
-                return;
+            if(context.getArgs().length == 2) {
+                amount = 1;
+            } else {
+                try {
+                    if(context.getArgs()[0].equalsIgnoreCase("sell") && context.getArgs()[2].equalsIgnoreCase("all")) {
+                        amount = user.getItem(item);
+                    } else {
+                        amount = Long.parseLong(context.getArgs()[2]);
+                    }
+                } catch(NumberFormatException e) {
+                    sendSyntaxError(context, "currency_shop-invalid-amount");
+                    return;
+                }
             }
+
             if(amount <= 0) {
                 sendSyntaxError(context, "currency_shop-too-low-amount");
                 return;
@@ -73,7 +82,7 @@ public class ShopCommand extends LupoCommand {
             }
 
             builder.addField(context.getServer().translate(context.getPlugin(), "currency_shop-item"), context.getServer().formatLong(amount) + "x " + item.getName(), true);
-            builder.addField(context.getServer().translate(context.getPlugin(), "currency_shop-coins"), context.getServer().formatLong( coins), true);
+            builder.addField(context.getServer().translate(context.getPlugin(), "currency_shop-coins"), context.getServer().formatLong(coins), true);
             context.getChannel().sendMessage(builder.build()).queue();
         } else {
             ArrayList<Page> pages = new ArrayList<>();

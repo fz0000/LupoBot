@@ -21,13 +21,17 @@ public class InventoryCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        if(context.getArgs().length == 2 && context.getArgs()[0].equalsIgnoreCase("upgrade")) {
+        if((context.getArgs().length == 1 || context.getArgs().length == 2) && context.getArgs()[0].equalsIgnoreCase("upgrade")) {
             long amount = 0;
-            try {
-                amount = Long.parseLong(context.getArgs()[1]);
-            } catch(NumberFormatException e) {
-                sendSyntaxError(context, "currency_inventory-upgrade-invalid-amount");
-                return;
+            if(context.getArgs().length == 1) {
+                amount = 1;
+            } else {
+                try {
+                    amount = Long.parseLong(context.getArgs()[1]);
+                } catch(NumberFormatException e) {
+                    sendSyntaxError(context, "currency_inventory-upgrade-invalid-amount");
+                    return;
+                }
             }
             if(amount <= 0) {
                 sendSyntaxError(context, "currency_inventory-upgrade-too-low-amount");
