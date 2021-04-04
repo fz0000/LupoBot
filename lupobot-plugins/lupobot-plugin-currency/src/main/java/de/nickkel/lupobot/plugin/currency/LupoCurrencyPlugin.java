@@ -7,18 +7,17 @@ import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.config.Document;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.plugin.PluginInfo;
+import de.nickkel.lupobot.core.tasks.SaveDataTask;
 import de.nickkel.lupobot.core.util.FileResourcesUtils;
 import de.nickkel.lupobot.plugin.currency.data.CurrencyUser;
 import de.nickkel.lupobot.plugin.currency.data.Item;
+import de.nickkel.lupobot.plugin.currency.task.DailyRemindTask;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @PluginInfo(name = "currency", version = "1.0.0", author = "Nickkel")
 public class LupoCurrencyPlugin extends LupoPlugin {
@@ -30,6 +29,7 @@ public class LupoCurrencyPlugin extends LupoPlugin {
     @Getter
     private List<Item> items = new ArrayList<>();
     private final Map<Long, CurrencyUser> currencyUser = new HashMap<>();
+    private Timer dailyRemindTask;
 
     @Override
     public void onEnable() {
@@ -41,11 +41,13 @@ public class LupoCurrencyPlugin extends LupoPlugin {
             this.config = new Document(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("items.json"));
         }
         this.loadItems();
+        this.dailyRemindTask = new Timer("DailyReminder");
+        this.dailyRemindTask.schedule(new DailyRemindTask(), 600*1000, 3600*1000);
     }
 
     @Override
     public void onDisable() {
-
+        this.dailyRemindTask.cancel();
     }
 
     public void loadItems() {

@@ -116,11 +116,11 @@ public class LupoBot {
 
         this.mongoClient = new MongoClient(new MongoClientURI("mongodb://localhost:27017"));
         this.login(builder);
-        this.loadBotData();
 
         Pages.activate(PaginatorBuilder.createSimplePaginator(this.shardManager));
         this.commandHandler.registerCommands(this.getClass().getClassLoader(), "de.nickkel.lupobot.core.internal.commands");
         this.pluginLoader = new PluginLoader();
+        this.loadBotData();
 
         Timer timer = new Timer("DataSaver");
         timer.schedule(new SaveDataTask(), 600*1000, 600*1000);
@@ -148,6 +148,11 @@ public class LupoBot {
 
     public SelfUser getSelfUser() {
         return this.shardManager.getShards().get(0).getSelfUser();
+    }
+
+    public Object getPluginData(LupoPlugin plugin, String key) {
+        BasicDBObject dbObject = (BasicDBObject) this.data.get(plugin.getInfo().name());
+        return dbObject.get(key);
     }
 
     private void loadBotData() {

@@ -112,6 +112,17 @@ public class LupoUser {
         return user;
     }
 
+    public static LupoUser getById(long id) {
+        LupoUser user = null;
+        if(LupoBot.getInstance().getUsers().containsKey(id)) {
+            user =  LupoBot.getInstance().getUsers().get(id);
+        } else {
+            user = new LupoUser(id);
+        }
+        saveQueue(user);
+        return user;
+    }
+
     public static void saveQueue(LupoUser user) {
         if(!LupoBot.getInstance().getSaveQueuedUsers().contains(user)) {
             LupoBot.getInstance().getSaveQueuedUsers().add(user);

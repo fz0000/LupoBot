@@ -1,12 +1,8 @@
 package de.nickkel.lupobot.plugin.currency.data;
 
-import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import de.nickkel.lupobot.core.LupoBot;
-import de.nickkel.lupobot.core.data.LupoServer;
 import de.nickkel.lupobot.core.data.LupoUser;
-import de.nickkel.lupobot.core.pagination.model.Page;
-import de.nickkel.lupobot.core.pagination.type.PageType;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.plugin.currency.LupoCurrencyPlugin;
 import lombok.Getter;

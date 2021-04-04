@@ -3,12 +3,19 @@ package de.nickkel.lupobot.core.util;
 
 import de.nickkel.lupobot.core.command.CommandContext;
 
+import java.sql.Time;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
 public class TimeUtils {
+
+    public static String currentDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime dateTime = LocalDateTime.now();
+        return dateTime.format(formatter);
+    }
 
     public static String format(OffsetDateTime time) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
