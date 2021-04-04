@@ -9,8 +9,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.nickkel.lupobot.plugin</groupId>
-    <artifactId>help</artifactId>
+    <artifactId>lupobot-plugin-profile</artifactId>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -37,7 +41,7 @@
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
-                                        <Main-Class>de.nickkel.lupobot.plugin.help.de.nickkel.lupobot.plugin.profile.LupoProfilePlugin</Main-Class>
+                                        <Main-Class>de.nickkel.lupobot.plugin.profile.LupoProfilePlugin</Main-Class>
                                         <Build-Number>123</Build-Number>
                                     </manifestEntries>
                                 </transformer>
@@ -48,10 +52,5 @@
             </plugin>
         </plugins>
     </build>
-
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-    </properties>
 
 </project>

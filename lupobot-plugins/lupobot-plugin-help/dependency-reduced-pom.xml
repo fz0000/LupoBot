@@ -23,7 +23,7 @@
               <transformers>
                 <transformer>
                   <manifestEntries>
-                    <Main-Class>de.nickkel.lupobot.plugin.help.LupoHelpPlugin</Main-Class>
+                    <Main-Class>de.nickkel.lupobot.plugin.help.de.nickkel.lupobot.plugin.profile.LupoProfilePlugin</Main-Class>
                     <Build-Number>123</Build-Number>
                   </manifestEntries>
                 </transformer>

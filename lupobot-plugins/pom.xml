@@ -13,13 +13,14 @@
     <artifactId>plugins</artifactId>
     <packaging>pom</packaging>
     <modules>
+        <module>lupobot-plugin-profile</module>
+        <module>lupobot-plugin-ticket</module>
         <module>lupobot-plugin-currency</module>
         <module>lupobot-plugin-leveling</module>
         <module>lupobot-plugin-music</module>
         <module>lupobot-plugin-help</module>
         <module>lupobot-plugin-fun</module>
         <module>lupobot-plugin-logging</module>
-        <module>lupobot-plugin-ticket</module>
     </modules>
 
     <properties>

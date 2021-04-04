@@ -11,6 +11,7 @@
         <module name="help" />
         <module name="music" />
         <module name="ticket" />
+        <module name="profile" />
         <module name="logging" />
         <module name="currency" />
         <module name="leveling" />
