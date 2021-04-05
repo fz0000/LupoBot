@@ -12,7 +12,9 @@ import net.dv8tion.jda.api.entities.Message;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class HangmanGame {
 
@@ -37,7 +39,7 @@ public class HangmanGame {
     @Getter @Setter
     private HangmanResult result;
     @Getter
-    private String triedCharacter;
+    private String triedCharacter = "";
     @Getter
     private boolean active;
     @Getter
@@ -57,7 +59,7 @@ public class HangmanGame {
     }
 
     public void tryCharacter(String character) {
-        if(this.characters.containsValue(character) || this.triedCharacter.contains(character)) {
+        if(this.characters.containsValue(character) || this.getIncorrectCharacters().contains(character)) {
             this.context.getChannel().sendMessage(this.context.getServer().translate(this.context.getPlugin(), "fun_hangman-already-guessed", this.context.getMember().getAsMention())).queue();
             return;
         }
@@ -127,6 +129,7 @@ public class HangmanGame {
             title = this.context.getServer().translate(this.context.getPlugin(), "fun_hangman-false-letter", this.incorrectCharacters.get(this.incorrectCharacters.size()-1));
         }
         builder.setTitle(title);
+        builder.setDescription(this.player.getAsMention());
         builder.setFooter(this.context.getServer().translate(context.getPlugin(), "fun_hangman-chances", this.chances, this.maxChances));
         builder.addField(this.context.getServer().translate(context.getPlugin(), "fun_hangman-incorrect-characters"), incorrectCharacters, false);
         builder.addField(this.context.getServer().translate(context.getPlugin(), "fun_hangman-current-word"), currentWord, false);
