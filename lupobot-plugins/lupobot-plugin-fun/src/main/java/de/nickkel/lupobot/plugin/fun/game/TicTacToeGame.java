@@ -82,13 +82,15 @@ public class TicTacToeGame {
         for (int i = 1; i < 10; i++) {
             int finalI = i;
             BiConsumer<Member, Message> consumer = (member, message) -> {
-                if (this.getCurrentPlayer().getIdLong() == member.getIdLong()) {
-                    String emoji = ":o:";
-                    if (this.getCreator() == this.getCurrentPlayer()) {
-                        emoji = ":x:";
+                if( this.winner == null) {
+                    if (this.getCurrentPlayer().getIdLong() == member.getIdLong()) {
+                        String emoji = ":o:";
+                        if (this.getCreator() == this.getCurrentPlayer()) {
+                            emoji = ":x:";
+                        }
+                        this.field.replace(finalI, emoji);
+                        nextRound();
                     }
-                    this.field.replace(finalI, emoji);
-                    nextRound();
                 }
             };
             consumers.put(i, consumer);
@@ -116,11 +118,13 @@ public class TicTacToeGame {
         if (this.message == null) {
             this.context.getChannel().sendMessage(builder.build()).queue(success -> {
                 this.message = success;
+                HashMap<String, BiConsumer<Member, Message>> buttons = new HashMap<>();
                 for (int i = 1; i < 10; i++) {
                     if(!this.field.get(i).equals(":x:") && !this.field.get(i).equals(":o:")) {
-                        Pages.buttonize(success, Collections.singletonMap(getEmoji(i), consumers.get(i)), false, 60, TimeUnit.SECONDS);
+                        buttons.put(getEmoji(i), consumers.get(i));
                     }
                 }
+                Pages.buttonize(success, buttons, false, 60, TimeUnit.SECONDS);
             });
         } else {
             for (int i = 1; i < 10; i++) {
@@ -202,7 +206,7 @@ public class TicTacToeGame {
         } else {
             this.context.getChannel().sendMessage(this.context.getServer().translate(context.getPlugin(), "fun_tictactoe-end", winner.getAsMention())).queue();
         }
-
+        build(true);
     }
 
     public Member getNextMember() {
