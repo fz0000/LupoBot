@@ -95,13 +95,13 @@ public class ShopCommand extends LupoCommand {
             builder.setDescription(context.getServer().translate(context.getPlugin(), "currency_shop-buy-sell"));
 
             for(int i=0; i < LupoCurrencyPlugin.getInstance().getItems().size(); i++) {
+                Item item  = LupoCurrencyPlugin.getInstance().getItems().get(i);
+                builder.addField(item.getIcon() + " " + item.getName(), context.getServer().translate(context.getPlugin(), "currency_shop-buy-sell-item",
+                        context.getServer().formatLong(item.getBuy()), context.getServer().formatLong(item.getSell())), true);
                 if(String.valueOf(i).length() != 1 && (String.valueOf(i).endsWith("0") || i == LupoCurrencyPlugin.getInstance().getItems().size()-1)) {
                     pages.add(new Page(PageType.EMBED, builder.build()));
                     builder.clearFields();
                 }
-                Item item  = LupoCurrencyPlugin.getInstance().getItems().get(i);
-                builder.addField(item.getIcon() + " " + item.getName(), context.getServer().translate(context.getPlugin(), "currency_shop-buy-sell-item",
-                        context.getServer().formatLong(item.getBuy()), context.getServer().formatLong(item.getSell())), true);
             }
 
             context.getChannel().sendMessage((MessageEmbed) pages.get(0).getContent()).queue(success -> {

@@ -80,12 +80,12 @@ public class InventoryCommand extends LupoCommand {
             int i = 0;
             for(Item item : LupoCurrencyPlugin.getInstance().getItems()) {
                 if(user.getItem(item) != 0) {
+                    builder.addField(item.getIcon() + " " + user.getItem(item) + "x " + item.getName(), context.getServer().translate(context.getPlugin(), "currency_inventory-price",
+                            context.getServer().formatLong(item.getBuy()), context.getServer().formatLong(item.getSell())), false);
                     if(String.valueOf(i).length() != 1 && (String.valueOf(i).endsWith("0") || i == max-1)) {
                         pages.add(new Page(PageType.EMBED, builder.build()));
                         builder.clearFields();
                     }
-                    builder.addField(item.getIcon() + " " + user.getItem(item) + "x " + item.getName(), context.getServer().translate(context.getPlugin(), "currency_inventory-price",
-                            context.getServer().formatLong(item.getBuy()), context.getServer().formatLong(item.getSell())), false);
                     i++;
                 }
             }
