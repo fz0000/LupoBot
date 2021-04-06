@@ -7,14 +7,13 @@ import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.config.Document;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.plugin.PluginInfo;
-import de.nickkel.lupobot.core.tasks.SaveDataTask;
 import de.nickkel.lupobot.core.util.FileResourcesUtils;
 import de.nickkel.lupobot.plugin.currency.data.CurrencyUser;
 import de.nickkel.lupobot.plugin.currency.data.Item;
+import de.nickkel.lupobot.plugin.currency.data.Job;
 import de.nickkel.lupobot.plugin.currency.task.DailyRemindTask;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Role;
 
 import java.io.File;
 import java.util.*;
@@ -25,9 +24,11 @@ public class LupoCurrencyPlugin extends LupoPlugin {
     @Getter
     private static LupoCurrencyPlugin instance;
     @Getter
-    private Document config;
+    private Document itemConfig, jobConfig;
     @Getter
-    private List<Item> items = new ArrayList<>();
+    private final List<Item> items = new ArrayList<>();
+    @Getter
+    private final List<Job> jobs = new ArrayList<>();
     private final Map<Long, CurrencyUser> currencyUser = new HashMap<>();
     private Timer dailyRemindTask;
 
@@ -36,11 +37,17 @@ public class LupoCurrencyPlugin extends LupoPlugin {
         instance = this;
         LupoBot.getInstance().getCommandHandler().registerCommands(this, "de.nickkel.lupobot.plugin.currency.commands");
         if(new File("storage/items.json").exists()) {
-            this.config = new Document(new File("storage/items.json"));
+            this.itemConfig = new Document(new File("storage/items.json"));
         } else {
-            this.config = new Document(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("items.json"));
+            this.itemConfig = new Document(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("configs/items.json"));
+        }
+        if(new File("storage/jobs.json").exists()) {
+            this.jobConfig = new Document(new File("storage/jobs.json"));
+        } else {
+            this.jobConfig = new Document(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("configs/jobs.json"));
         }
         this.loadItems();
+        this.loadJobs();
         this.dailyRemindTask = new Timer("DailyReminder");
         this.dailyRemindTask.schedule(new DailyRemindTask(), 600*1000, 3600*1000);
     }
@@ -51,13 +58,24 @@ public class LupoCurrencyPlugin extends LupoPlugin {
     }
 
     public void loadItems() {
-        BasicDBObject dbObject = (BasicDBObject) JSON.parse(this.config.convertToJsonString());
+        BasicDBObject dbObject = (BasicDBObject) JSON.parse(this.itemConfig.convertToJsonString());
         for(String name : dbObject.keySet()) {
             BasicDBList dbList = new BasicDBList();
-            dbList.addAll(this.config.getList(name));
+            dbList.addAll(this.itemConfig.getList(name));
             Item item = new Item(name, (String) dbList.get(0), Long.parseLong((String) dbList.get(1)), Long.parseLong((String) dbList.get(2)));
             this.items.add(item);
             LupoBot.getInstance().getLogger().info("Loaded item " + item.getName());
+        }
+    }
+
+    public void loadJobs() {
+        BasicDBObject dbObject = (BasicDBObject) JSON.parse(this.jobConfig.convertToJsonString());
+        for(String name : dbObject.keySet()) {
+            BasicDBList dbList = new BasicDBList();
+            dbList.addAll(this.jobConfig.getList(name));
+            Job job = new Job(name, this.getItem((String) dbList.get(0)), (String) dbList.get(1), Long.parseLong((String) dbList.get(2)), Long.parseLong((String) dbList.get(3)));
+            this.jobs.add(job);
+            LupoBot.getInstance().getLogger().info("Loaded job " + job.getName());
         }
     }
 

@@ -6,6 +6,7 @@ import de.nickkel.lupobot.core.data.LupoUser;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.plugin.currency.LupoCurrencyPlugin;
 import lombok.Getter;
+import lombok.Setter;
 import net.dv8tion.jda.api.entities.*;
 
 import java.util.*;
@@ -16,6 +17,8 @@ public class CurrencyUser {
     private final LupoUser user;
     @Getter
     private final LupoPlugin plugin;
+    @Getter @Setter
+    private Job currentJob;
 
     public CurrencyUser(Member member) {
         this.plugin = LupoBot.getInstance().getPlugin("currency");

@@ -1,0 +1,22 @@
+{
+  "farmer": ["tractor", "https://imgur.com/1PVI8hM.png", 14400, 600],
+  "technician": ["hammer", "https://imgur.com/yQmaFIe.png", 5400, 250],
+  "trainer": ["football", "https://imgur.com/bRqzmKw.png", 5400, 250],
+  "applespicker": ["apple", "https://imgur.com/qv4iev8.png", 60, 20],
+  "professor": ["book", "https://imgur.com/YUc7Ppb.png", 3600, 185],
+  "baker": ["croissant", "https://imgur.com/HRdvO6r.png", 1800, 80],
+  "taxidriver": ["car", "https://imgur.com/uOMpS17.png", 14400, 600],
+  "paramedic": ["syringe", "https://imgur.com/Z97fWoc.png", 10800, 490],
+  "police": ["gun", "https://imgur.com/HQXp8R8.png", 10800, 490],
+  "chef": ["knife", "https://imgur.com/F940PkL.png", 7200, 300],
+  "pilot": ["airplane", "https://imgur.com/kZqjcbJ.png", 28800, 1200],
+  "gamer": ["joystick", "https://imgur.com/hCCGeJC.png", 5400, 210],
+  "youtuber": ["computer", "https://imgur.com/MNx0RIm.png", 7200, 300],
+  "vlogger": ["camera", "https://imgur.com/mLpAIbc.png", 7200, 300],
+  "busdriver": ["bus", "https://imgur.com/2HpQcNT.png", 25200, 1000],
+  "guitarist": ["guitar", "https://imgur.com/7nLBU2b.png", 5400, 210],
+  "designer": ["scissors", "https://imgur.com/kN0JaqY.png", 7200, 300],
+  "teacher": ["book", "https://imgur.com/NXgcqGF.png", 19500, 850],
+  "nurse": ["syringe", "https://imgur.com/7OGLkVE.png", 21000, 890],
+  "programmer": ["computer", "https://imgur.com/qJyC8Y7.png", 14400, 700]
+}
