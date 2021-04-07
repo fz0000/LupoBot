@@ -33,9 +33,9 @@ public class LupoLauncher {
 
         System.out.println("Starting launcher ...");
         List<String> files = Arrays.asList("storage", "plugins");
-        for(String path : files) {
+        for (String path : files) {
             File file = new File(path);
-            if(!file.exists()) {
+            if (!file.exists()) {
                 System.out.println("Could not found " + path + " file! Creating the file ...");
                 file.mkdirs();
             }
@@ -57,13 +57,13 @@ public class LupoLauncher {
 
     public void startBot(String[] args) {
         Path path = null;
-        for(File file : new File("storage").listFiles()) {
-            if(file.getName().endsWith(".jar")) { //should be the core
+        for (File file : new File("storage").listFiles()) {
+            if (file.getName().endsWith(".jar")) { //should be the core
                 path = file.toPath();
             }
         }
 
-        if(path == null) {
+        if (path == null) {
             throw new NullPointerException("Could not find core in storage directory!");
         }
 

@@ -15,7 +15,7 @@ public class ClearQueueCommand extends LupoCommand {
     @Override
     public void onCommand(CommandContext context) {
         MusicServer server = LupoMusicPlugin.getInstance().getMusicServer(context.getGuild());
-        if(server.joinedVoiceChannel(context)) {
+        if (server.joinedVoiceChannel(context)) {
             server.getScheduler().getQueue().clear();
             EmbedBuilder builder = new EmbedBuilder();
             builder.setColor(LupoColor.GREEN.getColor());

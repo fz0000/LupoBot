@@ -68,7 +68,7 @@ public class Document implements iDocument {
 
     @Override
     public Document append(String key, String value) {
-        if(value == null)
+        if (value == null)
             return this;
         this.jsonObject.addProperty(key, value);
         return this;
@@ -76,7 +76,7 @@ public class Document implements iDocument {
 
     @Override
     public Document append(String key, Number value) {
-        if(value == null)
+        if (value == null)
             return this;
         this.jsonObject.addProperty(key, value);
         return this;
@@ -84,7 +84,7 @@ public class Document implements iDocument {
 
     @Override
     public Document append(String key, Integer value) {
-        if(value == null)
+        if (value == null)
             return this;
         this.jsonObject.addProperty(key, value);
         return this;
@@ -92,7 +92,7 @@ public class Document implements iDocument {
 
     @Override
     public Document append(String key, Boolean value) {
-        if(value == null)
+        if (value == null)
             return this;
         this.jsonObject.addProperty(key, value);
         return this;
@@ -100,7 +100,7 @@ public class Document implements iDocument {
 
     @Override
     public Document append(String key, Long value) {
-        if(value == null)
+        if (value == null)
             return this;
         this.jsonObject.addProperty(key, value);
         return this;
@@ -108,7 +108,7 @@ public class Document implements iDocument {
 
     @Override
     public Document append(String key, Object value) {
-        if(value == null)
+        if (value == null)
             return this;
         this.jsonObject.add(key, GSON.toJsonTree(value));
         return this;
@@ -116,11 +116,11 @@ public class Document implements iDocument {
 
     @Override
     public Document append(String key, List<String> value) {
-        if(value == null)
+        if (value == null)
             return this;
         JsonArray jsonElements = new JsonArray();
 
-        for(String b : value) {
+        for (String b : value) {
             jsonElements.add(new JsonPrimitive(b));
         }
         this.jsonObject.add(key, jsonElements);
@@ -129,7 +129,7 @@ public class Document implements iDocument {
 
     @Override
     public Document append(String key, JsonElement value) {
-        if(value == null)
+        if (value == null)
             return this;
         this.jsonObject.add(key, value);
         return this;
@@ -161,7 +161,7 @@ public class Document implements iDocument {
     }
 
     public <T> T getObject(String key, Class<T> class_) {
-        if(!this.jsonObject.has(key))
+        if (!this.jsonObject.has(key))
             return null;
         JsonElement jsonElement = this.jsonObject.get(key);
 
@@ -173,7 +173,7 @@ public class Document implements iDocument {
 
         List<String> list = new ArrayList<>();
 
-        for(short i = 0; i < jsonElements.size(); i++) {
+        for (short i = 0; i < jsonElements.size(); i++) {
             list.add(jsonElements.get(i).getAsString());
         }
 
@@ -181,13 +181,13 @@ public class Document implements iDocument {
     }
 
     public JsonElement getJsonElement(String key) {
-        if(!this.jsonObject.has(key))
+        if (!this.jsonObject.has(key))
             return null;
         return this.jsonObject.get(key);
     }
 
     public Boolean has(String key) {
-        if(!this.jsonObject.has(key))
+        if (!this.jsonObject.has(key))
             return false;
         return true;
     }
@@ -210,7 +210,7 @@ public class Document implements iDocument {
     }
 
     public Document saveAsConfig() {
-        try(PrintWriter printWriter = new PrintWriter(file, "UTF-8")) {
+        try (PrintWriter printWriter = new PrintWriter(file, "UTF-8")) {
             printWriter.write(GSON.toJson(jsonObject));
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();

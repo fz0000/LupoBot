@@ -22,7 +22,7 @@ public class DailyRemindCommand extends LupoCommand {
         builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null,
                 context.getMember().getUser().getAvatarUrl());
         builder.setTimestamp(context.getMessage().getTimeCreated());
-        if(dbList.contains(context.getMember().getIdLong())) {
+        if (dbList.contains(context.getMember().getIdLong())) {
             dbList.remove(context.getMember().getIdLong());
             builder.setColor(LupoColor.RED.getColor());
             builder.setDescription(context.getServer().translate(context.getPlugin(), "currency_dailyremind-removed"));

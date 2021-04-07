@@ -1,6 +1,5 @@
 package de.nickkel.lupobot.plugin.fun.commands;
 
-import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
@@ -18,19 +17,19 @@ import java.util.function.BiConsumer;
 public class TicTacToeCommand extends LupoCommand {
     @Override
     public void onCommand(CommandContext context) {
-        if(context.getArgs().length == 1) {
+        if (context.getArgs().length == 1) {
             Member member = context.getServer().getMember(context.getArgs()[0]);
-            if(member == null) {
+            if (member == null) {
                 sendSyntaxError(context, "fun_tictactoe-invalid-player");
                 return;
             }
 
-            if(member.getUser().isBot()) {
+            if (member.getUser().isBot()) {
                 sendSyntaxError(context, "fun_tictactoe-bot-player");
                 return;
             }
 
-            if(member.getIdLong() == context.getMember().getIdLong()) {
+            if (member.getIdLong() == context.getMember().getIdLong()) {
                 sendSyntaxError(context, "fun_tictactoe-player-against-himself");
                 return;
             }
@@ -38,13 +37,13 @@ public class TicTacToeCommand extends LupoCommand {
             TicTacToeGame game = new TicTacToeGame(context);
 
             BiConsumer<Member, Message> accept = (reactor, message) -> {
-                if(member == reactor && LupoFunPlugin.getInstance().getTicTacToeGames().contains(game) && game.getParticipant() == null) {
+                if (member == reactor && LupoFunPlugin.getInstance().getTicTacToeGames().contains(game) && game.getParticipant() == null) {
                     game.start(reactor);
                 }
             };
 
             BiConsumer<Member, Message> deny = (reactor, message) -> {
-                if(member == reactor && LupoFunPlugin.getInstance().getTicTacToeGames().contains(game) && game.getParticipant() == null) {
+                if (member == reactor && LupoFunPlugin.getInstance().getTicTacToeGames().contains(game) && game.getParticipant() == null) {
                     LupoFunPlugin.getInstance().getTicTacToeGames().remove(game);
                     context.getChannel().sendMessage(context.getServer().translate(context.getPlugin(), "fun_tictactoe-request-deny",
                             context.getMember().getAsMention(), reactor.getAsMention())).queue();

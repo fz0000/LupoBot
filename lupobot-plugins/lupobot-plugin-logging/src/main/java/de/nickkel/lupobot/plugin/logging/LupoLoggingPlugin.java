@@ -31,7 +31,7 @@ public class LupoLoggingPlugin extends LupoPlugin {
 
     public void sendLog(LogEvent event, Guild guild, EmbedBuilder builder) {
         long channelId = LupoLoggingPlugin.getInstance().getChannelId(event, guild);
-        if(channelId != -1) {
+        if (channelId != -1) {
             TextChannel channel = guild.getTextChannelById(channelId);
             builder.setDescription(LupoServer.getByGuild(guild).translate(LupoBot.getInstance().getPlugin(this.getInfo().name()), event.getLocale()));
             channel.sendMessage(builder.build()).queue();
@@ -41,9 +41,9 @@ public class LupoLoggingPlugin extends LupoPlugin {
     public long getChannelId(LogEvent event, Guild guild) {
         LupoServer server = LupoServer.getByGuild(guild);
         long channelId = Long.parseLong(server.getPluginData(LupoBot.getInstance().getPlugin(this.getInfo().name()), event.getKey()).toString());
-        if(channelId != -1) {
+        if (channelId != -1) {
             TextChannel channel = guild.getTextChannelById(channelId);
-            if(channel == null) {
+            if (channel == null) {
                 server.appendPluginData(LupoBot.getInstance().getPlugin(this.getInfo().name()), event.getKey(), -1);
                 return -1;
             }

@@ -11,7 +11,6 @@ import de.nickkel.lupobot.core.util.LupoColor;
 import de.nickkel.lupobot.core.util.TimeUtils;
 import de.nickkel.lupobot.plugin.currency.LupoCurrencyPlugin;
 import de.nickkel.lupobot.plugin.currency.data.CurrencyUser;
-import de.nickkel.lupobot.plugin.currency.data.Item;
 import de.nickkel.lupobot.plugin.currency.data.Job;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -31,21 +30,21 @@ public class JobCommand extends LupoCommand {
             int id = -1;
             try {
                 id = Integer.parseInt(context.getArgs()[0]);
-            } catch(NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 sendSyntaxError(context, "currency_job-invalid-id");
                 return;
             }
-            if(LupoCurrencyPlugin.getInstance().getJobs().size() <= id-1) {
+            if (LupoCurrencyPlugin.getInstance().getJobs().size() <= id-1) {
                 sendSyntaxError(context, "currency_job-invalid-id");
                 return;
             }
-            if(user.getCurrentJob() != null) {
+            if (user.getCurrentJob() != null) {
                 sendSyntaxError(context, "currency_job-already-working");
                 return;
             }
 
             Job job = LupoCurrencyPlugin.getInstance().getJobs().get(id-1);
-            if(user.getItem(job.getNeededItem()) == 0) {
+            if (user.getItem(job.getNeededItem()) == 0) {
                 sendSyntaxError(context, "currency_job-no-item", job.getNeededItem().getIcon() + " " + job.getNeededItem().getName(), job.getNeededItem().getName());
                 return;
             }
@@ -87,11 +86,11 @@ public class JobCommand extends LupoCommand {
 
             ArrayList<Page> pages = new ArrayList<>();
             int id = 1;
-            for(Job job : LupoCurrencyPlugin.getInstance().getJobs()) {
+            for (Job job : LupoCurrencyPlugin.getInstance().getJobs()) {
                 builder.addField(id + ". " + job.getTranslatedName(context.getServer()) + " (" + TimeUtils.format(context, job.getDuration()*1000L) + ")", context.getServer().translate(context.getPlugin(), "currency_job-info",
                         context.getServer().formatLong(job.getCoins()), job.getNeededItem().getIcon() + " " + job.getNeededItem().getName())
                         + job.getTranslatedDescription(context.getServer()), false);
-                if(String.valueOf(id).length() != 1 && (String.valueOf(id).endsWith("0") || id == LupoCurrencyPlugin.getInstance().getJobs().size())) {
+                if (String.valueOf(id).length() != 1 && (String.valueOf(id).endsWith("0") || id == LupoCurrencyPlugin.getInstance().getJobs().size())) {
                     pages.add(new Page(PageType.EMBED, builder.build()));
                     builder.clearFields();
                 }

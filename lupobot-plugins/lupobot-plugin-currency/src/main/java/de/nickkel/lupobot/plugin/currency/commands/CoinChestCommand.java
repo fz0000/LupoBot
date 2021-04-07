@@ -16,7 +16,7 @@ public class CoinChestCommand extends LupoCommand {
     @Override
     public void onCommand(CommandContext context) {
         CurrencyUser user = LupoCurrencyPlugin.getInstance().getCurrencyUser(context.getMember());
-        if(user.getItem(LupoCurrencyPlugin.getInstance().getItem("coinchest")) == 0) {
+        if (user.getItem(LupoCurrencyPlugin.getInstance().getItem("coinchest")) == 0) {
             sendSyntaxError(context, "currency_coinchest-buy-item");
             return;
         }
@@ -25,9 +25,9 @@ public class CoinChestCommand extends LupoCommand {
         long coins;
         int percent = new Random().nextInt(100);
 
-        if(percent < 80){
+        if (percent < 80){
             coins = new Random().nextInt((800-300)+1) + 300;
-        } else if(percent < 90){
+        } else if (percent < 90){
             coins = new Random().nextInt((2000-800)+1) + 800;
         } else {
             coins = new Random().nextInt((3000-2000)+1) + 2000;

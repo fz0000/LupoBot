@@ -21,14 +21,14 @@ public class LanguageCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        if(context.getArgs().length == 1) {
-            if(LupoBot.getInstance().getAvailableLanguages().contains(context.getArgs()[0]) || getLanguageCodeByName(context.getArgs()[0]) != null) {
+        if (context.getArgs().length == 1) {
+            if (LupoBot.getInstance().getAvailableLanguages().contains(context.getArgs()[0]) || getLanguageCodeByName(context.getArgs()[0]) != null) {
                 String languageCode = context.getArgs()[0];
-                if(getLanguageCodeByName(context.getArgs()[0]) != null) {
+                if (getLanguageCodeByName(context.getArgs()[0]) != null) {
                     languageCode = getLanguageCodeByName(context.getArgs()[0]);
                 }
                 Locale locale = new Locale(languageCode.split("_")[0]);
-                if(context.getServer().getLanguage().equals(languageCode)) {
+                if (context.getServer().getLanguage().equals(languageCode)) {
                     sendSyntaxError(context, "core_language-already-using", locale.getDisplayName(locale));
                     return;
                 }
@@ -49,7 +49,7 @@ public class LanguageCommand extends LupoCommand {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setColor(LupoColor.YELLOW.getColor());
             builder.setTitle(context.getServer().translate(null, "core_available-languages"));
-            for(String language : LupoBot.getInstance().getAvailableLanguages()) {
+            for (String language : LupoBot.getInstance().getAvailableLanguages()) {
                 Locale locale = new Locale(language.split("_")[0]);
                 String name = locale.getDisplayName(locale);
                 String flag = ":flag_" + language.split("_")[1].toLowerCase() + ":";
@@ -67,9 +67,9 @@ public class LanguageCommand extends LupoCommand {
     }
 
     private String getLanguageCodeByName(String name) {
-        for(String code : LupoBot.getInstance().getAvailableLanguages()) {
+        for (String code : LupoBot.getInstance().getAvailableLanguages()) {
             Locale locale = new Locale(code.split("_")[0]);
-            if(name.equalsIgnoreCase(locale.getDisplayName(locale))) {
+            if (name.equalsIgnoreCase(locale.getDisplayName(locale))) {
                 return code;
             }
         }

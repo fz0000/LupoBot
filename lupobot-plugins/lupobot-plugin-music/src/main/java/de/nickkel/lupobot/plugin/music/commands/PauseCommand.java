@@ -15,7 +15,7 @@ public class PauseCommand extends LupoCommand {
     @Override
     public void onCommand(CommandContext context) {
         MusicServer server = LupoMusicPlugin.getInstance().getMusicServer(context.getGuild());
-        if(!server.joinedVoiceChannel(context)) {
+        if (!server.joinedVoiceChannel(context)) {
             return;
         }
         EmbedBuilder builder = new EmbedBuilder();
@@ -24,7 +24,7 @@ public class PauseCommand extends LupoCommand {
                 context.getMember().getUser().getAvatarUrl());
         builder.setTimestamp(context.getMessage().getTimeCreated());
 
-        if(server.getAudioPlayer().isPaused()) {
+        if (server.getAudioPlayer().isPaused()) {
             server.getAudioPlayer().setPaused(false);
             builder.setDescription(context.getServer().translate(context.getPlugin(), "music_pause-false"));
         } else {

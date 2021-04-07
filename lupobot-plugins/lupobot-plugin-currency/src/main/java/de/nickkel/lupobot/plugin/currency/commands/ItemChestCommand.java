@@ -9,15 +9,13 @@ import de.nickkel.lupobot.plugin.currency.data.CurrencyUser;
 import de.nickkel.lupobot.plugin.currency.data.Item;
 import net.dv8tion.jda.api.EmbedBuilder;
 
-import java.util.Random;
-
 @CommandInfo(name = "itemchest", category = "chest")
 public class ItemChestCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
         CurrencyUser user = LupoCurrencyPlugin.getInstance().getCurrencyUser(context.getMember());
-        if(user.getItem(LupoCurrencyPlugin.getInstance().getItem("itemchest")) == 0) {
+        if (user.getItem(LupoCurrencyPlugin.getInstance().getItem("itemchest")) == 0) {
             sendSyntaxError(context, "currency_itemchest-buy-item");
             return;
         }

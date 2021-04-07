@@ -15,9 +15,9 @@ public class CoinsCommand extends LupoCommand {
     @Override
     public void onCommand(CommandContext context) {
         Member member = context.getMember();
-        if(context.getArgs().length == 1) {
+        if (context.getArgs().length == 1) {
             member = context.getServer().getMember(context.getArgs()[0]);
-            if(member == null) {
+            if (member == null) {
                 sendSyntaxError(context, "currency_coins-member-not-found");
                 return;
             }

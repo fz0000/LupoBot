@@ -19,11 +19,11 @@ public class GuildUserUpdateActivityOrderListener extends ListenerAdapter {
         LupoPlugin plugin = LupoBot.getInstance().getPlugin("logging");
 
         String old = "/";
-        if(event.getOldValue().size() == 1) {
+        if (event.getOldValue().size() == 1) {
             old = event.getOldValue().get(0).getName();
         }
         String current = "/";
-        if(event.getOldValue().size() == 1) {
+        if (event.getOldValue().size() == 1) {
             current = event.getNewValue().get(0).getName();
         }
 

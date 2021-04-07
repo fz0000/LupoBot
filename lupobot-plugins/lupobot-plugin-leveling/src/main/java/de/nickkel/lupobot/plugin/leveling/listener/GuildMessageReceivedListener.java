@@ -11,12 +11,12 @@ public class GuildMessageReceivedListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         LupoServer server = LupoServer.getByGuild(event.getGuild());
-        if(event.getMember() == null) {
+        if (event.getMember() == null) {
             return;
         }
 
         LupoUser user = LupoUser.getByMember(event.getMember());
-        if(LupoLevelingPlugin.getInstance().isReadyToReceiveXP(server, user)) {
+        if (LupoLevelingPlugin.getInstance().isReadyToReceiveXP(server, user)) {
             LupoLevelingPlugin.getInstance().addXP(server, user, LupoLevelingPlugin.getInstance().getRandomXP(), event.getChannel());
         }
     }

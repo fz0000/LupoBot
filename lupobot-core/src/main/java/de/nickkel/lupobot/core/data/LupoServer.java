@@ -1,6 +1,5 @@
 package de.nickkel.lupobot.core.data;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
@@ -13,7 +12,6 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 
-import javax.print.Doc;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -45,10 +43,10 @@ public class LupoServer {
             BasicDBObject dbObject = (BasicDBObject) JSON.parse(LupoBot.getInstance().getServerConfig().convertToJsonString());
             dbObject.append("_id", guild.getIdLong());
             // merge data file of all plugins into one file
-            for(LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
-                if(plugin.getServerConfig() != null) {
+            for (LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
+                if (plugin.getServerConfig() != null) {
                     Document document = new Document(new JsonObject());
-                    for(String key : plugin.getServerConfig().getJsonObject().keySet()) {
+                    for (String key : plugin.getServerConfig().getJsonObject().keySet()) {
                         document.append(key, plugin.getServerConfig().getJsonElement(key));
                     }
                     BasicDBObject basic = (BasicDBObject) JSON.parse(document.convertToJsonString());
@@ -57,14 +55,14 @@ public class LupoServer {
             }
             collection.insert(dbObject);
             this.data = dbObject;
-        } catch(DuplicateKeyException e) {
+        } catch (DuplicateKeyException e) {
             this.data = (BasicDBObject) cursor.one();
         }
         this.prefix = this.data.getString("prefix");
         this.language = this.data.getString("language");
         BasicDBList dbList = (BasicDBList) this.data.get("plugins");
-        for(Object name : dbList) {
-            if(LupoBot.getInstance().getPlugin((String) name) != null) {
+        for (Object name : dbList) {
+            if (LupoBot.getInstance().getPlugin((String) name) != null) {
                 this.plugins.add(LupoBot.getInstance().getPlugin((String) name));
             } else { // remove plugin if it doesn't exist anymore
                 dbList.remove(name);
@@ -73,16 +71,16 @@ public class LupoServer {
         }
 
         // merge missing plugin or core data if missing
-        for(String key : LupoBot.getInstance().getServerConfig().getJsonObject().keySet()) {
-            if(!this.data.containsKey(key)) {
+        for (String key : LupoBot.getInstance().getServerConfig().getJsonObject().keySet()) {
+            if (!this.data.containsKey(key)) {
                 this.data.append(key, JSON.parse(new Document(LupoBot.getInstance().getServerConfig().getJsonElement(key).getAsJsonObject()).convertToJsonString()));
             }
         }
-        for(LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
-            if(plugin.getServerConfig() != null) {
-                for(String key : plugin.getServerConfig().getJsonObject().keySet()) {
+        for (LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
+            if (plugin.getServerConfig() != null) {
+                for (String key : plugin.getServerConfig().getJsonObject().keySet()) {
                     BasicDBObject dbObject = (BasicDBObject) this.data.get(plugin.getInfo().name());
-                    if(!dbObject.containsKey(key)) {
+                    if (!dbObject.containsKey(key)) {
                         BasicDBObject config = (BasicDBObject) JSON.parse(new Document(plugin.getServerConfig().getJsonObject()).convertToJsonString());
                         dbObject.append(key, config.get(key));
                         this.data.append(plugin.getInfo().name(), dbObject);
@@ -161,11 +159,11 @@ public class LupoServer {
 
     public Member getMember(String arg) {
         try {
-            if(arg.contains("#") && !arg.startsWith("@")) { // only works if name does not contain any spaces
+            if (arg.contains("#") && !arg.startsWith("@")) { // only works if name does not contain any spaces
                 return this.guild.getMemberByTag(arg);
-            } else if(arg.startsWith("<@")) {
+            } else if (arg.startsWith("<@")) {
                 String id = arg.replace("@", "").replace("<", "").replace(">", "").replace("!", "");
-                if(id.length() == 18) {
+                if (id.length() == 18) {
                     return this.guild.getMemberById(id);
                 } else {
                     return null;
@@ -180,9 +178,9 @@ public class LupoServer {
     }
 
     public TextChannel getTextChannel(String arg) {
-        if(arg.startsWith("<#")) {
+        if (arg.startsWith("<#")) {
             String id = arg.replace("#", "").replace("<", "").replace(">", "").replace("!", "");
-            if(this.guild.getTextChannelById(id) != null) {
+            if (this.guild.getTextChannelById(id) != null) {
                 return this.guild.getTextChannelById(id);
             } else {
                 return null;
@@ -193,14 +191,14 @@ public class LupoServer {
     }
 
     public Role getRole(String arg) {
-        if(arg.startsWith("<@&")) {
+        if (arg.startsWith("<@&")) {
             String id = arg.replace("@", "").replace("<", "").replace(">", "").replace("&", "");
             if (this.guild.getRoleById(id) != null) {
                 return this.guild.getRoleById(id);
             } else {
                 return null;
             }
-        } else if(this.guild.getRolesByName(arg, true).size() != 0) {
+        } else if (this.guild.getRolesByName(arg, true).size() != 0) {
             return this.guild.getRolesByName(arg, true).get(0);
         } else {
             return null;
@@ -209,7 +207,7 @@ public class LupoServer {
 
     public static LupoServer getByGuild(Guild guild) {
         LupoServer server = null;
-        if(LupoBot.getInstance().getServers().containsKey(guild)) {
+        if (LupoBot.getInstance().getServers().containsKey(guild)) {
             server = LupoBot.getInstance().getServers().get(guild);
         } else {
             server =  new LupoServer(guild);
@@ -222,7 +220,7 @@ public class LupoServer {
         Locale locale = new Locale(this.language.split("_")[0]);
         NumberFormat anotherFormat = NumberFormat.getNumberInstance(locale);
 
-        if(anotherFormat instanceof DecimalFormat) {
+        if (anotherFormat instanceof DecimalFormat) {
             DecimalFormat anotherDFormat = (DecimalFormat) anotherFormat;
             anotherDFormat.setGroupingUsed(true);
             anotherDFormat.setGroupingSize(3);
@@ -232,7 +230,7 @@ public class LupoServer {
     }
 
     public static void saveQueue(LupoServer server) {
-        if(!LupoBot.getInstance().getSaveQueuedServers().contains(server)) {
+        if (!LupoBot.getInstance().getSaveQueuedServers().contains(server)) {
             LupoBot.getInstance().getSaveQueuedServers().add(server);
         }
     }

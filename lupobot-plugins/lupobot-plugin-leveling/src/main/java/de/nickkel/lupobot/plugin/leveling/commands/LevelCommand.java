@@ -14,9 +14,9 @@ public class LevelCommand extends LupoCommand {
     @Override
     public void onCommand(CommandContext context) {
         Member member = context.getMember();
-        if(context.getArgs().length == 1) {
+        if (context.getArgs().length == 1) {
             member = context.getServer().getMember(context.getArgs()[0]);
-            if(member == null) {
+            if (member == null) {
                 sendSyntaxError(context, "leveling_level-member-not-found");
                 return;
             }
@@ -41,10 +41,10 @@ public class LevelCommand extends LupoCommand {
     private String getProgressBar(int percent){
         StringBuilder bar = new StringBuilder("[");
 
-        for(int i = 0; i < 50; i++) {
-            if(i < (percent/2)) {
+        for (int i = 0; i < 50; i++) {
+            if (i < (percent/2)) {
                 bar.append("=");
-            } else if( i == (percent/2)) {
+            } else if (i == (percent/2)) {
                 bar.append(">");
             } else {
                 bar.append(" ");

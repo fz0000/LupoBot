@@ -20,7 +20,7 @@ public class LogMessage {
         DBObject query = new BasicDBObject("_id", messageId);
         DBCursor cursor = collection.find(query);
         try {
-            if(createIfNotExists) {
+            if (createIfNotExists) {
                 BasicDBObject dbObject = new BasicDBObject();
                 dbObject.append("_id", messageId);
                 collection.insert(dbObject);
@@ -28,7 +28,7 @@ public class LogMessage {
             } else {
                 this.data = (BasicDBObject) cursor.one();
             }
-        } catch(DuplicateKeyException e) {
+        } catch (DuplicateKeyException e) {
             this.data = (BasicDBObject) cursor.one();
         }
     }

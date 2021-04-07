@@ -12,13 +12,13 @@ import net.dv8tion.jda.api.Permission;
 public class PrefixCommand extends LupoCommand {
     @Override
     public void onCommand(CommandContext context) {
-        if(context.getArgs().length == 1) {
+        if (context.getArgs().length == 1) {
             String prefix = context.getArgs()[0];
             if(context.getServer().getPrefix().equals(prefix)) {
                 sendSyntaxError(context, "core_prefix-already-using", prefix);
                 return;
             }
-            if(prefix.length() <= 10) {
+            if (prefix.length() <= 10) {
                 context.getServer().setPrefix(prefix);
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setColor(LupoColor.GREEN.getColor());

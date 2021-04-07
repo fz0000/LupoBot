@@ -10,12 +10,10 @@ import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.User;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Predicate;
 
 public abstract class LupoCommand {
 
@@ -55,13 +53,13 @@ public abstract class LupoCommand {
         LupoPlugin plugin = context.getPlugin();
 
         String title = server.getPrefix() + this.info.name();
-        if(this.info.aliases().length != 0) {
+        if (this.info.aliases().length != 0) {
             for(String alias : this.info.aliases()) {
                 title = title + " / " + server.getPrefix() + alias;
             }
         }
         String permissions = "/";
-        if(this.info.permissions().length != 0) {
+        if (this.info.permissions().length != 0) {
             permissions = "";
             for(Permission permission : this.info.permissions()) {
                 permissions = permissions + "\n" + permission.toString();
@@ -69,7 +67,7 @@ public abstract class LupoCommand {
         }
 
         String pluginName = "core";
-        if(plugin != null) {
+        if (plugin != null) {
             pluginName = plugin.getInfo().name();
         }
         EmbedBuilder builder = new EmbedBuilder();

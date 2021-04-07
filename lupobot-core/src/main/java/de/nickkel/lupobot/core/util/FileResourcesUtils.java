@@ -102,10 +102,10 @@ public class FileResourcesUtils {
 
             while ((line = reader.readLine()) != null) {
                 try {
-                    if(!line.isEmpty()) {
+                    if (!line.isEmpty()) {
                         properties.setProperty(line.split(" = ")[0], line.split(" = ")[1]);
                     }
-                } catch(ArrayIndexOutOfBoundsException e) {
+                } catch (ArrayIndexOutOfBoundsException e) {
                     LupoBot.getInstance().getLogger().error("Failed to load locale file of " + clazz.getName() + " due to line split fail (" + line + ")");
                 }
 

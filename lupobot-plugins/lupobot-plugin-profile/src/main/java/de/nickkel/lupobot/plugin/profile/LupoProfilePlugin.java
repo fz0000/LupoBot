@@ -29,7 +29,7 @@ public class LupoProfilePlugin extends LupoPlugin {
     }
 
     public Profile getProfile(Member member) {
-        if(!this.profiles.containsKey(member.getIdLong())) {
+        if (!this.profiles.containsKey(member.getIdLong())) {
             this.profiles.put(member.getIdLong(), new Profile(member));
         }
         return this.profiles.get(member.getIdLong());

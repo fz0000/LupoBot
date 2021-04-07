@@ -17,11 +17,11 @@ public class VolumeCommand extends LupoCommand {
         if(context.getArgs().length == 1) {
             try {
                 MusicServer server = LupoMusicPlugin.getInstance().getMusicServer(context.getGuild());
-                if(!server.joinedVoiceChannel(context)) {
+                if (!server.joinedVoiceChannel(context)) {
                     return;
                 }
                 int volume = Integer.parseInt(context.getArgs()[0]);
-                if(volume > 0 && volume < 101) {
+                if (volume > 0 && volume < 101) {
                     context.getServer().appendPluginData(context.getPlugin(), "volume", volume);
                     server.getAudioPlayer().setVolume(volume);
                     EmbedBuilder builder = new EmbedBuilder();
@@ -34,7 +34,7 @@ public class VolumeCommand extends LupoCommand {
                 } else {
                     sendSyntaxError(context, "music_volume-range");
                 }
-            } catch(NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 sendSyntaxError(context, "music_volume-only-numbers");
             }
         } else {

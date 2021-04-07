@@ -40,10 +40,10 @@ public class LupoUser {
             BasicDBObject dbObject = (BasicDBObject) JSON.parse(LupoBot.getInstance().getUserConfig().convertToJsonString());
             dbObject.append("_id", id);
             // merge data file of all plugins into one file
-            for(LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
-                if(plugin.getUserConfig() != null) {
+            for (LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
+                if (plugin.getUserConfig() != null) {
                     Document document = new Document(new JsonObject());
-                    for(String key : plugin.getUserConfig().getJsonObject().keySet()) {
+                    for (String key : plugin.getUserConfig().getJsonObject().keySet()) {
                         document.append(key, plugin.getUserConfig().getJsonElement(key));
                     }
                     BasicDBObject basic = (BasicDBObject) JSON.parse(document.convertToJsonString());
@@ -52,21 +52,21 @@ public class LupoUser {
             }
             collection.insert(dbObject);
             this.data = dbObject;
-        } catch(DuplicateKeyException e) {
+        } catch (DuplicateKeyException e) {
             this.data = (BasicDBObject) cursor.one();
         }
 
         // merge missing plugin or core data if missing
-        for(String key : LupoBot.getInstance().getUserConfig().getJsonObject().keySet()) {
-            if(!this.data.containsKey(key)) {
+        for (String key : LupoBot.getInstance().getUserConfig().getJsonObject().keySet()) {
+            if (!this.data.containsKey(key)) {
                 this.data.append(key, JSON.parse(new Document(LupoBot.getInstance().getUserConfig().getJsonElement(key).getAsJsonObject()).convertToJsonString()));
             }
         }
-        for(LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
-            if(plugin.getUserConfig() != null) {
-                for(String key : plugin.getUserConfig().getJsonObject().keySet()) {
+        for (LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
+            if (plugin.getUserConfig() != null) {
+                for (String key : plugin.getUserConfig().getJsonObject().keySet()) {
                     BasicDBObject dbObject = (BasicDBObject) this.data.get(plugin.getInfo().name());
-                    if(!dbObject.containsKey(key)) {
+                    if (!dbObject.containsKey(key)) {
                         BasicDBObject config = (BasicDBObject) JSON.parse(new Document(plugin.getUserConfig().getJsonObject()).convertToJsonString());
                         dbObject.append(key, config.get(key));
                         this.data.append(plugin.getInfo().name(), dbObject);
@@ -103,7 +103,7 @@ public class LupoUser {
 
     public static LupoUser getByMember(Member member) {
         LupoUser user = null;
-        if(LupoBot.getInstance().getUsers().containsKey(member.getIdLong())) {
+        if (LupoBot.getInstance().getUsers().containsKey(member.getIdLong())) {
             user =  LupoBot.getInstance().getUsers().get(member.getIdLong());
         } else {
             user = new LupoUser(member.getIdLong());
@@ -114,7 +114,7 @@ public class LupoUser {
 
     public static LupoUser getById(long id) {
         LupoUser user = null;
-        if(LupoBot.getInstance().getUsers().containsKey(id)) {
+        if (LupoBot.getInstance().getUsers().containsKey(id)) {
             user =  LupoBot.getInstance().getUsers().get(id);
         } else {
             user = new LupoUser(id);
@@ -124,7 +124,7 @@ public class LupoUser {
     }
 
     public static void saveQueue(LupoUser user) {
-        if(!LupoBot.getInstance().getSaveQueuedUsers().contains(user)) {
+        if (!LupoBot.getInstance().getSaveQueuedUsers().contains(user)) {
             LupoBot.getInstance().getSaveQueuedUsers().add(user);
         }
     }

@@ -17,7 +17,7 @@ public class LootCommand extends LupoCommand {
     @Override
     public void onCommand(CommandContext context) {
         CurrencyUser user = LupoCurrencyPlugin.getInstance().getCurrencyUser(context.getMember());
-        if(user.getUsedInventorySlots()+1 > user.getInventorySlots()) {
+        if (user.getUsedInventorySlots()+1 > user.getInventorySlots()) {
             sendSyntaxError(context, "currency_loot-no-inventory-space");
             return;
         }

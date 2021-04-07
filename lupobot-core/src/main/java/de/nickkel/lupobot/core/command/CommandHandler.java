@@ -11,8 +11,6 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 public class CommandHandler {
@@ -45,15 +43,15 @@ public class CommandHandler {
         }
 
         LupoPlugin plugin = null;
-        for(LupoPlugin all : LupoBot.getInstance().getPlugins()) {
-            if(all.getCommands().contains(command)) {
+        for (LupoPlugin all : LupoBot.getInstance().getPlugins()) {
+            if (all.getCommands().contains(command)) {
                 plugin = all;
             }
         }
         context.setPlugin(plugin);
 
-        for(Permission permission : command.getInfo().permissions()) {
-            if(!context.getMember().getPermissions().contains(permission)) {
+        for (Permission permission : command.getInfo().permissions()) {
+            if (!context.getMember().getPermissions().contains(permission)) {
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null, context.getMember().getUser().getAvatarUrl());
                 builder.setDescription(server.translate(null, "core_command-no-user-permission"));
@@ -64,7 +62,7 @@ public class CommandHandler {
                 return;
             }
         }
-        if(plugin != null && !server.getPlugins().contains(plugin)) {
+        if (plugin != null && !server.getPlugins().contains(plugin)) {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null, context.getMember().getUser().getAvatarUrl());
             builder.setDescription(server.translate(null, "core_command-no-plugin"));
@@ -75,9 +73,9 @@ public class CommandHandler {
             return;
         }
 
-        if(user.getCooldowns().containsKey(command)) {
+        if (user.getCooldowns().containsKey(command)) {
             long leftCooldown = user.getCooldowns().get(command)+command.getInfo().cooldown()*1000L-System.currentTimeMillis();
-            if(leftCooldown > 0) {
+            if (leftCooldown > 0) {
                 String time = String.format("%d " + server.translate(null, "core_minutes") + ", %d " + server.translate(null, "core_seconds"),
                         TimeUnit.MILLISECONDS.toMinutes(leftCooldown),
                         TimeUnit.MILLISECONDS.toSeconds(leftCooldown) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(leftCooldown))
@@ -99,7 +97,7 @@ public class CommandHandler {
             if(command.getInfo().cooldown() != 0) {
                 user.getCooldowns().put(command, System.currentTimeMillis());
             }
-        } catch(PermissionException permissionException) {
+        } catch (PermissionException permissionException) {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null, context.getMember().getUser().getAvatarUrl());
             builder.setDescription(server.translate(null, "core_command-no-bot-permission"));
@@ -107,10 +105,10 @@ public class CommandHandler {
             builder.setColor(LupoColor.DARK_GRAY.getColor());
             builder.setFooter(server.translate(null, server.getPrefix() + "core_used-command", server.getPrefix() + context.getLabel()));
             context.getChannel().sendMessage(builder.build()).queue();
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             String stackTrace = "";
-            for(StackTraceElement element : e.getStackTrace()) {
+            for (StackTraceElement element : e.getStackTrace()) {
                 stackTrace = stackTrace + "\n" + element.toString();
             }
             EmbedBuilder builder = new EmbedBuilder();
@@ -132,7 +130,7 @@ public class CommandHandler {
     public void registerCommand(LupoPlugin plugin, LupoCommand command) {
         if (!existsCommand(command)) {
             LupoBot.getInstance().getCommands().add(command);
-            if(plugin != null) {
+            if (plugin != null) {
                 plugin.getCommands().add(command);
             }
             LupoBot.getInstance().getLogger().info("Registered command " + command.getInfo().name());
@@ -172,7 +170,7 @@ public class CommandHandler {
         }
     }
 
-    public void registerCommands(LupoPlugin plugin, String packageName) { // only for plugins
+    public void registerCommands (LupoPlugin plugin, String packageName) { // only for plugins
         ClassPath classPath = null;
         try {
             classPath = ClassPath.from(plugin.getClass().getClassLoader());

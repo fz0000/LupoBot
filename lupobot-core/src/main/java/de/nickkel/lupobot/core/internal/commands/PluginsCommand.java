@@ -19,10 +19,10 @@ public class PluginsCommand extends LupoCommand {
         builder.setDescription(context.getServer().translate(null, "core_plugin-list-description"));
         builder.setTimestamp(context.getMessage().getTimeCreated());
 
-        for(LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
-            if(!plugin.getInfo().hidden()) {
+        for (LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
+            if (!plugin.getInfo().hidden()) {
                 String statusKey = ":x:";
-                if(context.getServer().getPlugins().contains(plugin)) {
+                if (context.getServer().getPlugins().contains(plugin)) {
                     statusKey = ":white_check_mark:";
                 }
                 builder.addField(statusKey + " " + context.getServer().translatePluginName(plugin), context.getServer().translate(plugin, plugin.getInfo().name() + "_description"), false);

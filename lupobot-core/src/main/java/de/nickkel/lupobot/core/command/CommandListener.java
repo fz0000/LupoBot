@@ -20,12 +20,12 @@ public class CommandListener extends ListenerAdapter {
 
         String label = event.getMessage().getContentStripped().replace(prefix, "").split(" ")[0];
         String message = event.getMessage().getContentRaw().replace(prefix, "").replace(label, "");
-        if(message.startsWith(" ")) {
+        if (message.startsWith(" ")) {
             message = message.substring(1);
         }
 
         String[] args = message.split(" ");
-        if(Arrays.toString(args).equals("[]")) {
+        if (Arrays.toString(args).equals("[]")) {
             args = new String[0];
         }
         CommandContext context = new CommandContext(event.getMember(), event.getChannel(), event.getMessage(), label, args);

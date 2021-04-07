@@ -32,7 +32,7 @@ public class GuildMessageUpdateListener extends ListenerAdapter {
             builder.setColor(LupoColor.GREEN.getColor());
 
             LupoLoggingPlugin.getInstance().sendLog(LogEvent.MESSAGE_UPDATE, event.getGuild(), builder);
-        } catch(Exception ignored) {
+        } catch (Exception ignored) {
         }
         message.update(event.getMessage());
     }

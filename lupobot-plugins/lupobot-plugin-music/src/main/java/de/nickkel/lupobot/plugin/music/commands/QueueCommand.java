@@ -15,18 +15,18 @@ public class QueueCommand extends LupoCommand {
     @Override
     public void onCommand(CommandContext context) {
         MusicServer server = LupoMusicPlugin.getInstance().getMusicServer(context.getGuild());
-        if(server.joinedVoiceChannel(context)) {
+        if (server.joinedVoiceChannel(context)) {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setColor(LupoColor.ORANGE.getColor());
             builder.setAuthor(context.getServer().translate(context.getPlugin(), "music_queue-title"), null,
                     "https://cdn.pixabay.com/photo/2019/08/11/18/27/icon-4399630_960_720.png");
             builder.setTimestamp(context.getMessage().getTimeCreated());
 
-            if(server.getScheduler().getQueue().size() == 0) {
+            if (server.getScheduler().getQueue().size() == 0) {
                 builder.setDescription(context.getServer().translate(context.getPlugin(), "music_queue-nothing"));
             } else {
                 String description = "";
-                for(AudioTrack track : server.getScheduler().getQueue()) {
+                for (AudioTrack track : server.getScheduler().getQueue()) {
                     description = description + "- " + track.getInfo().title + "\n";
                 }
                 builder.setDescription(description);

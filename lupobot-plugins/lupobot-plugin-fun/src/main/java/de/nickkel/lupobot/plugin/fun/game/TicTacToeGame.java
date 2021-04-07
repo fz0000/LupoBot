@@ -38,7 +38,7 @@ public class TicTacToeGame {
         this.bestMoves.add(new int[]{7, 8, 9});
         this.bestMoves.add(new int[]{1, 5, 9});
         this.bestMoves.add(new int[]{3, 5, 7});
-        for(int i = 1; i < 10; i++) {
+        for (int i = 1; i < 10; i++) {
             field.put(i, getEmoji(i));
         }
         LupoFunPlugin.getInstance().getTicTacToeGames().add(this);
@@ -67,13 +67,13 @@ public class TicTacToeGame {
             field = field + this.field.get(i) + addition;
         }
         builder.setDescription(field);
-        if(end) {
+        if (end) {
             builder.addField(this.context.getServer().translate(this.context.getPlugin(), "fun_tictactoe-winner"), this.winner.getAsMention(), false);
         } else {
             builder.addField(this.context.getServer().translate(this.context.getPlugin(), "fun_tictactoe-current-player"), this.currentPlayer.getAsMention(), false);
         }
 
-        if(end) {
+        if (end) {
             this.message.editMessage(builder.build()).queue();
             return;
         }
@@ -82,7 +82,7 @@ public class TicTacToeGame {
         for (int i = 1; i < 10; i++) {
             int finalI = i;
             BiConsumer<Member, Message> consumer = (member, message) -> {
-                if( this.winner == null) {
+                if (this.winner == null) {
                     if (this.getCurrentPlayer().getIdLong() == member.getIdLong()) {
                         String emoji = ":o:";
                         if (this.getCreator() == this.getCurrentPlayer()) {
@@ -100,12 +100,12 @@ public class TicTacToeGame {
         this.timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if(!LupoFunPlugin.getInstance().getTicTacToeGames().contains(TicTacToeGame.this)) {
+                if (!LupoFunPlugin.getInstance().getTicTacToeGames().contains(TicTacToeGame.this)) {
                     this.cancel();
                     return;
                 }
                 Member winner = TicTacToeGame.this.getCreator();
-                if(winner == TicTacToeGame.this.getCurrentPlayer()) {
+                if (winner == TicTacToeGame.this.getCurrentPlayer()) {
                     winner = TicTacToeGame.this.getParticipant();
                 }
                 TicTacToeGame.this.getContext().getChannel().sendMessage(TicTacToeGame.this.context.getServer().translate(TicTacToeGame.this.getContext().getPlugin(),
@@ -120,7 +120,7 @@ public class TicTacToeGame {
                 this.message = success;
                 HashMap<String, BiConsumer<Member, Message>> buttons = new HashMap<>();
                 for (int i = 1; i < 10; i++) {
-                    if(!this.field.get(i).equals(":x:") && !this.field.get(i).equals(":o:")) {
+                    if (!this.field.get(i).equals(":x:") && !this.field.get(i).equals(":o:")) {
                         buttons.put(getEmoji(i), consumers.get(i));
                     }
                 }
@@ -128,14 +128,14 @@ public class TicTacToeGame {
             });
         } else {
             for (int i = 1; i < 10; i++) {
-                if(this.field.get(i).equals(":x:") || this.field.get(i).equals(":o:")) {
+                if (this.field.get(i).equals(":x:") || this.field.get(i).equals(":o:")) {
                     this.message.removeReaction(getEmoji(i)).queue();
                 }
             }
             this.message.editMessage(builder.build()).queue(success -> {
                 HashMap<String, BiConsumer<Member, Message>> buttons = new HashMap<>();
                 for (int i = 1; i < 10; i++) {
-                    if(!this.field.get(i).equals(":x:") && !this.field.get(i).equals(":o:")) {
+                    if (!this.field.get(i).equals(":x:") && !this.field.get(i).equals(":o:")) {
                         buttons.put(getEmoji(i), consumers.get(i));
                     }
                 }
@@ -147,7 +147,7 @@ public class TicTacToeGame {
     public void nextRound() {
         this.timer.cancel();
         String emoji = "";
-        if(this.getCreator() == this.getCurrentPlayer()) {
+        if (this.getCreator() == this.getCurrentPlayer()) {
             this.currentPlayer = this.getParticipant();
             emoji = ":x:";
         } else {
@@ -175,18 +175,18 @@ public class TicTacToeGame {
         }
 
         int checked = 0;
-        for(int i = 1; i < 10; i++) {
-            if(this.field.get(i).equals(":x:") || this.field.get(i).equals(":o:")) {
+        for (int i = 1; i < 10; i++) {
+            if (this.field.get(i).equals(":x:") || this.field.get(i).equals(":o:")) {
                 checked++;
             }
         }
 
-        if(checked == 9) {
+        if (checked == 9) {
             end(null);
             return;
         }
 
-        if(winner == null) {
+        if (winner == null) {
             build(false);
         } else {
             this.winner = winner;
@@ -201,7 +201,7 @@ public class TicTacToeGame {
             this.message.removeReaction(getEmoji(i)).queue();
         }
 
-        if(winner == null) {
+        if (winner == null) {
             this.context.getChannel().sendMessage(this.context.getServer().translate(context.getPlugin(), "fun_tictactoe-draw")).queue();
         } else {
             this.context.getChannel().sendMessage(this.context.getServer().translate(context.getPlugin(), "fun_tictactoe-end", winner.getAsMention())).queue();
@@ -210,7 +210,7 @@ public class TicTacToeGame {
     }
 
     public Member getNextMember() {
-        if(this.currentPlayer == this.participant) {
+        if (this.currentPlayer == this.participant) {
             return this.creator;
         } else {
             return this.participant;
@@ -218,7 +218,7 @@ public class TicTacToeGame {
     }
 
     public String getEmoji(int number) {
-        switch(number) {
+        switch (number) {
             case 2:
                 return "2️⃣";
             case 3:

@@ -11,7 +11,7 @@ public class EightBallCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        if(context.getArgs().length >= 1) {
+        if (context.getArgs().length >= 1) {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setColor(LupoColor.AQUA.getColor());
             builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null, context.getMember().getUser().getAvatarUrl());

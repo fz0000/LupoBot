@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 
-
 @CommandInfo(name = "memberinfo", category = "information")
 public class MemberinfoCommand extends LupoCommand {
 
@@ -17,27 +16,27 @@ public class MemberinfoCommand extends LupoCommand {
     public void onCommand(CommandContext context) {
         Member member = context.getMember();
 
-        if(context.getArgs().length == 1) {
+        if (context.getArgs().length == 1) {
             member = context.getServer().getMember(context.getArgs()[0]);
-            if(member == null) {
+            if (member == null) {
                 sendSyntaxError(context, "help_memberinfo-not-found");
                 return;
             }
         }
 
         String roles = "/";
-        if(member.getRoles().size() != 0) {
+        if (member.getRoles().size() != 0) {
             roles = "";
         }
-        for(Role role : member.getRoles()) {
+        for (Role role : member.getRoles()) {
             roles = roles + role.getName() + ", ";
         }
-        if(!roles.equals("/")) {
+        if (!roles.equals("/")) {
             roles = roles.substring(0, roles.length() - 2);
         }
 
         String activity = "/";
-        if(member.getActivities().size() >= 1) {
+        if (member.getActivities().size() >= 1) {
             activity = member.getActivities().get(0).getName();
         }
 

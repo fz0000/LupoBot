@@ -15,16 +15,16 @@ public class ActivateEventCommand extends LupoCommand {
     @Override
     public void onCommand(CommandContext context) {
         String[] args = context.getArgs();
-        if(args.length == 0) {
+        if (args.length == 0) {
             sendHelp(context);
             return;
         }
 
         String key = args[0];
         TextChannel channel;
-        if(args.length == 1) {
+        if (args.length == 1) {
             channel = context.getChannel();
-        } else if(args.length == 2) {
+        } else if (args.length == 2) {
             channel = context.getServer().getTextChannel(args[1]);
         } else {
             sendHelp(context);
@@ -32,16 +32,16 @@ public class ActivateEventCommand extends LupoCommand {
         }
 
         LogEvent event = null;
-        for(LogEvent logEvent : LogEvent.values()) {
-            if(logEvent.getKey().equalsIgnoreCase(key)) {
+        for (LogEvent logEvent : LogEvent.values()) {
+            if (logEvent.getKey().equalsIgnoreCase(key)) {
                 event = logEvent;
             }
         }
 
-        if(event == null) {
+        if (event == null) {
             sendSyntaxError(context, "logging_activateevent-invalid-event");
             return;
-        } else if(channel == null) {
+        } else if (channel == null) {
             sendSyntaxError(context, "logging_activateevent-invalid-channel");
             return;
         }

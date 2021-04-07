@@ -19,11 +19,11 @@ public class GuildMemberUpdateNicknameListener extends ListenerAdapter {
         LupoPlugin plugin = LupoBot.getInstance().getPlugin("logging");
 
         String old = event.getOldNickname();
-        if(event.getOldNickname() == null || event.getOldNickname().equals("")) {
+        if (event.getOldNickname() == null || event.getOldNickname().equals("")) {
             old = "/";
         }
         String current = event.getNewNickname();
-        if(event.getNewNickname() == null || event.getNewNickname().equals("")) {
+        if (event.getNewNickname() == null || event.getNewNickname().equals("")) {
             current = "/";
         }
 

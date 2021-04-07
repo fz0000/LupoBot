@@ -14,9 +14,9 @@ public class PayCoinsCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        if(context.getArgs().length == 2) {
+        if (context.getArgs().length == 2) {
             Member receiveMember = context.getServer().getMember(context.getArgs()[0]);
-            if(receiveMember == null) {
+            if (receiveMember == null) {
                 sendSyntaxError(context, "currency_paycoins-member-not-found");
                 return;
             }
@@ -27,12 +27,12 @@ public class PayCoinsCommand extends LupoCommand {
             long coins = 0;
             try {
                 coins = Long.parseLong(context.getArgs()[1]);
-            } catch(NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 sendSyntaxError(context, "currency_paycoins-invalid-number");
                 return;
             }
 
-            if(payUser.getCoins()-coins < 0) {
+            if (payUser.getCoins()-coins < 0) {
                 sendSyntaxError(context, "currency_paycoins-not-enough-coins");
                 return;
             }

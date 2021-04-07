@@ -45,7 +45,7 @@ public class CurrencyUser {
     public Long getItem(Item item) {
         BasicDBObject pluginObject = (BasicDBObject) this.user.getData().get(LupoCurrencyPlugin.getInstance().getInfo().name());
         BasicDBObject itemObject = (BasicDBObject) pluginObject.get("inventory");
-        if(itemObject.containsKey(item.getName())) {
+        if (itemObject.containsKey(item.getName())) {
             return itemObject.getLong(item.getName());
         } else {
             return 0L;
@@ -54,25 +54,25 @@ public class CurrencyUser {
 
     public Item getRandomItem(int cheapPercent, int middlePercent, int expensivePercent) {
         List<Item> cheapItems = new ArrayList<>(), middleItems = new ArrayList<>(), expensiveItems = new ArrayList<>();
-        for(Item item : LupoCurrencyPlugin.getInstance().getItems()) {
-            if(item.getBuy() >= 2000) { // from 2000
+        for (Item item : LupoCurrencyPlugin.getInstance().getItems()) {
+            if (item.getBuy() >= 2000) { // from 2000
                 expensiveItems.add(item);
-            } else if(item.getBuy() >= 500 && item.getBuy() < 2000) { // between 500-1999
+            } else if (item.getBuy() >= 500 && item.getBuy() < 2000) { // between 500-1999
                 middleItems.add(item);
-            } else if(item.getBuy() > 0 && item.getBuy() < 500) { // between 0-500
+            } else if (item.getBuy() > 0 && item.getBuy() < 500) { // between 0-500
                 cheapItems.add(item);
             }
         }
 
         int percent = new Random().nextInt(100);
 
-        if(percent < cheapPercent){
+        if (percent < cheapPercent){
             int index = new Random().nextInt(cheapItems.size());
             return cheapItems.get(index);
-        } else if(percent < cheapPercent+middlePercent){
+        } else if (percent < cheapPercent+middlePercent){
             int index = new Random().nextInt(middleItems.size());
             return middleItems.get(index);
-        } else if(percent < cheapPercent+middlePercent+expensivePercent){
+        } else if (percent < cheapPercent+middlePercent+expensivePercent){
             int index = new Random().nextInt(expensiveItems.size());
             return expensiveItems.get(index);
         }
@@ -89,8 +89,8 @@ public class CurrencyUser {
 
     public long getUsedInventorySlots() {
         long usedSlots = 0;
-        for(Item item : LupoCurrencyPlugin.getInstance().getItems()) {
-            if(this.getItem(item) != 0) {
+        for (Item item : LupoCurrencyPlugin.getInstance().getItems()) {
+            if (this.getItem(item) != 0) {
                 usedSlots = usedSlots + this.getItem(item);
             }
         }

@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.entities.Member;
 public class PenisSizeCommand extends LupoCommand {
     @Override
     public void onCommand(CommandContext context) {
-        if(context.getArgs().length == 1) {
+        if (context.getArgs().length == 1) {
             context.getChannel().sendMessage(getEmbed(context, context.getServer().getMember(context.getArgs()[0])).build()).queue();
         } else {
             context.getChannel().sendMessage(getEmbed(context, context.getMember()).build()).queue();
@@ -21,7 +21,7 @@ public class PenisSizeCommand extends LupoCommand {
 
     private EmbedBuilder getEmbed(CommandContext context, Member member) {
         EmbedBuilder builder = new EmbedBuilder();
-        if(member.getUser().getIdLong() == LupoBot.getInstance().getSelfUser().getIdLong()) {
+        if (member.getUser().getIdLong() == LupoBot.getInstance().getSelfUser().getIdLong()) {
             builder.setDescription(context.getServer().translate(context.getPlugin(), "fun_penissize-lupo", context.getMember()));
         } else {
             builder.setDescription(context.getPlugin().getLanguageHandler().getRandomTranslation(context.getServer().getLanguage(),

@@ -16,9 +16,9 @@ public class ProfileCommand extends LupoCommand {
     @Override
     public void onCommand(CommandContext context) {
         Member member = context.getMember();
-        if(context.getArgs().length == 1) {
+        if (context.getArgs().length == 1) {
             member = context.getServer().getMember(context.getArgs()[0]);
-            if(member == null) {
+            if (member == null) {
                 sendSyntaxError(context, "profile_profile-user-not-found");
                 return;
             }
@@ -32,22 +32,22 @@ public class ProfileCommand extends LupoCommand {
         builder.setThumbnail(member.getUser().getAvatarUrl());
         builder.setDescription(profile.getStatus());
 
-        if(profile.getBirthday() != null) {
+        if (profile.getBirthday() != null) {
             builder.addField(context.getServer().translate(context.getPlugin(), "profile_profile-birthday"), profile.getBirthday(), true);
             builder.addField(context.getServer().translate(context.getPlugin(), "profile_profile-age"), String.valueOf(profile.getAge()), true);
         }
-        if(profile.getGender() != null) {
+        if (profile.getGender() != null) {
             builder.addField(context.getServer().translate(context.getPlugin(), "profile_profile-gender"),
                     context.getServer().translate(context.getPlugin(), profile.getGender().getLocale()), false);
         }
-        if(profile.getBadges().size() != 0) {
+        if (profile.getBadges().size() != 0) {
             String badges = "";
-            if(profile.getBadges().size() >= 3) {
-                for(Badge badge : profile.getBadges()) {
+            if (profile.getBadges().size() >= 3) {
+                for (Badge badge : profile.getBadges()) {
                     badges = badges + badge.getEmoji() + " " + badge.getTranslatedName(context.getServer()) + "\n";
                 }
             } else {
-                for(Badge badge : profile.getBadges()) {
+                for (Badge badge : profile.getBadges()) {
                     badges = badges + badge.getEmoji() + " " + badge.getTranslatedName(context.getServer()) + ", ";
                 }
                 badges = badges.substring(0, badges.length() - 2);

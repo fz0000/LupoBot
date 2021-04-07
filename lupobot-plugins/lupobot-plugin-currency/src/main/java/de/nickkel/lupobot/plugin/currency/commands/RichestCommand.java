@@ -21,15 +21,13 @@ public class RichestCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        Guild guild = context.getGuild();
-
         Map<Long, Long> users = new HashMap<>();
         DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
                 .getAsJsonObject().get("database").getAsString());
         DBCollection collection = database.getCollection("users");
         DBCursor cursor = collection.find().limit(20); // TODO: descending order by coins
 
-        while(cursor.hasNext()) {
+        while (cursor.hasNext()) {
             DBObject dbObject = cursor.next();
             BasicDBObject pluginObject = (BasicDBObject) dbObject.get("currency");
             users.put((long) dbObject.get("_id"), pluginObject.getLong("coins"));
@@ -43,8 +41,8 @@ public class RichestCommand extends LupoCommand {
 
         String userNames = "", coins = "";
         int rank = 1;
-        for(Long id : sortedUsers.keySet()) {
-            if(rank == 20) {
+        for (Long id : sortedUsers.keySet()) {
+            if (rank == 20) {
                 break;
             }
             User user = LupoBot.getInstance().getShardManager().getUserById(id);

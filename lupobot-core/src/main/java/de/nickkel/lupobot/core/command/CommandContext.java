@@ -1,6 +1,5 @@
 package de.nickkel.lupobot.core.command;
 
-import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.data.LupoServer;
 import de.nickkel.lupobot.core.data.LupoUser;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
@@ -45,7 +44,7 @@ public class CommandContext {
 
     public String getArgsAsString() {
         String argString = "";
-        for(String arg : this.args) {
+        for (String arg : this.args) {
             argString = argString + arg + " ";
         }
         return argString;

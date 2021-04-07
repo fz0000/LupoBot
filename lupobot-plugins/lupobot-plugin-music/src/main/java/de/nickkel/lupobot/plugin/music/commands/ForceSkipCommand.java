@@ -14,7 +14,7 @@ public class ForceSkipCommand extends LupoCommand {
     @Override
     public void onCommand(CommandContext context) {
         MusicServer server = LupoMusicPlugin.getInstance().getMusicServer(context.getGuild());
-        if(!server.joinedVoiceChannel(context)) {
+        if (!server.joinedVoiceChannel(context)) {
             return;
         }
         EmbedBuilder builder = new EmbedBuilder();
@@ -23,7 +23,7 @@ public class ForceSkipCommand extends LupoCommand {
                 context.getMember().getUser().getAvatarUrl());
         builder.setTimestamp(context.getMessage().getTimeCreated());
 
-        if(server.getScheduler().getQueue().size() == 0) {
+        if (server.getScheduler().getQueue().size() == 0) {
             builder.setDescription(context.getServer().translate(context.getPlugin(), "music_forceskip-nothing"));
         } else {
             server.getScheduler().next();

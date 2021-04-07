@@ -1,6 +1,5 @@
 package de.nickkel.lupobot.plugin.help.commands;
 
-import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
@@ -9,22 +8,18 @@ import de.nickkel.lupobot.core.util.TimeUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emote;
 
-import java.awt.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 @CommandInfo(name = "guildinfo", category = "information")
 public class GuildinfoCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
         String emotes = "/";
-        for(Emote emote : context.getGuild().getEmotes()) {
+        for (Emote emote : context.getGuild().getEmotes()) {
             emotes = emotes + emote.getAsMention() + " ";
         }
 
         String afkChannel = "/";
-        if(context.getGuild().getAfkChannel() != null) {
+        if (context.getGuild().getAfkChannel() != null) {
             afkChannel = context.getGuild().getAfkChannel().getName();
         }
 

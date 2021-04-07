@@ -12,7 +12,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.*;
 
 @CommandInfo(name = "exportdata", category = "core")
 public class ExportDataCommand extends LupoCommand {
@@ -20,7 +19,7 @@ public class ExportDataCommand extends LupoCommand {
     @Override
     public void onCommand(CommandContext context) {
         long lastDataExport = context.getUser().getData().getLong("lastDataExport");
-        if(lastDataExport != -1 && lastDataExport+7776000000L-System.currentTimeMillis() > 0) {
+        if (lastDataExport != -1 && lastDataExport+7776000000L-System.currentTimeMillis() > 0) {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setColor(LupoColor.RED.getColor());
             builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null,
@@ -41,7 +40,7 @@ public class ExportDataCommand extends LupoCommand {
 
         builder.addField(context.getServer().translate(context.getPlugin(), "core_exportdata-user"),
                 context.getServer().translate(context.getPlugin(), "core_exportdata-user-description"), false);
-        if(context.getMember().isOwner()) {
+        if (context.getMember().isOwner()) {
             builder.addField(context.getServer().translate(context.getPlugin(), "core_exportdata-guild", ":mailbox_with_mail:"),
                     context.getServer().translate(context.getPlugin(), "core_exportdata-guild-owner"), false);
         } else {
@@ -82,7 +81,7 @@ public class ExportDataCommand extends LupoCommand {
                 e.printStackTrace();
             }
 
-            if(context.getMember().isOwner()) {
+            if (context.getMember().isOwner()) {
                 channel.sendMessage(dataBuilder.build()).addFile(userFile).addFile(serverFile).queue();
                 userFile.deleteOnExit();
             } else {

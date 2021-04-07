@@ -31,7 +31,7 @@ public class Profile {
     public List<Badge> getBadges() {
         BasicDBList dbList = (BasicDBList) this.user.getPluginData(this.plugin, "badges");
         List<Badge> badges = new ArrayList<>();
-        for(Object name : dbList) {
+        for (Object name : dbList) {
             badges.add(Badge.valueOf((String) name));
         }
         return badges;
@@ -39,7 +39,7 @@ public class Profile {
 
     public void addBadge(Badge badge) {
         BasicDBList dbList = (BasicDBList) this.user.getPluginData(this.plugin, "badges");
-        if(!dbList.contains(badge.toString())) {
+        if (!dbList.contains(badge.toString())) {
             dbList.add(badge.toString());
             this.user.appendPluginData(this.plugin, "badges", dbList);
         }
@@ -62,7 +62,7 @@ public class Profile {
 
     public Gender getGender() {
         String gender = (String) this.user.getPluginData(this.plugin, "gender");
-        if(gender != null) {
+        if (gender != null) {
             return Gender.valueOf(gender);
         }
         return null;

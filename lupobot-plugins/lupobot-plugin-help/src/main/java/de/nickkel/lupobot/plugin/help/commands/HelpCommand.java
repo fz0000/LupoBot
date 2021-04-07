@@ -13,7 +13,7 @@ public class HelpCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        if(context.getArgs().length == 1) {
+        if (context.getArgs().length == 1) {
             LupoCommand command = null;
             for (LupoCommand all : LupoBot.getInstance().getCommands()) {
                 if (context.getArgs()[0].equalsIgnoreCase(all.getInfo().name())) {
@@ -27,15 +27,15 @@ public class HelpCommand extends LupoCommand {
                 }
             }
 
-            if(command == null) {
+            if (command == null) {
                 sendHelp(context);
                 return;
             }
 
             CommandContext helpContext = new CommandContext(context.getMember(), context.getChannel(), context.getMessage(), command.getInfo().name(), new String[0]);
             LupoPlugin plugin = null;
-            for(LupoPlugin all : LupoBot.getInstance().getPlugins()) {
-                if(all.getCommands().contains(command)) {
+            for (LupoPlugin all : LupoBot.getInstance().getPlugins()) {
+                if (all.getCommands().contains(command)) {
                     plugin = all;
                 }
             }

@@ -43,8 +43,8 @@ public class TicketServer {
         List<Role> roles = new ArrayList<>();
         BasicDBList dbList = new BasicDBList();
         dbList.addAll((ArrayList) this.server.getPluginData(this.plugin, "supportTeamRoles"));
-        for(Object id : dbList) {
-            if(this.guild.getRoleById((long) id) != null) {
+        for (Object id : dbList) {
+            if (this.guild.getRoleById((long) id) != null) {
                 roles.add(this.guild.getRoleById((long) id));
             } else { // remove role if it doesn't exist anymore
                 dbList.remove(id);

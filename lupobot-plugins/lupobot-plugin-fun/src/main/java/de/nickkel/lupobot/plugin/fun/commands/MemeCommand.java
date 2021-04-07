@@ -17,7 +17,7 @@ public class MemeCommand extends LupoCommand {
     public void onCommand(CommandContext context) {
         try {
             Document document = new Document(("https://apis.duncte123.me/meme?nsfw=false"));
-            if(!document.getBoolean("success")) {
+            if (!document.getBoolean("success")) {
                 failure(context);
             } else {
                 JsonObject jsonObject = document.getJsonElement("data").getAsJsonObject();
@@ -28,7 +28,7 @@ public class MemeCommand extends LupoCommand {
                 builder.setFooter(context.getServer().translate(context.getPlugin(), "fun_meme-footer"));
                 context.getChannel().sendMessage(builder.build()).queue();
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             failure(context);
         }
 

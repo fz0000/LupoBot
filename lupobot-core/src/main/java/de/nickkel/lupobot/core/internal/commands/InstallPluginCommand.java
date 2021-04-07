@@ -17,23 +17,23 @@ public class InstallPluginCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        if(context.getArgs().length == 1) {
-            if(LupoBot.getInstance().getPlugins().size() == 0) {
+        if (context.getArgs().length == 1) {
+            if (LupoBot.getInstance().getPlugins().size() == 0) {
                 context.getChannel().sendMessage("**Error:** No plugins loaded! Nothing to install").queue();
                 return;
             }
             boolean match = false;
             int plugins = 0;
-            for(LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
+            for (LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
                 plugins++;
-                if(context.getArgs()[0].equalsIgnoreCase(plugin.getInfo().name()) || context.getArgs()[0].equalsIgnoreCase(context.getServer().translatePluginName(plugin))) {
+                if (context.getArgs()[0].equalsIgnoreCase(plugin.getInfo().name()) || context.getArgs()[0].equalsIgnoreCase(context.getServer().translatePluginName(plugin))) {
                     List<Long> guilds = new ArrayList<>();
-                    for(long l : plugin.getInfo().guilds()) {
+                    for (long l : plugin.getInfo().guilds()) {
                         guilds.add(l);
                     }
-                    if(guilds.size() == 0 || guilds.contains(context.getGuild().getIdLong())) {
+                    if (guilds.size() == 0 || guilds.contains(context.getGuild().getIdLong())) {
                         match = true;
-                        if(context.getServer().getPlugins().contains(plugin)) {
+                        if (context.getServer().getPlugins().contains(plugin)) {
                             EmbedBuilder builder = new EmbedBuilder();
                             builder.setColor(LupoColor.RED.getColor());
                             builder.setAuthor(context.getGuild().getName() + " (" + context.getGuild().getId() + ")", null, context.getGuild().getIconUrl());
@@ -55,7 +55,7 @@ public class InstallPluginCommand extends LupoCommand {
                     }
                 }
             }
-            if(!match && plugins == LupoBot.getInstance().getPlugins().size()) {
+            if (!match && plugins == LupoBot.getInstance().getPlugins().size()) {
                 sendSyntaxError(context, "core_installplugin-invalid-plugin");
             }
         } else {

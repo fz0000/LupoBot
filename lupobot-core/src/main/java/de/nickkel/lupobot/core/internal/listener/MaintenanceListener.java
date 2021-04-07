@@ -10,7 +10,7 @@ public class MaintenanceListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-        if(event.getMessage().getContentRaw().startsWith("?")) {
+        if (event.getMessage().getContentRaw().startsWith("?")) {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setAuthor(event.getMember().getUser().getAsTag() + " (" + event.getMember().getId() + ")", null,
                     event.getMember().getUser().getAvatarUrl());

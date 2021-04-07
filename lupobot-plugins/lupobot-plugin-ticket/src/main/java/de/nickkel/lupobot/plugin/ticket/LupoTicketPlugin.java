@@ -29,7 +29,7 @@ public class LupoTicketPlugin extends LupoPlugin {
     }
 
     public TicketServer getTicketServer(Guild guild) {
-        if(!this.ticketServer.containsKey(guild.getIdLong())) {
+        if (!this.ticketServer.containsKey(guild.getIdLong())) {
             this.ticketServer.put(guild.getIdLong(), new TicketServer(guild));
         }
         return this.ticketServer.get(guild.getIdLong());

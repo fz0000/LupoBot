@@ -6,7 +6,6 @@ import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.TextChannel;
 
 @CommandInfo(name = "ticketvisibility", category = "config", permissions = Permission.ADMINISTRATOR)
 public class TicketVisibilityCommand extends LupoCommand {
@@ -19,7 +18,7 @@ public class TicketVisibilityCommand extends LupoCommand {
         builder.setTimestamp(context.getMessage().getTimeCreated());
 
         boolean visibleEveryone = (boolean) context.getServer().getPluginData(context.getPlugin(), "visibleEveryone");
-        if(visibleEveryone) {
+        if (visibleEveryone) {
             context.getServer().appendPluginData(context.getPlugin(), "visibleEveryone", false);
             builder.setDescription(context.getServer().translate(context.getPlugin(), "ticket_ticketvisibility-private"));
             builder.setColor(LupoColor.RED.getColor());

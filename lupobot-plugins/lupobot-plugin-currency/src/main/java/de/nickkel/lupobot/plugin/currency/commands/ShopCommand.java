@@ -22,31 +22,31 @@ public class ShopCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        if(context.getArgs().length == 2 || context.getArgs().length == 3) {
+        if (context.getArgs().length == 2 || context.getArgs().length == 3) {
             CurrencyUser user = LupoCurrencyPlugin.getInstance().getCurrencyUser(context.getMember());
             Item item = LupoCurrencyPlugin.getInstance().getItem(context.getArgs()[1]);
-            if(item == null) {
+            if (item == null) {
                 sendSyntaxError(context, "currency_shop-invalid-item");
                 return;
             }
 
             long amount = 0;
-            if(context.getArgs().length == 2) {
+            if (context.getArgs().length == 2) {
                 amount = 1;
             } else {
                 try {
-                    if(context.getArgs()[0].equalsIgnoreCase("sell") && context.getArgs()[2].equalsIgnoreCase("all")) {
+                    if (context.getArgs()[0].equalsIgnoreCase("sell") && context.getArgs()[2].equalsIgnoreCase("all")) {
                         amount = user.getItem(item);
                     } else {
                         amount = Long.parseLong(context.getArgs()[2]);
                     }
-                } catch(NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     sendSyntaxError(context, "currency_shop-invalid-amount");
                     return;
                 }
             }
 
-            if(amount <= 0) {
+            if (amount <= 0) {
                 sendSyntaxError(context, "currency_shop-too-low-amount");
                 return;
             }
@@ -57,12 +57,12 @@ public class ShopCommand extends LupoCommand {
             builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getIdLong() + ")", null, context.getMember().getUser().getAvatarUrl());
 
             long coins = 0;
-            if(context.getArgs()[0].equalsIgnoreCase("buy")) {
-                if(user.getCoins()-amount < 0) {
+            if (context.getArgs()[0].equalsIgnoreCase("buy")) {
+                if (user.getCoins()-amount < 0) {
                     sendSyntaxError(context, "currency_shop-buy-not-enough-coins", context.getServer().formatLong(user.getCoins()));
                     return;
                 }
-                if(user.getUsedInventorySlots()+amount > user.getInventorySlots()) {
+                if (user.getUsedInventorySlots()+amount > user.getInventorySlots()) {
                     sendSyntaxError(context, "currency_shop-buy-not-enough-slots", context.getServer().formatLong(user.getInventorySlots()), context.getServer().formatLong(amount));
                     return;
                 }
@@ -70,8 +70,8 @@ public class ShopCommand extends LupoCommand {
                 user.addCoins(-coins);
                 user.addItem(item, amount);
                 builder.setDescription(context.getServer().translate(context.getPlugin(), "currency_shop-buy"));
-            } else if(context.getArgs()[0].equalsIgnoreCase("sell")) {
-                if(user.getItem(item)-amount < 0) {
+            } else if (context.getArgs()[0].equalsIgnoreCase("sell")) {
+                if (user.getItem(item)-amount < 0) {
                     sendSyntaxError(context, "currency_shop-sell-not-enough-items", context.getServer().formatLong(user.getItem(item)));
                     return;
                 }
@@ -94,11 +94,11 @@ public class ShopCommand extends LupoCommand {
             builder.setAuthor(context.getServer().translate(context.getPlugin(), "currency_shop-title"), null, LupoBot.getInstance().getSelfUser().getAvatarUrl());
             builder.setDescription(context.getServer().translate(context.getPlugin(), "currency_shop-buy-sell"));
 
-            for(int i=0; i < LupoCurrencyPlugin.getInstance().getItems().size(); i++) {
+            for (int i=0; i < LupoCurrencyPlugin.getInstance().getItems().size(); i++) {
                 Item item  = LupoCurrencyPlugin.getInstance().getItems().get(i);
                 builder.addField(item.getIcon() + " " + item.getName(), context.getServer().translate(context.getPlugin(), "currency_shop-buy-sell-item",
                         context.getServer().formatLong(item.getBuy()), context.getServer().formatLong(item.getSell())), true);
-                if(String.valueOf(i).length() != 1 && (String.valueOf(i).endsWith("0") || i == LupoCurrencyPlugin.getInstance().getItems().size()-1)) {
+                if (String.valueOf(i).length() != 1 && (String.valueOf(i).endsWith("0") || i == LupoCurrencyPlugin.getInstance().getItems().size()-1)) {
                     pages.add(new Page(PageType.EMBED, builder.build()));
                     builder.clearFields();
                 }

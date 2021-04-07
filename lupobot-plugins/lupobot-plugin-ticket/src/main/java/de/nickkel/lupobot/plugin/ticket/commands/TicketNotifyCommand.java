@@ -14,9 +14,9 @@ public class TicketNotifyCommand extends LupoCommand {
     @Override
     public void onCommand(CommandContext context) {
 
-        if(context.getArgs().length == 1) {
+        if (context.getArgs().length == 1) {
             TextChannel channel = context.getServer().getTextChannel(context.getArgs()[0]);
-            if(channel == null) {
+            if (channel == null) {
                 sendSyntaxError(context, "ticket_ticketnotify-invalid-channel");
                 return;
             }

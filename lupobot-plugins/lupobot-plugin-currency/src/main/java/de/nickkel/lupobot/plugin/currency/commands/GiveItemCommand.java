@@ -1,41 +1,33 @@
 package de.nickkel.lupobot.plugin.currency.commands;
 
-import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
-import de.nickkel.lupobot.core.pagination.method.Pages;
-import de.nickkel.lupobot.core.pagination.model.Page;
-import de.nickkel.lupobot.core.pagination.type.PageType;
 import de.nickkel.lupobot.core.util.LupoColor;
 import de.nickkel.lupobot.plugin.currency.LupoCurrencyPlugin;
 import de.nickkel.lupobot.plugin.currency.data.CurrencyUser;
 import de.nickkel.lupobot.plugin.currency.data.Item;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-
-import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 @CommandInfo(name = "giveitem", category = "items")
 public class GiveItemCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        if(context.getArgs().length == 3) {
+        if (context.getArgs().length == 3) {
             Member giveMember = context.getMember();
             CurrencyUser giveUser = LupoCurrencyPlugin.getInstance().getCurrencyUser(context.getMember());
 
             Member receiveMember = context.getServer().getMember(context.getArgs()[0]);
-            if(receiveMember == null) {
+            if (receiveMember == null) {
                 sendSyntaxError(context, "currency_giveitem-invalid-user");
                 return;
             }
             CurrencyUser receiveUser = LupoCurrencyPlugin.getInstance().getCurrencyUser(receiveMember);
 
             Item item = LupoCurrencyPlugin.getInstance().getItem(context.getArgs()[1]);
-            if(item == null) {
+            if (item == null) {
                 sendSyntaxError(context, "currency_giveitem-invalid-item");
                 return;
             }
@@ -43,15 +35,15 @@ public class GiveItemCommand extends LupoCommand {
             long amount = 0;
             try {
                 amount = Long.parseLong(context.getArgs()[2]);
-            } catch(NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 sendSyntaxError(context, "currency_giveitem-invalid-amount");
                 return;
             }
-            if(amount <= 0) {
+            if (amount <= 0) {
                 sendSyntaxError(context, "currency_giveitem-too-low-amount");
                 return;
             }
-            if(giveUser.getItem(item)-amount < 0) {
+            if (giveUser.getItem(item)-amount < 0) {
                 sendSyntaxError(context, "currency_giveitem-not-enough-items", context.getServer().formatLong(giveUser.getItem(item)));
                 return;
             }
@@ -59,7 +51,7 @@ public class GiveItemCommand extends LupoCommand {
             giveUser.addItem(item, -amount);
             receiveUser.addItem(item, amount);
 
-            if(receiveUser.getUsedInventorySlots()+amount > receiveUser.getInventorySlots()) {
+            if (receiveUser.getUsedInventorySlots()+amount > receiveUser.getInventorySlots()) {
                 sendSyntaxError(context, "currency_giveitem-receiver-no-space", giveMember.getAsMention(), context.getServer().formatLong(receiveUser.getInventorySlots()), context.getServer().formatLong(amount));
                 return;
             }

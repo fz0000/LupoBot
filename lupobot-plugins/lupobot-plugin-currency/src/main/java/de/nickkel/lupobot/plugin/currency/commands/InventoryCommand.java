@@ -21,25 +21,25 @@ public class InventoryCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        if((context.getArgs().length == 1 || context.getArgs().length == 2) && context.getArgs()[0].equalsIgnoreCase("upgrade")) {
+        if ((context.getArgs().length == 1 || context.getArgs().length == 2) && context.getArgs()[0].equalsIgnoreCase("upgrade")) {
             long amount = 0;
-            if(context.getArgs().length == 1) {
+            if (context.getArgs().length == 1) {
                 amount = 1;
             } else {
                 try {
                     amount = Long.parseLong(context.getArgs()[1]);
-                } catch(NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     sendSyntaxError(context, "currency_inventory-upgrade-invalid-amount");
                     return;
                 }
             }
-            if(amount <= 0) {
+            if (amount <= 0) {
                 sendSyntaxError(context, "currency_inventory-upgrade-too-low-amount");
                 return;
             }
 
             CurrencyUser user = LupoCurrencyPlugin.getInstance().getCurrencyUser(context.getMember());
-            if(user.getItem(LupoCurrencyPlugin.getInstance().getItem("inventoryslot"))-amount < 0) {
+            if (user.getItem(LupoCurrencyPlugin.getInstance().getItem("inventoryslot"))-amount < 0) {
                 sendSyntaxError(context, "currency_inventory-upgrade-not-enough", user.getItem(LupoCurrencyPlugin.getInstance().getItem("inventoryslot")));
                 return;
             }
@@ -63,7 +63,7 @@ public class InventoryCommand extends LupoCommand {
             builder.setColor(LupoColor.ORANGE.getColor());
             builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getIdLong() + ")", null, context.getMember().getUser().getAvatarUrl());
 
-            if(user.getUsedInventorySlots() == 0) {
+            if (user.getUsedInventorySlots() == 0) {
                 builder.setDescription(context.getServer().translate(context.getPlugin(), "currency_inventory-empty"));
             } else {
                 builder.setDescription(context.getServer().translate(context.getPlugin(), "currency_inventory-inventoryslots",
@@ -71,18 +71,18 @@ public class InventoryCommand extends LupoCommand {
             }
 
             int max = 0;
-            for(Item item : LupoCurrencyPlugin.getInstance().getItems()) {
+            for (Item item : LupoCurrencyPlugin.getInstance().getItems()) {
                 if (user.getItem(item) != 0) {
                     max++;
                 }
             }
 
             int i = 0;
-            for(Item item : LupoCurrencyPlugin.getInstance().getItems()) {
-                if(user.getItem(item) != 0) {
+            for (Item item : LupoCurrencyPlugin.getInstance().getItems()) {
+                if (user.getItem(item) != 0) {
                     builder.addField(item.getIcon() + " " + user.getItem(item) + "x " + item.getName(), context.getServer().translate(context.getPlugin(), "currency_inventory-price",
                             context.getServer().formatLong(item.getBuy()), context.getServer().formatLong(item.getSell())), false);
-                    if(String.valueOf(i).length() != 1 && (String.valueOf(i).endsWith("0") || i == max-1)) {
+                    if (String.valueOf(i).length() != 1 && (String.valueOf(i).endsWith("0") || i == max-1)) {
                         pages.add(new Page(PageType.EMBED, builder.build()));
                         builder.clearFields();
                     }
@@ -90,7 +90,7 @@ public class InventoryCommand extends LupoCommand {
                 }
             }
 
-            if(pages.size() != 0) {
+            if (pages.size() != 0) {
                 context.getChannel().sendMessage((MessageEmbed) pages.get(0).getContent()).queue(success -> {
                     Pages.paginate(success, pages, 60, TimeUnit.SECONDS, reactUser -> context.getUser().getId() == reactUser.getIdLong());
                 });

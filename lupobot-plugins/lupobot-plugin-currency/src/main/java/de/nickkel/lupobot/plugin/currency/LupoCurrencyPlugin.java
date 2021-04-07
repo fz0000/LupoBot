@@ -36,12 +36,12 @@ public class LupoCurrencyPlugin extends LupoPlugin {
     public void onEnable() {
         instance = this;
         LupoBot.getInstance().getCommandHandler().registerCommands(this, "de.nickkel.lupobot.plugin.currency.commands");
-        if(new File("storage/items.json").exists()) {
+        if (new File("storage/items.json").exists()) {
             this.itemConfig = new Document(new File("storage/items.json"));
         } else {
             this.itemConfig = new Document(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("configs/items.json"));
         }
-        if(new File("storage/jobs.json").exists()) {
+        if (new File("storage/jobs.json").exists()) {
             this.jobConfig = new Document(new File("storage/jobs.json"));
         } else {
             this.jobConfig = new Document(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("configs/jobs.json"));
@@ -59,7 +59,7 @@ public class LupoCurrencyPlugin extends LupoPlugin {
 
     public void loadItems() {
         BasicDBObject dbObject = (BasicDBObject) JSON.parse(this.itemConfig.convertToJsonString());
-        for(String name : dbObject.keySet()) {
+        for (String name : dbObject.keySet()) {
             BasicDBList dbList = new BasicDBList();
             dbList.addAll(this.itemConfig.getList(name));
             Item item = new Item(name, (String) dbList.get(0), Long.parseLong((String) dbList.get(1)), Long.parseLong((String) dbList.get(2)));
@@ -70,7 +70,7 @@ public class LupoCurrencyPlugin extends LupoPlugin {
 
     public void loadJobs() {
         BasicDBObject dbObject = (BasicDBObject) JSON.parse(this.jobConfig.convertToJsonString());
-        for(String name : dbObject.keySet()) {
+        for (String name : dbObject.keySet()) {
             BasicDBList dbList = new BasicDBList();
             dbList.addAll(this.jobConfig.getList(name));
             Job job = new Job(name, this.getItem((String) dbList.get(0)), (String) dbList.get(1), Long.parseLong((String) dbList.get(2)), Long.parseLong((String) dbList.get(3)));
@@ -80,8 +80,8 @@ public class LupoCurrencyPlugin extends LupoPlugin {
     }
 
     public Item getItem(String name) {
-        for(Item item : this.items) {
-            if(item.getName().equalsIgnoreCase(name)) {
+        for (Item item : this.items) {
+            if (item.getName().equalsIgnoreCase(name)) {
                 return item;
             }
         }
@@ -89,7 +89,7 @@ public class LupoCurrencyPlugin extends LupoPlugin {
     }
 
     public CurrencyUser getCurrencyUser(Member member) {
-        if(!this.currencyUser.containsKey(member.getIdLong())) {
+        if (!this.currencyUser.containsKey(member.getIdLong())) {
             this.currencyUser.put(member.getIdLong(), new CurrencyUser(member));
         }
         return this.currencyUser.get(member.getIdLong());

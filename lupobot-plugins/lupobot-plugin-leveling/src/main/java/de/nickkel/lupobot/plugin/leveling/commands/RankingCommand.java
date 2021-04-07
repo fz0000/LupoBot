@@ -22,7 +22,7 @@ public class RankingCommand extends LupoCommand {
         Map<Long, Long> users = new HashMap<>();
         BasicDBObject data = (BasicDBObject) context.getServer().getPluginData(context.getPlugin(), "xp");
 
-        for(String id : data.keySet()) {
+        for (String id : data.keySet()) {
             BasicDBObject dbObject = (BasicDBObject) data.get(id);
             users.put(Long.valueOf(id), dbObject.getLong("xp"));
         }
@@ -35,8 +35,8 @@ public class RankingCommand extends LupoCommand {
 
         String userNames = "", xp = "";
         int rank = 1;
-        for(Long id : sortedUsers.keySet()) {
-            if(rank == 20) {
+        for (Long id : sortedUsers.keySet()) {
+            if (rank == 20) {
                 break;
             }
             User user = LupoBot.getInstance().getShardManager().getUserById(id);

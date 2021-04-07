@@ -20,10 +20,10 @@ public class EventsCommand extends LupoCommand {
         builder.setTimestamp(context.getMessage().getTimeCreated());
         builder.setColor(LupoColor.ORANGE.getColor());
 
-        for(LogEvent event : LogEvent.values()) {
+        for (LogEvent event : LogEvent.values()) {
             long channelId = LupoLoggingPlugin.getInstance().getChannelId(event, context.getGuild());
             String key = context.getServer().translate(context.getPlugin(), "logging_events-key", event.getKey());
-            if(channelId == -1) {
+            if (channelId == -1) {
                builder.addField(":x: " + context.getServer().translate(context.getPlugin(), event.getLocale())
                         + " " + context.getServer().translate(context.getPlugin(), "logging_events-deactivated"), key, false);
             } else {

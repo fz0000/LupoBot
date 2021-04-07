@@ -14,16 +14,16 @@ public class DeactivateEventCommand extends LupoCommand {
     @Override
     public void onCommand(CommandContext context) {
         String[] args = context.getArgs();
-        if(args.length == 1) {
+        if (args.length == 1) {
             String key = args[0];
             LogEvent event = null;
-            for(LogEvent logEvent : LogEvent.values()) {
-                if(logEvent.getKey().equalsIgnoreCase(key)) {
+            for (LogEvent logEvent : LogEvent.values()) {
+                if (logEvent.getKey().equalsIgnoreCase(key)) {
                     event = logEvent;
                 }
             }
 
-            if(event == null) {
+            if (event == null) {
                 sendSyntaxError(context, "logging_deactivateevent-invalid-event");
                 return;
             }

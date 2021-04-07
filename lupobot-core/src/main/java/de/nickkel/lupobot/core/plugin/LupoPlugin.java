@@ -39,26 +39,26 @@ public abstract class LupoPlugin {
     public void loadResources() {
         try {
             this.userConfig = new Document(new FileResourcesUtils(this.resourcesClass).getFileFromResourceAsStream("user.json"));
-            if(this.userConfig.convertToJsonString().equals(LupoBot.getInstance().getUserConfig().convertToJsonString())) {
+            if (this.userConfig.convertToJsonString().equals(LupoBot.getInstance().getUserConfig().convertToJsonString())) {
                 this.userConfig = null;
             }
-        } catch(IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             LupoBot.getInstance().getLogger().warn("Could not find user.json file of plugin " + this.info.name());
         }
         try {
             this.serverConfig = new Document(new FileResourcesUtils(this.resourcesClass).getFileFromResourceAsStream("server.json"));
-            if(this.serverConfig.convertToJsonString().equals(LupoBot.getInstance().getServerConfig().convertToJsonString())) {
+            if (this.serverConfig.convertToJsonString().equals(LupoBot.getInstance().getServerConfig().convertToJsonString())) {
                 this.serverConfig = null;
             }
-        } catch(IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             LupoBot.getInstance().getLogger().warn("Could not find server.json file of plugin  " + this.info.name());
         }
         try {
             this.botConfig = new Document(new FileResourcesUtils(this.resourcesClass).getFileFromResourceAsStream("bot.json"));
-            if(this.botConfig.convertToJsonString().equals(new Document(new FileResourcesUtils(LupoBot.getInstance().getClass()).getFileFromResourceAsStream("bot.json")).convertToJsonString())) {
+            if (this.botConfig.convertToJsonString().equals(new Document(new FileResourcesUtils(LupoBot.getInstance().getClass()).getFileFromResourceAsStream("bot.json")).convertToJsonString())) {
                 this.botConfig = null;
             }
-        } catch(IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             LupoBot.getInstance().getLogger().warn("Could not find bot.json file of plugin  " + this.info.name());
         }
     }

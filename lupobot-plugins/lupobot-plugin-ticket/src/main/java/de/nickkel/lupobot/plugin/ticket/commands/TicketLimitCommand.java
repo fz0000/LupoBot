@@ -6,7 +6,6 @@ import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.TextChannel;
 
 @CommandInfo(name = "ticketlimit", category = "config", permissions = Permission.ADMINISTRATOR)
 public class TicketLimitCommand extends LupoCommand {
@@ -19,7 +18,7 @@ public class TicketLimitCommand extends LupoCommand {
             try {
                 amount = Integer.parseInt(context.getArgs()[0]);
                 context.getServer().appendPluginData(context.getPlugin(), "limitAmount", amount);
-            } catch(NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 sendSyntaxError(context, "ticket_ticketlimit-invalid-amount");
                 return;
             }

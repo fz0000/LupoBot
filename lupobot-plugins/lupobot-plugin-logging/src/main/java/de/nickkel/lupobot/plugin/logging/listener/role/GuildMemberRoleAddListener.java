@@ -20,7 +20,7 @@ public class GuildMemberRoleAddListener extends ListenerAdapter {
         LupoPlugin plugin = LupoBot.getInstance().getPlugin("logging");
 
         String roles = "";
-        for(Role role : event.getRoles()) {
+        for (Role role : event.getRoles()) {
             roles = roles + role.getName() + " (" + role.getId() + ")\n";
         }
 

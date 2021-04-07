@@ -12,7 +12,6 @@ import net.dv8tion.jda.api.entities.Message;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 
@@ -59,18 +58,18 @@ public class HangmanGame {
     }
 
     public void tryCharacter(String character) {
-        if(this.characters.containsValue(character) || this.getIncorrectCharacters().contains(character)) {
+        if (this.characters.containsValue(character) || this.getIncorrectCharacters().contains(character)) {
             this.context.getChannel().sendMessage(this.context.getServer().translate(this.context.getPlugin(), "fun_hangman-already-guessed", this.context.getMember().getAsMention())).queue();
             return;
         }
         this.timer.cancel();
         this.triedCharacter = character;
         boolean success = false;
-        if(this.characters.containsKey(character) && !this.characters.containsValue(character)) {
+        if (this.characters.containsKey(character) && !this.characters.containsValue(character)) {
             success = true;
         }
 
-        if(success) {
+        if (success) {
             this.characters.get(character).clear();
             this.characters.get(character).add(character);
             this.result = HangmanResult.CORRECT;
@@ -80,12 +79,12 @@ public class HangmanGame {
             this.result = HangmanResult.FALSE;
         }
 
-        if(!this.characters.containsValue("_")) {
+        if (!this.characters.containsValue("_")) {
             this.active = false;
             this.result = HangmanResult.WIN;
         }
 
-        if(this.chances == this.maxChances) {
+        if (this.chances == this.maxChances) {
             this.active = false;
             this.result = HangmanResult.LOSE;
         }
@@ -95,8 +94,8 @@ public class HangmanGame {
 
     public void build() {
         String currentWord = "";
-        for(String character : this.sortedCharacters) {
-            if(!this.characters.values().contains(character)) {
+        for (String character : this.sortedCharacters) {
+            if (!this.characters.values().contains(character)) {
                 currentWord = currentWord + "_ ";
             } else {
                 currentWord = currentWord + character + " ";
@@ -106,26 +105,26 @@ public class HangmanGame {
         currentWord = "``" + currentWord + "``";
 
         String incorrectCharacters = "/";
-        if(this.incorrectCharacters.size() != 0) {
+        if (this.incorrectCharacters.size() != 0) {
             incorrectCharacters = "";
         }
-        for(String character : this.incorrectCharacters) {
+        for (String character : this.incorrectCharacters) {
             incorrectCharacters = incorrectCharacters + character + ", ";
         }
-        if(!incorrectCharacters.equals("/")) {
+        if (!incorrectCharacters.equals("/")) {
             incorrectCharacters = incorrectCharacters.substring(0, incorrectCharacters.length() - 2);
         }
 
         EmbedBuilder builder = new EmbedBuilder();
         builder.setColor(LupoColor.AQUA.getColor());
         String title = this.context.getServer().translate(this.context.getPlugin(), "fun_hangman-write");
-        if(this.result == HangmanResult.WIN) {
+        if (this.result == HangmanResult.WIN) {
             title = this.context.getServer().translate(this.context.getPlugin(), "fun_hangman-won-game");
-        } else if(this.result == HangmanResult.LOSE) {
+        } else if (this.result == HangmanResult.LOSE) {
             title = this.context.getServer().translate(this.context.getPlugin(), "fun_hangman-lost-game");
-        } else if(this.result == HangmanResult.CORRECT) {
+        } else if (this.result == HangmanResult.CORRECT) {
             title = this.context.getServer().translate(this.context.getPlugin(), "fun_hangman-correct-letter", this.triedCharacter);
-        } else if(this.result == HangmanResult.FALSE) {
+        } else if (this.result == HangmanResult.FALSE) {
             title = this.context.getServer().translate(this.context.getPlugin(), "fun_hangman-false-letter", this.incorrectCharacters.get(this.incorrectCharacters.size()-1));
         }
         builder.setTitle(title);
@@ -142,11 +141,11 @@ public class HangmanGame {
             this.message.editMessage(builder.build()).queue();
         }
 
-        if(this.result == HangmanResult.WIN) {
+        if (this.result == HangmanResult.WIN) {
             LupoFunPlugin.getInstance().getHangmanGames().remove(this);
             this.context.getChannel().sendMessage(this.context.getServer().translate(this.context.getPlugin(), "fun_hangman-won-message", this.getContext().getMember().getAsMention())).queue();
             return;
-        } else if(this.result == HangmanResult.LOSE) {
+        } else if (this.result == HangmanResult.LOSE) {
             LupoFunPlugin.getInstance().getHangmanGames().remove(this);
             this.context.getChannel().sendMessage(this.context.getServer().translate(this.context.getPlugin(), "fun_hangman-lost-message", this.getContext().getMember().getAsMention(), this.getWord())).queue();
             return;
@@ -156,7 +155,7 @@ public class HangmanGame {
         this.timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if(!LupoFunPlugin.getInstance().getHangmanGames().contains(HangmanGame.this)) {
+                if (!LupoFunPlugin.getInstance().getHangmanGames().contains(HangmanGame.this)) {
                     this.cancel();
                     return;
                 }

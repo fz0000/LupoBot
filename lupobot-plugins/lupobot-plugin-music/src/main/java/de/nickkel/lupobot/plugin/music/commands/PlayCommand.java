@@ -25,13 +25,13 @@ import java.util.function.BiConsumer;
 public class PlayCommand extends LupoCommand {
     @Override
     public void onCommand(CommandContext context) {
-        if(context.getArgs().length >= 1) {
+        if (context.getArgs().length >= 1) {
             String arg = context.getArgsAsString();
             MusicServer server = LupoMusicPlugin.getInstance().getMusicServer(context.getGuild());
-            if(!server.joinedVoiceChannel(context)) {
+            if (!server.joinedVoiceChannel(context)) {
                 return;
             }
-            if(context.getArgs()[0].startsWith("http") && context.getArgs()[0].contains("/")) {
+            if (context.getArgs()[0].startsWith("http") && context.getArgs()[0].contains("/")) {
                 server.play(this, context, context.getArgs()[0]);
             } else {
                 LupoMusicPlugin.getInstance().getAudioPlayerManager().loadItemOrdered(server, "ytsearch: " + arg, new AudioLoadResultHandler() {
@@ -52,7 +52,7 @@ public class PlayCommand extends LupoCommand {
                                 "https://cdn.pixabay.com/photo/2019/08/11/18/27/icon-4399630_960_720.png");
                         String description = "";
 
-                        for(int i=1; i < 10; i++) {
+                        for (int i=1; i < 10; i++) {
                             try {
                                 AudioTrack track = tracks.get(i-1);
                                 description = description + "**" + i + ":** " + track.getInfo().title + "\n";
@@ -62,7 +62,7 @@ public class PlayCommand extends LupoCommand {
                                     server.onQueue(context, track);
                                 };
                                 consumers.put(i, consumer);
-                            } catch(IndexOutOfBoundsException e) {
+                            } catch (IndexOutOfBoundsException e) {
                                 break;
                             }
                         }

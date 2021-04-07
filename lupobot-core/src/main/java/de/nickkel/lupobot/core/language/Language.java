@@ -21,7 +21,7 @@ public class Language {
         String value;
         try {
             value = translations.get(key);
-        } catch(NullPointerException e) {
+        } catch (NullPointerException e) {
             value = "N/A (" + key + ")";
         }
         return MessageFormat.format(value, params);

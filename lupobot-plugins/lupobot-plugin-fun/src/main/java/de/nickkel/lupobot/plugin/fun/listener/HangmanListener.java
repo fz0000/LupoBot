@@ -10,21 +10,21 @@ public class HangmanListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         HangmanGame game = null;
-        for(HangmanGame all : LupoFunPlugin.getInstance().getHangmanGames()) {
-            if(all.getPlayer() == event.getMember()) {
+        for (HangmanGame all : LupoFunPlugin.getInstance().getHangmanGames()) {
+            if (all.getPlayer() == event.getMember()) {
                 game = all;
             }
         }
-        if(game == null || game.getMessage() == null) {
+        if (game == null || game.getMessage() == null) {
             return;
         }
 
-        if(event.getChannel() == game.getMessage().getTextChannel() && event.getMember() == game.getContext().getMember() && game.isActive()) {
-            if(event.getMessage().getContentRaw().length() == 1 && event.getMessage().getContentRaw().chars().allMatch(Character::isLetter)) {
+        if (event.getChannel() == game.getMessage().getTextChannel() && event.getMember() == game.getContext().getMember() && game.isActive()) {
+            if (event.getMessage().getContentRaw().length() == 1 && event.getMessage().getContentRaw().chars().allMatch(Character::isLetter)) {
                 game.tryCharacter(event.getMessage().getContentRaw());
             } else {
-                if(event.getMessage().getContentRaw().equalsIgnoreCase(game.getWord())) {
-                    for(String key : game.getSortedCharacters()) {
+                if (event.getMessage().getContentRaw().equalsIgnoreCase(game.getWord())) {
+                    for (String key : game.getSortedCharacters()) {
                         game.getCharacters().get(key).clear();
                         game.getCharacters().get(key).add(key);
                     }

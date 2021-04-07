@@ -8,7 +8,6 @@ import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.plugin.PluginInfo;
 import de.nickkel.lupobot.core.util.ListenerRegister;
 import lombok.Getter;
-import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.HashMap;
@@ -35,7 +34,7 @@ public class LupoLevelingPlugin extends LupoPlugin {
     }
 
     public boolean isReadyToReceiveXP(LupoServer server, LupoUser user) {
-        if(!this.lastReceivedXP.containsKey(server.getGuild().getIdLong()+user.getId())) {
+        if (!this.lastReceivedXP.containsKey(server.getGuild().getIdLong()+user.getId())) {
             return true;
         }
         long time = this.lastReceivedXP.get(server.getGuild().getIdLong()+user.getId())-System.currentTimeMillis();
@@ -79,8 +78,8 @@ public class LupoLevelingPlugin extends LupoPlugin {
         this.lastReceivedXP.put(server.getGuild().getIdLong()+user.getId(), System.currentTimeMillis()+60000);
 
         BasicDBObject rewardObject = (BasicDBObject) pluginObject.get("rewardRoles");
-        if(rewardObject.containsKey(String.valueOf(level))) {
-            if(existsRewardRole(server, level)) {
+        if (rewardObject.containsKey(String.valueOf(level))) {
+            if (existsRewardRole(server, level)) {
                 server.getGuild().addRoleToMember(user.getId(), server.getGuild().getRoleById(rewardObject.getLong(String.valueOf(level)))).queue();
             }
         }
@@ -93,14 +92,14 @@ public class LupoLevelingPlugin extends LupoPlugin {
     public void addXP(LupoServer server, LupoUser user, long xp, TextChannel channel) {
         checkIfDataExists(server, user);
 
-        if(user.getDiscordUser().isBot()) {
+        if (user.getDiscordUser().isBot()) {
             return;
         }
 
-        while(getXP(server, user)+xp >= getRequiredXP(getLevel(server, user)+1)) {
+        while (getXP(server, user)+xp >= getRequiredXP(getLevel(server, user)+1)) {
             addLevel(server, user);
-            if(channel != null) {
-                if(server.getPluginData(LupoBot.getInstance().getPlugin(this.getInfo().name()), "levelUpMessage") == null) {
+            if (channel != null) {
+                if (server.getPluginData(LupoBot.getInstance().getPlugin(this.getInfo().name()), "levelUpMessage") == null) {
                     channel.sendMessage(server.translate(LupoBot.getInstance().getPlugin(this.getInfo().name()), "leveling_level-up",
                             user.getDiscordUser().getAsMention(), getLevel(server, user))).queue();
                 } else {
@@ -125,8 +124,8 @@ public class LupoLevelingPlugin extends LupoPlugin {
     public boolean existsRewardRole(LupoServer server, long level) {
         BasicDBObject pluginObject = (BasicDBObject) server.getData().get(LupoLevelingPlugin.getInstance().getInfo().name());
         BasicDBObject rewardObject = (BasicDBObject) pluginObject.get("rewardRoles");
-        if(rewardObject.containsKey(String.valueOf(level))) {
-            if(server.getGuild().getRoleById(rewardObject.getLong(String.valueOf(level))) == null) {
+        if (rewardObject.containsKey(String.valueOf(level))) {
+            if (server.getGuild().getRoleById(rewardObject.getLong(String.valueOf(level))) == null) {
                 rewardObject.remove(String.valueOf(level));
                 pluginObject.append("rewardRoles", rewardObject);
                 server.getData().append(this.getInfo().name(), pluginObject);
@@ -140,7 +139,7 @@ public class LupoLevelingPlugin extends LupoPlugin {
         BasicDBObject pluginObject = (BasicDBObject) server.getData().get(this.getInfo().name());
         BasicDBObject xpObject = (BasicDBObject) pluginObject.get("xp");
 
-        if(!xpObject.containsKey(String.valueOf(user.getId()))) {
+        if (!xpObject.containsKey(String.valueOf(user.getId()))) {
             xpObject.append(String.valueOf(user.getId()), new BasicDBObject().append("level", 0).append("xp", 0));
             pluginObject.append("xp", xpObject);
             server.getData().append(this.getInfo().name(), pluginObject);

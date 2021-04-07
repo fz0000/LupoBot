@@ -53,7 +53,7 @@ public class MusicServer {
             @Override
             public void playlistLoaded(AudioPlaylist audioPlaylist) {
                 List<AudioTrack> tracks = audioPlaylist.getTracks();
-                for(AudioTrack track : tracks) {
+                for (AudioTrack track : tracks) {
                     MusicServer.this.scheduler.queue(track);
                 }
                 EmbedBuilder builder = new EmbedBuilder();
@@ -81,12 +81,12 @@ public class MusicServer {
         GuildVoiceState selfVoiceState = this.guild.getSelfMember().getVoiceState();
         AudioManager audioManager = this.guild.getAudioManager();
 
-        if(!memberVoiceState.inVoiceChannel()) {
+        if (!memberVoiceState.inVoiceChannel()) {
             context.getChannel().sendMessage(this.server.translate(context.getPlugin(), "music_member-not-in-voicechannel",
                     context.getMember().getAsMention())).queue();
             return false;
         }
-        if(selfVoiceState.inVoiceChannel() && memberVoiceState.getChannel().getIdLong() != selfVoiceState.getChannel().getIdLong()) {
+        if (selfVoiceState.inVoiceChannel() && memberVoiceState.getChannel().getIdLong() != selfVoiceState.getChannel().getIdLong()) {
             context.getChannel().sendMessage(this.server.translate(context.getPlugin(), "music_bot-already-in-voicechannel",
                     context.getMember().getAsMention())).queue();
             return false;

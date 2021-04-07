@@ -17,7 +17,7 @@ public class SaveDataTask extends TimerTask {
         LupoBot.getInstance().getSaveQueuedUsers().clear();
         int serverAmount = 0;
         LupoBot.getInstance().getLogger().info("Trying to save data of queued servers ...");
-        for(LupoServer server : servers) {
+        for (LupoServer server : servers) {
             serverAmount++;
             server.saveData();
         }
@@ -25,7 +25,7 @@ public class SaveDataTask extends TimerTask {
 
         int userAmount = 0;
         LupoBot.getInstance().getLogger().info("Trying to save data of queued users ...");
-        for(LupoUser user : users) {
+        for (LupoUser user : users) {
             userAmount++;
             user.saveData();
         }
