@@ -20,7 +20,9 @@ public class Document implements iDocument {
     private JsonObject jsonObject;
     private File file;
 
-    public Document() { }
+    public Document() {
+        this.jsonObject = new JsonObject();
+    }
 
     public Document(InputStream inputStream) {
         JsonParser jsonParser = new JsonParser();

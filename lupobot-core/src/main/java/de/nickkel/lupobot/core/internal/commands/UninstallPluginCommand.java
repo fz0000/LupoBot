@@ -28,7 +28,7 @@ public class UninstallPluginCommand extends LupoCommand {
                 plugins++;
                 if (context.getArgs()[0].equalsIgnoreCase(plugin.getInfo().name()) || context.getArgs()[0].equalsIgnoreCase(context.getServer().translatePluginName(plugin))) {
                     List<Long> guilds = new ArrayList<>();
-                    for (long l : plugin.getInfo().guilds()) {
+                    for (long l : plugin.getInfo().guildWhitelist()) {
                         guilds.add(l);
                     }
                     if (guilds.size() == 0 || guilds.contains(context.getGuild().getIdLong())) {

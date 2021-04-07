@@ -5,6 +5,7 @@ import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.config.Document;
 import de.nickkel.lupobot.core.language.LanguageHandler;
 import de.nickkel.lupobot.core.util.FileResourcesUtils;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -13,7 +14,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class LupoPlugin {
+@Data public abstract class LupoPlugin {
 
     @Getter @Setter
     private LanguageHandler languageHandler;

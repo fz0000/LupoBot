@@ -15,8 +15,10 @@ import de.nickkel.lupobot.core.pagination.method.Pages;
 import de.nickkel.lupobot.core.pagination.model.PaginatorBuilder;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.plugin.PluginLoader;
+import de.nickkel.lupobot.core.rest.RestServer;
 import de.nickkel.lupobot.core.tasks.SaveDataTask;
 import de.nickkel.lupobot.core.util.FileResourcesUtils;
+import io.javalin.Javalin;
 import lombok.Getter;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
@@ -74,6 +76,8 @@ public class LupoBot {
     private final List<String> availableLanguages = new ArrayList<>();
     @Getter
     private final long startMillis = System.currentTimeMillis();
+    @Getter
+    private RestServer restServer;
 
     public static void main(String[] args) {
         new LupoBot().run(args);
@@ -82,14 +86,14 @@ public class LupoBot {
     public void run(String[] args) {
         instance = this;
         this.executorService = Executors.newCachedThreadPool();
-        if(new File("storage/config.json").exists()) {
+        if (new File("storage/config.json").exists()) {
             this.config = new Document(new File("storage/config.json"));
         } else {
             this.config = new Document(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("config.json"));
         }
 
-        for(String arg : args) {
-            if(arg.equalsIgnoreCase("--maintenance")) {
+        for (String arg : args) {
+            if (arg.equalsIgnoreCase("--maintenance")) {
                 DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(this.config.getString("token"))
                         .addEventListeners(new MaintenanceListener())
                         .setStatus(OnlineStatus.DO_NOT_DISTURB)
@@ -125,6 +129,7 @@ public class LupoBot {
         Timer timer = new Timer("DataSaver");
         timer.schedule(new SaveDataTask(), 600*1000, 600*1000);
         this.logger.info("LupoBot is running on " + this.shardManager.getGuilds().size() + " servers");
+        this.restServer = new RestServer(this.config.getInt("restServerPort"));
     }
 
     private void login(DefaultShardManagerBuilder builder) {
@@ -132,14 +137,14 @@ public class LupoBot {
             this.logger.info("Logging in ...");
             this.shardManager = builder.build();
             this.logger.info("Ready as " + this.shardManager.getShards().get(0).getSelfUser().getAsTag());
-        } catch(LoginException e) {
+        } catch (LoginException e) {
             throw new RuntimeException("Failed to log in!", e);
         }
     }
 
     public LupoPlugin getPlugin(String name) {
-        for(LupoPlugin plugin : this.plugins) {
-            if(plugin.getInfo().name().equalsIgnoreCase(name)) {
+        for (LupoPlugin plugin : this.plugins) {
+            if (plugin.getInfo().name().equalsIgnoreCase(name)) {
                 return plugin;
             }
         }
@@ -166,10 +171,10 @@ public class LupoBot {
             BasicDBObject dbObject = (BasicDBObject) JSON.parse(botConfig.convertToJsonString());
             dbObject.append("_id", this.getSelfUser().getIdLong());
             // merge data file of all plugins into one file
-            for(LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
-                if(plugin.getBotConfig() != null) {
+            for (LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
+                if (plugin.getBotConfig() != null) {
                     Document document = new Document(new JsonObject());
-                    for(String key : plugin.getBotConfig().getJsonObject().keySet()) {
+                    for (String key : plugin.getBotConfig().getJsonObject().keySet()) {
                         document.append(key, plugin.getBotConfig().getJsonElement(key));
                     }
                     BasicDBObject basic = (BasicDBObject) JSON.parse(document.convertToJsonString());
@@ -183,16 +188,16 @@ public class LupoBot {
         }
 
         // merge missing plugin or core data if missing
-        for(String key : botConfig.getJsonObject().keySet()) {
-            if(!this.data.containsKey(key)) {
+        for (String key : botConfig.getJsonObject().keySet()) {
+            if (!this.data.containsKey(key)) {
                 this.data.append(key, JSON.parse(new Document(botConfig.getJsonElement(key).getAsJsonObject()).convertToJsonString()));
             }
         }
-        for(LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
-            if(plugin.getBotConfig() != null) {
-                for(String key : plugin.getBotConfig().getJsonObject().keySet()) {
+        for (LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
+            if (plugin.getBotConfig() != null) {
+                for (String key : plugin.getBotConfig().getJsonObject().keySet()) {
                     BasicDBObject dbObject = (BasicDBObject) this.data.get(plugin.getInfo().name());
-                    if(!dbObject.containsKey(key)) {
+                    if (!dbObject.containsKey(key)) {
                         BasicDBObject config = (BasicDBObject) JSON.parse(new Document(plugin.getBotConfig().getJsonObject()).convertToJsonString());
                         dbObject.append(key, config.get(key));
                         this.data.append(plugin.getInfo().name(), dbObject);

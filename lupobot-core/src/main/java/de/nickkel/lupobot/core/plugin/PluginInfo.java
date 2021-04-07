@@ -12,7 +12,7 @@ public @interface PluginInfo {
 
     String author() default "Unknown";
 
-    long[] guilds() default {};
+    long[] guildWhitelist() default {};
 
     boolean hidden() default false;
 
