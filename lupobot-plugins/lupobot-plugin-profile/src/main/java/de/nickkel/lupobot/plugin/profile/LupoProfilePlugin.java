@@ -4,6 +4,7 @@ import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.plugin.PluginInfo;
 import de.nickkel.lupobot.plugin.profile.data.Profile;
+import lombok.Getter;
 import net.dv8tion.jda.api.entities.Member;
 
 import java.util.HashMap;
@@ -12,10 +13,13 @@ import java.util.Map;
 @PluginInfo(name = "profile", version = "1.0.0", author = "Nickkel")
 public class LupoProfilePlugin extends LupoPlugin {
 
+    @Getter
+    private static LupoProfilePlugin instance;
     private final Map<Long, Profile> profiles = new HashMap<>();
 
     @Override
     public void onEnable() {
+        instance = this;
         LupoBot.getInstance().getCommandHandler().registerCommands(this, "de.nickkel.lupobot.plugin.profile.commands");
     }
 
