@@ -47,7 +47,7 @@ public class PluginController {
 
     private JsonObject getPluginObject(LupoPlugin plugin) {
         List<String> commands = new ArrayList<>();
-        for(LupoCommand command : plugin.getCommands()) {
+        for (LupoCommand command : plugin.getCommands()) {
             commands.add(command.getInfo().name());
         }
 

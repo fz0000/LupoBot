@@ -1,6 +1,7 @@
 package de.nickkel.lupobot.core.rest;
 
 import de.nickkel.lupobot.core.controller.PluginController;
+import de.nickkel.lupobot.core.controller.ServerController;
 import io.javalin.Javalin;
 import lombok.Getter;
 public class RestServer {
@@ -20,5 +21,6 @@ public class RestServer {
         }).start(port);
 
         new PluginController(this.app);
+        new ServerController(this.app);
     }
 }

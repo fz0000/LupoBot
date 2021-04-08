@@ -18,7 +18,6 @@ import de.nickkel.lupobot.core.plugin.PluginLoader;
 import de.nickkel.lupobot.core.rest.RestServer;
 import de.nickkel.lupobot.core.tasks.SaveDataTask;
 import de.nickkel.lupobot.core.util.FileResourcesUtils;
-import io.javalin.Javalin;
 import lombok.Getter;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
@@ -125,7 +124,6 @@ public class LupoBot {
         this.commandHandler.registerCommands(this.getClass().getClassLoader(), "de.nickkel.lupobot.core.internal.commands");
         this.pluginLoader = new PluginLoader();
         this.loadBotData();
-
         Timer timer = new Timer("DataSaver");
         timer.schedule(new SaveDataTask(), 600*1000, 600*1000);
         this.logger.info("LupoBot is running on " + this.shardManager.getGuilds().size() + " servers");

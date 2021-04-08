@@ -216,6 +216,17 @@ public class LupoServer {
         return server;
     }
 
+    public static LupoServer getById(long id) {
+        LupoServer server = null;
+        if (LupoBot.getInstance().getServers().containsKey(LupoBot.getInstance().getShardManager().getGuildById(id))) {
+            server =  LupoBot.getInstance().getServers().get(LupoBot.getInstance().getShardManager().getGuildById(id));
+        } else {
+            server = new LupoServer(LupoBot.getInstance().getShardManager().getGuildById(id));
+        }
+        saveQueue(server);
+        return server;
+    }
+
     public String formatLong(Long value) {
         Locale locale = new Locale(this.language.split("_")[0]);
         NumberFormat anotherFormat = NumberFormat.getNumberInstance(locale);
