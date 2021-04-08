@@ -13,7 +13,7 @@
     <p align="center">
        An all-in-all Discord Bot that offers many cool new features in plugins which you can install to your Discord server!
        <br/>
-       <a href="https://discord.gg/SPezacNufS">Discord</a> • <a href="https://crowdin.com/project/lupobot">Crowdin</a> • <a href="https://github.com/LupoBot/LupoBot/issues">Bugs & Suggestions</a> 
+       <a href="https://discord.gg/SPezacNufS" target="_blank">Discord</a> • <a href="https://crowdin.com/project/lupobot" target="_blank">Crowdin</a> • <a href="https://github.com/LupoBot/LupoBot/issues" target="_blank">Bugs & Suggestions</a> 
 </p>
 
 ###
