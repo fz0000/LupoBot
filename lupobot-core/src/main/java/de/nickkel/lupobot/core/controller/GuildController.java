@@ -100,7 +100,7 @@ public class GuildController {
             ctx.status(404).result("Guild not found");
             return;
         }
-
+        
         if (guild == null) {
             ctx.status(404).result("Guild not found");
         } else {
@@ -120,7 +120,7 @@ public class GuildController {
             ctx.status(404).result("Guild not found");
             return;
         }
-
+        
         if (guild == null) {
             ctx.status(404).result("Guild not found");
         } else {
@@ -160,7 +160,7 @@ public class GuildController {
             ctx.status(404).result("Guild not found");
             return;
         }
-
+        
         if (guild == null) {
             ctx.status(404).result("Guild not found");
         } else {
@@ -180,7 +180,7 @@ public class GuildController {
             ctx.status(404).result("Guild not found");
             return;
         }
-
+        
         if (guild == null) {
             ctx.status(404).result("Guild not found");
         } else {
