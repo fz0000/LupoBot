@@ -104,7 +104,7 @@ public class LupoUser {
     public static LupoUser getByMember(Member member) {
         LupoUser user = null;
         if (LupoBot.getInstance().getUsers().containsKey(member.getIdLong())) {
-            user =  LupoBot.getInstance().getUsers().get(member.getIdLong());
+            user = LupoBot.getInstance().getUsers().get(member.getIdLong());
         } else {
             user = new LupoUser(member.getIdLong());
         }
@@ -114,8 +114,11 @@ public class LupoUser {
 
     public static LupoUser getById(long id) {
         LupoUser user = null;
+        if (LupoBot.getInstance().getShardManager().getUserById(id) == null) {
+            return null;
+        }
         if (LupoBot.getInstance().getUsers().containsKey(id)) {
-            user =  LupoBot.getInstance().getUsers().get(id);
+            user = LupoBot.getInstance().getUsers().get(id);
         } else {
             user = new LupoUser(id);
         }

@@ -210,14 +210,17 @@ public class LupoServer {
         if (LupoBot.getInstance().getServers().containsKey(guild)) {
             server = LupoBot.getInstance().getServers().get(guild);
         } else {
-            server =  new LupoServer(guild);
+            server = new LupoServer(guild);
         }
         saveQueue(server);
         return server;
     }
 
     public static LupoServer getById(long id) {
-        LupoServer server = null;
+        LupoServer server;
+        if (LupoBot.getInstance().getShardManager().getGuildById(id) == null) {
+            return null;
+        }
         if (LupoBot.getInstance().getServers().containsKey(LupoBot.getInstance().getShardManager().getGuildById(id))) {
             server =  LupoBot.getInstance().getServers().get(LupoBot.getInstance().getShardManager().getGuildById(id));
         } else {
