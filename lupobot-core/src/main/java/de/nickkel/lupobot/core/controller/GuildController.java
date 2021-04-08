@@ -1,15 +1,20 @@
 package de.nickkel.lupobot.core.controller;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import de.nickkel.lupobot.core.LupoBot;
+import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.config.Document;
+import de.nickkel.lupobot.core.util.TimeUtils;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.GuildChannel;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
 
@@ -24,8 +29,52 @@ public class GuildController {
                 path("channels", () -> {
                     get(this::getChannels);
                 });
+                path("members/:member", () -> {
+                    get(this::getMember);
+                });
             });
         });
+    }
+
+    public void getMember(Context ctx) {
+        Guild guild = LupoBot.getInstance().getShardManager().getGuildById(ctx.pathParam("id"));
+        if (guild == null) {
+            ctx.status(404).result("Guild not found");
+        } else {
+            Member member;
+            try {
+                member = guild.getMemberById(ctx.pathParam("member"));
+                if (member == null) {
+                    ctx.status(404).result("Member not found");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                ctx.status(404).result("Member not found");
+                return;
+            }
+
+            List<Long> roles = new ArrayList<>();
+            for (Role role : member.getRoles()) {
+                roles.add(role.getIdLong());
+            }
+            List<String> permissions = new ArrayList<>();
+            for (Permission permission : member.getPermissions()) {
+                permissions.add(permission.toString());
+            }
+
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("id", member.getIdLong());
+            jsonObject.addProperty("effectiveName", member.getEffectiveName());
+            jsonObject.addProperty("nickname", member.getNickname());
+            jsonObject.addProperty("owner", member.isOwner());
+            jsonObject.addProperty("avatarUrl", member.getUser().getAvatarUrl());
+            jsonObject.addProperty("timeCreated", TimeUtils.format(member.getTimeCreated()));
+            jsonObject.addProperty("timeJoined", TimeUtils.format(member.getTimeJoined()));
+            jsonObject.addProperty("color", member.getColorRaw());
+            jsonObject.add("roles", new Gson().toJsonTree(roles));
+            jsonObject.add("permissions", new Gson().toJsonTree(permissions));
+            ctx.result(new Document(jsonObject).convertToJson());
+        }
     }
 
     public void getChannels(Context ctx) {
