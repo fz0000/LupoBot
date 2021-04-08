@@ -1,7 +1,6 @@
 package de.nickkel.lupobot.core.controller;
 
 import com.google.gson.JsonObject;
-import com.mongodb.util.JSON;
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.config.Document;
 import de.nickkel.lupobot.core.data.LupoServer;
