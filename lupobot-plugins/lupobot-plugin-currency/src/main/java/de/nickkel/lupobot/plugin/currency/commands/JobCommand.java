@@ -48,7 +48,6 @@ public class JobCommand extends LupoCommand {
                 sendSyntaxError(context, "currency_job-no-item", job.getNeededItem().getIcon() + " " + job.getNeededItem().getName(), job.getNeededItem().getName());
                 return;
             }
-            user.addItem(job.getNeededItem(), -1);
             user.setCurrentJob(job);
             EmbedBuilder builder = new EmbedBuilder();
             builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
