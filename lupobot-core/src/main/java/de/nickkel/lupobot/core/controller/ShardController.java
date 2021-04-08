@@ -46,7 +46,7 @@ public class ShardController {
         } else {
             JDA shard = LupoBot.getInstance().getShardManager().getShardById(ctx.pathParam("id"));
             if (type != null) {
-                if (type.equals("stop")) {
+                if (type.equals("shutdown")) {
                     shard.shutdown();
                 } else {
                     LupoBot.getInstance().getShardManager().restart(shard.getShardInfo().getShardId());
