@@ -1,9 +1,6 @@
 package de.nickkel.lupobot.core.rest;
 
-import de.nickkel.lupobot.core.controller.PluginController;
-import de.nickkel.lupobot.core.controller.ServerController;
-import de.nickkel.lupobot.core.controller.ShardController;
-import de.nickkel.lupobot.core.controller.UserController;
+import de.nickkel.lupobot.core.controller.*;
 import io.javalin.Javalin;
 import lombok.Getter;
 public class RestServer {
@@ -26,5 +23,6 @@ public class RestServer {
         new ServerController(this.app);
         new UserController(this.app);
         new ShardController(this.app);
+        new GuildController(this.app);
     }
 }
