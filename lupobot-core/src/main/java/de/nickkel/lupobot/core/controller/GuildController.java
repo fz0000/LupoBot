@@ -3,7 +3,6 @@ package de.nickkel.lupobot.core.controller;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import de.nickkel.lupobot.core.LupoBot;
-import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.config.Document;
 import de.nickkel.lupobot.core.util.TimeUtils;
 import io.javalin.Javalin;
@@ -28,6 +27,15 @@ public class GuildController {
                 });
                 path("channels", () -> {
                     get(this::getChannels);
+                    path(":channel", () -> {
+                        get(this::getChannel);
+                    });
+                });
+                path("roles", () -> {
+                    get(this::getRoles);
+                    path(":role", () -> {
+                        get(this::getRole);
+                    });
                 });
                 path("members/:member", () -> {
                     get(this::getMember);
@@ -37,7 +45,14 @@ public class GuildController {
     }
 
     public void getMember(Context ctx) {
-        Guild guild = LupoBot.getInstance().getShardManager().getGuildById(ctx.pathParam("id"));
+        Guild guild;
+        try {
+            guild = LupoBot.getInstance().getShardManager().getGuildById(ctx.pathParam("id"));
+        } catch (NumberFormatException e) {
+            ctx.status(404).result("Guild not found");
+            return;
+        }
+
         if (guild == null) {
             ctx.status(404).result("Guild not found");
         } else {
@@ -77,33 +92,138 @@ public class GuildController {
         }
     }
 
-    public void getChannels(Context ctx) {
-        Guild guild = LupoBot.getInstance().getShardManager().getGuildById(ctx.pathParam("id"));
+    public void getRoles(Context ctx) {
+        Guild guild;
+        try {
+            guild = LupoBot.getInstance().getShardManager().getGuildById(ctx.pathParam("id"));
+        } catch (NumberFormatException e) {
+            ctx.status(404).result("Guild not found");
+            return;
+        }
+
         if (guild == null) {
             ctx.status(404).result("Guild not found");
         } else {
             JsonObject jsonObject = new JsonObject();
-            for (GuildChannel channel : guild.getChannels()) {
-                JsonObject channelObject = new JsonObject();
-                channelObject.addProperty("type", channel.getType().toString());
-                channelObject.addProperty("id", channel.getIdLong());
-                channelObject.addProperty("name", channel.getName());
-                channelObject.addProperty("position", channel.getPositionRaw());
-                if (channel.getParent() != null) {
-                    channelObject.addProperty("categoryName", channel.getParent().getName());
-                    channelObject.addProperty("categoryId", channel.getParent().getIdLong());
-                } else {
-                    channelObject.addProperty("categoryName", "NONE");
-                    channelObject.addProperty("categoryId", "NONE");
-                }
-                jsonObject.add(channel.getId(), channelObject);
+            for (Role role : guild.getRoles()) {
+                jsonObject.add(role.getId(), getRoleObject(role));
             }
             ctx.result(new Document(jsonObject).convertToJson());
         }
     }
 
+    public void getRole(Context ctx) {
+        Guild guild;
+        try {
+            guild = LupoBot.getInstance().getShardManager().getGuildById(ctx.pathParam("id"));
+        } catch (NumberFormatException e) {
+            ctx.status(404).result("Guild not found");
+            return;
+        }
+
+        if (guild == null) {
+            ctx.status(404).result("Guild not found");
+        } else {
+            Role role;
+            try {
+                role = guild.getRoleById(ctx.pathParam("role"));
+                if (role == null) {
+                    ctx.status(404).result("Role not found");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                ctx.status(404).result("Role not found");
+                return;
+            }
+            ctx.result(new Document(getRoleObject(role)).convertToJson());
+        }
+    }
+
+    public JsonObject getRoleObject(Role role) {
+        JsonObject roleObject = new JsonObject();
+        roleObject.addProperty("id", role.getIdLong());
+        roleObject.addProperty("name", role.getName());
+        roleObject.addProperty("permissionsRaw", role.getPermissionsRaw());
+        List<String> permissions = new ArrayList<>();
+        for (Permission permission : role.getPermissions()) {
+            permissions.add(permission.toString());
+        }
+        roleObject.add("permissions", new Gson().toJsonTree(permissions));
+        return roleObject;
+    }
+
+    public void getChannels(Context ctx) {
+        Guild guild;
+        try {
+            guild = LupoBot.getInstance().getShardManager().getGuildById(ctx.pathParam("id"));
+        } catch (NumberFormatException e) {
+            ctx.status(404).result("Guild not found");
+            return;
+        }
+
+        if (guild == null) {
+            ctx.status(404).result("Guild not found");
+        } else {
+            JsonObject jsonObject = new JsonObject();
+            for (GuildChannel channel : guild.getChannels()) {
+                jsonObject.add(channel.getId(), getChannelObject(channel));
+            }
+            ctx.result(new Document(jsonObject).convertToJson());
+        }
+    }
+
+    public void getChannel(Context ctx) {
+        Guild guild;
+        try {
+            guild = LupoBot.getInstance().getShardManager().getGuildById(ctx.pathParam("id"));
+        } catch (NumberFormatException e) {
+            ctx.status(404).result("Guild not found");
+            return;
+        }
+
+        if (guild == null) {
+            ctx.status(404).result("Guild not found");
+        } else {
+            GuildChannel channel;
+            try {
+                channel = guild.getGuildChannelById(ctx.pathParam("channel"));
+                if (channel == null) {
+                    ctx.status(404).result("Channel not found");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                ctx.status(404).result("Channel not found");
+                return;
+            }
+            ctx.result(new Document(getChannelObject(channel)).convertToJson());
+        }
+    }
+
+    public JsonObject getChannelObject(GuildChannel channel) {
+        JsonObject channelObject = new JsonObject();
+        channelObject.addProperty("type", channel.getType().toString());
+        channelObject.addProperty("id", channel.getIdLong());
+        channelObject.addProperty("name", channel.getName());
+        channelObject.addProperty("position", channel.getPositionRaw());
+        if (channel.getParent() != null) {
+            channelObject.addProperty("categoryName", channel.getParent().getName());
+            channelObject.addProperty("categoryId", channel.getParent().getIdLong());
+        } else {
+            channelObject.addProperty("categoryName", "NONE");
+            channelObject.addProperty("categoryId", "NONE");
+        }
+        return channelObject;
+    }
+
     public void createMessage(Context ctx) {
-        Guild guild = LupoBot.getInstance().getShardManager().getGuildById(ctx.pathParam("id"));
+        Guild guild;
+        try {
+            guild = LupoBot.getInstance().getShardManager().getGuildById(ctx.pathParam("id"));
+        } catch (NumberFormatException e) {
+            ctx.status(404).result("Guild not found");
+            return;
+        }
+        
         if (guild == null) {
             ctx.status(404).result("Guild not found");
             return;
