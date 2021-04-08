@@ -223,7 +223,7 @@ public class GuildController {
             ctx.status(404).result("Guild not found");
             return;
         }
-        
+
         if (guild == null) {
             ctx.status(404).result("Guild not found");
             return;
@@ -283,7 +283,7 @@ public class GuildController {
             messageBuilder.setEmbed(embedBuilder.build());
         }
 
-        if (ctx.queryParam("messageid") != null) {
+        if (ctx.queryParam("messageId") != null) {
             channel.editMessageById(ctx.queryParam("messageId"), messageBuilder.build()).queue();
         } else {
             channel.sendMessage(messageBuilder.build()).queue();
