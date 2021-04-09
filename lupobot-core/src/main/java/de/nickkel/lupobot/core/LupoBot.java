@@ -32,8 +32,6 @@ import org.slf4j.LoggerFactory;
 import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class LupoBot {
 
@@ -49,8 +47,6 @@ public class LupoBot {
     private CommandHandler commandHandler;
     @Getter
     private PluginLoader pluginLoader;
-    @Getter
-    private ExecutorService executorService;
     @Getter
     private Document config, userConfig, serverConfig;
     @Getter
@@ -82,7 +78,6 @@ public class LupoBot {
 
     public void run(String[] args) {
         instance = this;
-        this.executorService = Executors.newCachedThreadPool();
         if (new File("storage/config.json").exists()) {
             this.config = new Document(new File("storage/config.json"));
         } else {
