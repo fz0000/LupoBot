@@ -91,6 +91,11 @@ public class Profile {
     public boolean isValidDate(String date) {
         boolean valid = false;
         try {
+            if (date.split("-").length == 3) {
+                LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            } else {
+                date = "1000-" + date;
+            }
             LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             valid = true;
         } catch (DateTimeParseException ignored) {

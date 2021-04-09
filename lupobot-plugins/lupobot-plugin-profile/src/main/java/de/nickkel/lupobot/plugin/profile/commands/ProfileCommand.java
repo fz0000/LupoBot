@@ -34,7 +34,9 @@ public class ProfileCommand extends LupoCommand {
 
         if (profile.getBirthday() != null) {
             builder.addField(context.getServer().translate(context.getPlugin(), "profile_profile-birthday"), profile.getBirthday(), true);
-            builder.addField(context.getServer().translate(context.getPlugin(), "profile_profile-age"), String.valueOf(profile.getAge()), true);
+            if (profile.getBirthday().split("-").length == 3) {
+                builder.addField(context.getServer().translate(context.getPlugin(), "profile_profile-age"), String.valueOf(profile.getAge()), true);
+            }
         }
         if (profile.getGender() != null) {
             builder.addField(context.getServer().translate(context.getPlugin(), "profile_profile-gender"),
