@@ -9,6 +9,7 @@ import de.nickkel.lupobot.core.plugin.PluginInfo;
 import de.nickkel.lupobot.core.util.ListenerRegister;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -90,9 +91,10 @@ public class LupoLevelingPlugin extends LupoPlugin {
     }
 
     public void addXP(LupoServer server, LupoUser user, long xp, TextChannel channel) {
+        User discordUser = LupoBot.getInstance().getShardManager().retrieveUserById(user.getId()).complete();
         checkIfDataExists(server, user);
 
-        if (user.getDiscordUser().isBot()) {
+        if (discordUser.isBot()) {
             return;
         }
 
@@ -101,10 +103,10 @@ public class LupoLevelingPlugin extends LupoPlugin {
             if (channel != null) {
                 if (server.getPluginData(LupoBot.getInstance().getPlugin(this.getInfo().name()), "levelUpMessage") == null) {
                     channel.sendMessage(server.translate(LupoBot.getInstance().getPlugin(this.getInfo().name()), "leveling_level-up",
-                            user.getDiscordUser().getAsMention(), getLevel(server, user))).queue();
+                            discordUser.getAsMention(), getLevel(server, user))).queue();
                 } else {
                     String message = (String) server.getPluginData(LupoBot.getInstance().getPlugin(this.getInfo().name()), "levelUpMessage");
-                    channel.sendMessage(message.replace("%member%", user.getDiscordUser().getAsMention())
+                    channel.sendMessage(message.replace("%member%", discordUser.getAsMention())
                             .replace("%level%", String.valueOf(getLevel(server, user)))).queue();
                 }
             }

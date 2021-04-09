@@ -100,7 +100,7 @@ public class UserController {
     }
 
     public void getUser(Context ctx) {
-        if (LupoBot.getInstance().getShardManager().getUserById(Long.parseLong(ctx.pathParam("id"))) == null) {
+        if (LupoUser.getById(Long.parseLong(ctx.pathParam("id"))) == null) {
             ctx.status(404).result("User not found");
         } else {
             Document document = new Document(getUserObject(LupoUser.getById(Long.parseLong(ctx.pathParam("id")))));

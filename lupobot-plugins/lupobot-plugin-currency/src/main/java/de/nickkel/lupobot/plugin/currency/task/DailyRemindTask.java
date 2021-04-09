@@ -20,7 +20,7 @@ public class DailyRemindTask extends TimerTask {
             String lastDailyRemind = (String) user.getPluginData(plugin, "lastDailyRemind");
             if (lastDailyCoins == -1 || lastDailyCoins+86400000-System.currentTimeMillis() < 0) {
                 if (lastDailyRemind == null || !lastDailyRemind.equals(TimeUtils.currentDate())) {
-                    user.getDiscordUser().openPrivateChannel().queue(success -> {
+                    LupoBot.getInstance().getShardManager().retrieveUserById(user.getId()).complete().openPrivateChannel().queue(success -> {
                         success.sendMessage("Don't forget to pick up your daily reward! :coin:").queue();
                     });
                     user.appendPluginData(plugin, "lastDailyRemind", TimeUtils.currentDate());

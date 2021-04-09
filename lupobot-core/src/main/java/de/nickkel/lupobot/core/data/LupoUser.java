@@ -13,13 +13,12 @@ import net.dv8tion.jda.api.entities.User;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class LupoUser {
 
     @Getter
     private final long id;
-    @Getter
-    private final User discordUser;
     @Getter
     private final Map<LupoCommand, Long> cooldowns = new HashMap<>();
     @Getter
@@ -27,7 +26,7 @@ public class LupoUser {
 
     public LupoUser(long id) {
         this.id = id;
-        this.discordUser = LupoBot.getInstance().getShardManager().getUserById(id);
+        User discordUser = LupoBot.getInstance().getShardManager().retrieveUserById(id).complete();
         LupoBot.getInstance().getLogger().info("Loading user " + discordUser.getAsTag() + " (" + id + ") ...");
 
         DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
@@ -102,7 +101,7 @@ public class LupoUser {
     }
 
     public static LupoUser getByMember(Member member) {
-        LupoUser user = null;
+        LupoUser user;
         if (LupoBot.getInstance().getUsers().containsKey(member.getIdLong())) {
             user = LupoBot.getInstance().getUsers().get(member.getIdLong());
         } else {
@@ -113,8 +112,16 @@ public class LupoUser {
     }
 
     public static LupoUser getById(long id) {
-        LupoUser user = null;
-        if (LupoBot.getInstance().getShardManager().getUserById(id) == null) {
+        final User[] discordUser = new User[1];
+        LupoBot.getInstance().getShardManager().retrieveUserById(id).queue(new Consumer<User>() {
+            @Override
+            public void accept(User user) {
+                discordUser[0] = user;
+            }
+        });
+
+        LupoUser user;
+        if (discordUser[0] == null) {
             return null;
         }
         if (LupoBot.getInstance().getUsers().containsKey(id)) {
