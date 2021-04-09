@@ -35,11 +35,6 @@ public class MemberinfoCommand extends LupoCommand {
             roles = roles.substring(0, roles.length() - 2);
         }
 
-        String activity = "/";
-        if (member.getActivities().size() >= 1) {
-            activity = member.getActivities().get(0).getName();
-        }
-
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
         builder.setColor(LupoColor.BLUE.getColor());
@@ -47,8 +42,6 @@ public class MemberinfoCommand extends LupoCommand {
 
         builder.addField(context.getServer().translate(context.getPlugin(), "help_memberinfo-creation"), TimeUtils.format(member.getUser().getTimeCreated()), false);
         builder.addField(context.getServer().translate(context.getPlugin(), "help_memberinfo-joined"), TimeUtils.format(member.getTimeJoined()), false);
-        builder.addField(context.getServer().translate(context.getPlugin(), "help_memberinfo-status"), member.getOnlineStatus().name(), false);
-        builder.addField(context.getServer().translate(context.getPlugin(), "help_memberinfo-activity"), activity, false);
         builder.addField(context.getServer().translate(context.getPlugin(), "help_memberinfo-roles"), roles, false);
         context.getChannel().sendMessage(builder.build()).queue();
     }
