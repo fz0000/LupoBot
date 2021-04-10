@@ -2,6 +2,8 @@ package de.nickkel.lupobot.core.controller;
 
 import com.google.gson.JsonObject;
 import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.config.Document;
 import de.nickkel.lupobot.core.data.LupoUser;
@@ -17,12 +19,22 @@ public class UserController {
         app.routes(() -> {
             path("v1/users", () -> {
                 get(this::getUsers);
+                path("total", () -> {
+                    get(this::getTotalUsers);
+                });
                 path(":id", () -> {
                     get(this::getUser);
                     post(this::editUser);
                 });
             });
         });
+    }
+
+    public void getTotalUsers(Context ctx) {
+        DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
+                .getAsJsonObject().get("database").getAsString());
+        DBCollection collection = database.getCollection("users");
+        ctx.result(new Document().append("totalUsers", collection.getCount()).convertToJson());
     }
 
     public void getUsers(Context ctx) {

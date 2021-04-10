@@ -2,6 +2,8 @@ package de.nickkel.lupobot.core.controller;
 
 import com.google.gson.JsonObject;
 import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.config.Document;
 import de.nickkel.lupobot.core.data.LupoServer;
@@ -17,12 +19,22 @@ public class ServerController {
         app.routes(() -> {
             path("v1/servers", () -> {
                 get(this::getServers);
+                path("total", () -> {
+                    get(this::getTotalServers);
+                });
                 path(":id", () -> {
                     get(this::getServer);
                     post(this::editServer);
                 });
             });
         });
+    }
+
+    public void getTotalServers(Context ctx) {
+        DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
+                .getAsJsonObject().get("database").getAsString());
+        DBCollection collection = database.getCollection("servers");
+        ctx.result(new Document().append("totalServers", collection.getCount()).convertToJson());
     }
 
     public void editServer(Context ctx) {
