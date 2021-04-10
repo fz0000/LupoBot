@@ -39,7 +39,6 @@ public class RankingCommand extends LupoCommand {
                 break;
             }
             LupoUser user = LupoUser.getById(id);
-            System.out.println(user.getId());
             userNames = userNames + rank + ". " + user.getAsMention() + "\n";
             xp = xp + context.getServer().formatLong(sortedUsers.get(id)) + "\n";
             rank++;
