@@ -1,7 +1,6 @@
 package de.nickkel.lupobot.plugin.leveling.commands;
 
 import com.mongodb.BasicDBObject;
-import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
@@ -9,7 +8,6 @@ import de.nickkel.lupobot.core.data.LupoUser;
 import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.User;
 
 import java.util.*;
 
@@ -40,7 +38,8 @@ public class RankingCommand extends LupoCommand {
             if (rank == 20) {
                 break;
             }
-            User user = LupoBot.getInstance().getShardManager().retrieveUserById(id).complete();
+            LupoUser user = LupoUser.getById(id);
+            System.out.println(user.getId());
             userNames = userNames + rank + ". " + user.getAsMention() + "\n";
             xp = xp + context.getServer().formatLong(sortedUsers.get(id)) + "\n";
             rank++;

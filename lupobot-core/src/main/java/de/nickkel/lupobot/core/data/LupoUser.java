@@ -20,6 +20,10 @@ public class LupoUser {
     @Getter
     private final long id;
     @Getter
+    private final String asMention;
+    @Getter
+    private final boolean isBot;
+    @Getter
     private final Map<LupoCommand, Long> cooldowns = new HashMap<>();
     @Getter
     private BasicDBObject data;
@@ -27,6 +31,8 @@ public class LupoUser {
     public LupoUser(long id) {
         this.id = id;
         User discordUser = LupoBot.getInstance().getShardManager().retrieveUserById(id).complete();
+        this.asMention = discordUser.getAsMention();
+        this.isBot = discordUser.isBot();
         LupoBot.getInstance().getLogger().info("Loading user " + discordUser.getAsTag() + " (" + id + ") ...");
 
         DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
@@ -112,16 +118,9 @@ public class LupoUser {
     }
 
     public static LupoUser getById(long id) {
-        final User[] discordUser = new User[1];
-        LupoBot.getInstance().getShardManager().retrieveUserById(id).queue(new Consumer<User>() {
-            @Override
-            public void accept(User user) {
-                discordUser[0] = user;
-            }
-        });
-
+        User discordUser = LupoBot.getInstance().getShardManager().retrieveUserById(id).complete();
         LupoUser user;
-        if (discordUser[0] == null) {
+        if (discordUser == null) {
             return null;
         }
         if (LupoBot.getInstance().getUsers().containsKey(id)) {

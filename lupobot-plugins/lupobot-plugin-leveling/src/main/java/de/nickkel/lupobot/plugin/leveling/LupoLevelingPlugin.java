@@ -91,10 +91,9 @@ public class LupoLevelingPlugin extends LupoPlugin {
     }
 
     public void addXP(LupoServer server, LupoUser user, long xp, TextChannel channel) {
-        User discordUser = LupoBot.getInstance().getShardManager().retrieveUserById(user.getId()).complete();
         checkIfDataExists(server, user);
 
-        if (discordUser.isBot()) {
+        if (user.isBot()) {
             return;
         }
 
@@ -103,10 +102,10 @@ public class LupoLevelingPlugin extends LupoPlugin {
             if (channel != null) {
                 if (server.getPluginData(LupoBot.getInstance().getPlugin(this.getInfo().name()), "levelUpMessage") == null) {
                     channel.sendMessage(server.translate(LupoBot.getInstance().getPlugin(this.getInfo().name()), "leveling_level-up",
-                            discordUser.getAsMention(), getLevel(server, user))).queue();
+                            user.getAsMention(), getLevel(server, user))).queue();
                 } else {
                     String message = (String) server.getPluginData(LupoBot.getInstance().getPlugin(this.getInfo().name()), "levelUpMessage");
-                    channel.sendMessage(message.replace("%member%", discordUser.getAsMention())
+                    channel.sendMessage(message.replace("%member%", user.getAsMention())
                             .replace("%level%", String.valueOf(getLevel(server, user)))).queue();
                 }
             }
