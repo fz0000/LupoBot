@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.config.Document;
+import de.nickkel.lupobot.core.language.Language;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
@@ -57,6 +58,16 @@ public class PluginController {
         jsonObject.addProperty("version", plugin.getInfo().version());
         jsonObject.add("commands", new Gson().toJsonTree(commands));
         jsonObject.add("guildWhitelist", new Gson().toJsonTree(plugin.getInfo().guildWhitelist()));
+        Document translatedNames = new Document();
+        for (Language language : plugin.getLanguageHandler().getLanguages().values()) {
+            translatedNames.append(language.getName(), plugin.getLanguageHandler().translate(language.getName(), plugin.getInfo().name() + "_display-name"));
+        }
+        jsonObject.add("translatedNames", translatedNames.getJsonObject());
+        Document translatedDescriptions = new Document();
+        for (Language language : plugin.getLanguageHandler().getLanguages().values()) {
+            translatedDescriptions.append(language.getName(), plugin.getLanguageHandler().translate(language.getName(), plugin.getInfo().name() + "_description"));
+        }
+        jsonObject.add("translatedDescriptions", translatedDescriptions.getJsonObject());
         return jsonObject;
     }
 }
