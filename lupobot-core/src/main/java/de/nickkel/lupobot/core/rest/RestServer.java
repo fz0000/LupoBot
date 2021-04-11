@@ -7,6 +7,8 @@ public class RestServer {
 
     @Getter
     private final Javalin app;
+    @Getter
+    private final OAuth2 oAuth2 = new OAuth2();
 
     public RestServer(int port) {
         this.app = Javalin.create(config -> {
@@ -24,5 +26,6 @@ public class RestServer {
         new UserController(this.app);
         new ShardController(this.app);
         new GuildController(this.app);
+        new OAuth2Controller(this.app);
     }
 }

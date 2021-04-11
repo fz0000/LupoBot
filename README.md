@@ -29,6 +29,7 @@ GET | /guilds/:id/channels/:channel | Get a specific channel on a guild by guild
 GET | /guilds/:id/roles | Get all roles on a guild by guild id
 GET | /guilds/:id/roles/:role | Get a specific role on a guild by guild id and role id
 GET | /guilds/members/:member | Get a specific role on a guild by member id
+GET | /oauth2 | Get information about the user and the guilds which the has joined. The query param `code` (of Discord OAuth2) is required
 GET | /plugins | Get all loaded plugins
 GET | /plugins/:name | Get a specific plugin by its name
 GET | /servers | Get all cached servers
