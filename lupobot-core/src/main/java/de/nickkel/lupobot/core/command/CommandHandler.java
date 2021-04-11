@@ -1,6 +1,8 @@
 package de.nickkel.lupobot.core.command;
 
 import com.google.common.reflect.ClassPath;
+import com.google.gson.JsonObject;
+import com.mongodb.BasicDBObject;
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.data.LupoServer;
 import de.nickkel.lupobot.core.data.LupoUser;
@@ -94,9 +96,29 @@ public class CommandHandler {
 
         try {
             command.onCommand(context);
-            if(command.getInfo().cooldown() != 0) {
+            if (command.getInfo().cooldown() != 0) {
                 user.getCooldowns().put(command, System.currentTimeMillis());
             }
+
+            // Track command stats
+            BasicDBObject statsObject = (BasicDBObject) LupoBot.getInstance().getData().get("commandStats");
+            if (!statsObject.containsKey(command.getInfo().name())) {
+                BasicDBObject dbObject = new BasicDBObject();
+                dbObject.append("totalUsages", 0);
+                dbObject.append("labelUsages", new BasicDBObject());
+                statsObject.append(command.getInfo().name(), dbObject);
+            }
+            BasicDBObject commandObject = (BasicDBObject) statsObject.get(command.getInfo().name());
+            commandObject.append("totalUsages", commandObject.getLong("totalUsages")+1);
+            BasicDBObject labelObject = (BasicDBObject) commandObject.get("labelUsages");
+            if (labelObject.containsKey(context.getLabel())) {
+                labelObject.append(context.getLabel(), labelObject.getLong(context.getLabel())+1);
+            } else {
+                labelObject.append(context.getLabel(), 1);
+            }
+            commandObject.append("labelUsages", labelObject);
+            statsObject.append(command.getInfo().name(), commandObject);
+            LupoBot.getInstance().getData().append("commandStats", statsObject);
         } catch (PermissionException permissionException) {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null, context.getMember().getUser().getAvatarUrl());
