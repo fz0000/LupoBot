@@ -22,7 +22,6 @@ public class RichestList {
 
     @Getter
     private HashMap<Long, String> usersAsMention = new HashMap<>();
-    @Getter
     private LinkedHashMap<Long, Long> sortedUsers;
     private FindIterable<Document> topDocuments;
     private Long lastRefresh;
@@ -31,9 +30,9 @@ public class RichestList {
         loadFromDatabase();
     }
 
-    public FindIterable<Document> getTopDocuments() {
+    public LinkedHashMap<Long, Long> getSortedUsers() {
         try {
-            return this.topDocuments;
+            return this.sortedUsers;
         } finally {
             if (this.lastRefresh+1200000L-System.currentTimeMillis() > 0) {
                 loadFromDatabase();
