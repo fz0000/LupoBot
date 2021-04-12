@@ -15,18 +15,20 @@ public class LanguageHandler {
     private final Map<String, Language> languages = new HashMap<>();
     @Getter
     private final String FALLBACK = "en_US";
+    @Getter
+    private final Class clazz;
 
     public LanguageHandler(Class clazz) {
+        this.clazz = clazz;
         FileResourcesUtils app = new FileResourcesUtils(clazz);
         try {
             List<Path> result = app.getPathsFromResourceJAR("locales");
             for (Path path : result) {
                 String filePathInJAR = path.toString();
 
-                // Windows will returns /json/file1.json, cut the first /
-                // the correct path should be json/file1.json
+                // Windows will return path with / at the beginning, cut it
                 if (filePathInJAR.startsWith("/")) {
-                    filePathInJAR = filePathInJAR.substring(1, filePathInJAR.length());
+                    filePathInJAR = filePathInJAR.substring(1);
                 }
 
                 InputStream is = app.getFileFromResourceAsStream(filePathInJAR);
@@ -44,19 +46,19 @@ public class LanguageHandler {
         for (String key : properties.stringPropertyNames()) {
             translations.put(key, properties.getProperty(key));
         }
-        languages.put(language, new Language(language, translations));
-        if(!LupoBot.getInstance().getAvailableLanguages().contains(language)) {
+        this.languages.put(language, new Language(language, translations));
+        if (!LupoBot.getInstance().getAvailableLanguages().contains(language)) {
             LupoBot.getInstance().getAvailableLanguages().add(language);
         }
-        LupoBot.getInstance().getLogger().info("Loaded language " + language + " with " + translations.size() + " strings");
+        LupoBot.getInstance().getLogger().info("Loaded language " + language + " with " + translations.size() + " strings of " + this.clazz.getName());
     }
 
     public String translate(String language, String key, Object... params) {
         try {
-            return languages.getOrDefault(language, languages.get(this.FALLBACK)).translate(key, params);
+            return this.languages.getOrDefault(language, languages.get(this.FALLBACK)).translate(key, params);
         } catch (NullPointerException e) {
-            if(languages.get(this.FALLBACK).getTranslations().containsKey(key)) {
-                return languages.get(this.FALLBACK).translate(key, params);
+            if (this.languages.get(this.FALLBACK).getTranslations().containsKey(key)) {
+                return this.languages.get(this.FALLBACK).translate(key, params);
             }
             return "N/A (" + key + ")";
         }
@@ -64,8 +66,7 @@ public class LanguageHandler {
 
     public int maximum(String language, String locale) {
         int max = 0;
-        for(int i = 1; !this.translate(language, locale + "_" + i ).startsWith("N/A"); max = i++) {
-        }
+        for(int i = 1; !this.translate(language, locale + "_" + i ).startsWith("N/A"); max = i++) {}
         return max;
     }
 
