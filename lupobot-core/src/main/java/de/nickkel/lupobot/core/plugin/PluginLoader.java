@@ -26,10 +26,15 @@ public class PluginLoader {
 
         if (pluginPaths.size() == 0) {
             LupoBot.getInstance().getLogger().warn("Could not found any plugin!");
+            return;
         }
 
         for (Path path : pluginPaths) {
-            loadPlugin(path);
+            try {
+                loadPlugin(path);
+            } catch (Exception e) {
+                LupoBot.getInstance().getLogger().error("Failed to load plugin " + path.toString() + ": " + e.getMessage());
+            }
         }
     }
 
@@ -43,13 +48,11 @@ public class PluginLoader {
             Class resourcesClass = new URLClassLoader(new URL[]{path.toFile().toURI().toURL()}).loadClass(mainClass);
             Class clazz = new URLClassLoader(new URL[]{path.toFile().toURI().toURL()}, this.getClass().getClassLoader()).loadClass(mainClass);
             if (!clazz.isAnnotationPresent(PluginInfo.class)) {
-                LupoBot.getInstance().getLogger().error("Failed to load plugin " + path + " due to missing PluginInfo annotation!");
-                return;
+                throw new NullPointerException("PluginInfo annotation is missing!");
             }
             Object object = clazz.newInstance();
             if (!(object instanceof LupoPlugin)) {
-                LupoBot.getInstance().getLogger().error("Failed to load plugin " + path + " due it is not an instance of LupoPlugin!");
-                return;
+                throw new NullPointerException("Plugin main class is not an instance of LupoPlugin!");
             }
 
             LupoPlugin plugin = (LupoPlugin) object;
@@ -67,7 +70,7 @@ public class PluginLoader {
             }
 
         } catch (IOException | ReflectiveOperationException e) {
-            throw new RuntimeException("Failed to load plugin " + path.toFile().getName() + "!", e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 

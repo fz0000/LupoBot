@@ -1,5 +1,6 @@
 package de.nickkel.lupobot.core.rest;
 
+import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.controller.*;
 import io.javalin.Javalin;
 import lombok.Getter;
@@ -11,6 +12,10 @@ public class RestServer {
     private final OAuth2 oAuth2 = new OAuth2();
 
     public RestServer(int port) {
+        if (port == -1) {
+            LupoBot.getInstance().getLogger().error("Could not start RestServer! Please enter a valid port in the config.json");
+        }
+
         this.app = Javalin.create(config -> {
             config.accessManager((handler, ctx, permittedRoles) -> {
                 if (ctx.host().contains("localhost")) {
