@@ -241,16 +241,12 @@ public class GuildController {
         }
 
         MessageBuilder messageBuilder = new MessageBuilder();
-        if (ctx.queryParam("content") != null) {
-            messageBuilder.setContent(ctx.queryParam("content"));
-        }
+        if (ctx.queryParam("content") != null) messageBuilder.setContent(ctx.queryParam("content"));
+
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        if (ctx.queryParam("description") != null) {
-            embedBuilder.setDescription(ctx.queryParam("description"));
-        }
-        if (ctx.queryParam("thumbnail") != null) {
-            embedBuilder.setThumbnail(ctx.queryParam("thumbnail"));
-        }
+        if (ctx.queryParam("description") != null) embedBuilder.setDescription(ctx.queryParam("description"));
+        if (ctx.queryParam("thumbnail") != null) embedBuilder.setThumbnail(ctx.queryParam("thumbnail"));
+
         if (ctx.queryParam("authorName") != null) {
             embedBuilder.setAuthor(ctx.queryParam("authorName"));
             if (ctx.queryParam("authorIconUrl") != null) {
@@ -275,8 +271,7 @@ public class GuildController {
         if (ctx.queryParam("color") != null) {
             try {
                 embedBuilder.setColor(Integer.parseInt(ctx.queryParam("color")));
-            } catch (NullPointerException ignored) {
-            }
+            } catch (NullPointerException ignored) {}
         }
 
         if (!embedBuilder.isEmpty()) {

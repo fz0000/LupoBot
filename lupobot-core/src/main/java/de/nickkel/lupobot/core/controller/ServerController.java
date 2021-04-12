@@ -31,10 +31,7 @@ public class ServerController {
     }
 
     public void getTotalServers(Context ctx) {
-        DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
-                .getAsJsonObject().get("database").getAsString());
-        DBCollection collection = database.getCollection("servers");
-        ctx.result(new Document().append("totalServers", collection.getCount()).convertToJson());
+        ctx.result(new Document().append("totalServers", LupoBot.getInstance().getShardManager().getGuilds().size()).convertToJson());
     }
 
     public void editServer(Context ctx) {
@@ -64,6 +61,7 @@ public class ServerController {
 
         if (key.equals("_id")) {
             ctx.status(423).result("The key cannot be _id");
+            return;
         }
 
         if (plugin == null) {

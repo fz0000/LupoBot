@@ -71,6 +71,8 @@ public class LupoBot {
     private final long startMillis = System.currentTimeMillis();
     @Getter
     private RestServer restServer;
+    @Getter
+    private Timer dataServer;
 
     public static void main(String[] args) {
         new LupoBot().run(args);
@@ -114,8 +116,10 @@ public class LupoBot {
         this.commandHandler.registerCommands(this.getClass().getClassLoader(), "de.nickkel.lupobot.core.internal.commands");
         this.pluginLoader = new PluginLoader();
         this.loadBotData();
-        Timer timer = new Timer("DataSaver");
-        timer.schedule(new SaveDataTask(), 600*1000, 600*1000);
+
+        this.dataServer = new Timer("DataSaver");
+        this.dataServer.schedule(new SaveDataTask(), 600*1000, 600*1000);
+
         this.logger.info("LupoBot is running on " + this.shardManager.getGuilds().size() + " servers");
         this.restServer = new RestServer(this.config.getInt("restServerPort"));
     }
