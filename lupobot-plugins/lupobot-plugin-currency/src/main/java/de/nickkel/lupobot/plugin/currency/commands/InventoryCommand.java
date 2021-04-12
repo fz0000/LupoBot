@@ -9,7 +9,7 @@ import de.nickkel.lupobot.core.pagination.type.PageType;
 import de.nickkel.lupobot.core.util.LupoColor;
 import de.nickkel.lupobot.plugin.currency.LupoCurrencyPlugin;
 import de.nickkel.lupobot.plugin.currency.data.CurrencyUser;
-import de.nickkel.lupobot.plugin.currency.data.Item;
+import de.nickkel.lupobot.plugin.currency.entities.Item;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 

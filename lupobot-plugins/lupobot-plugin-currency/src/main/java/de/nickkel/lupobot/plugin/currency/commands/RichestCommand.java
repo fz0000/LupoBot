@@ -1,50 +1,24 @@
 package de.nickkel.lupobot.plugin.currency.commands;
 
-import com.mongodb.*;
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.data.LupoUser;
 import de.nickkel.lupobot.core.util.LupoColor;
+import de.nickkel.lupobot.plugin.currency.LupoCurrencyPlugin;
 import net.dv8tion.jda.api.EmbedBuilder;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-@CommandInfo(name = "richest", category = "general", cooldown = 30)
+@CommandInfo(name = "richest", category = "general")
 public class RichestCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        Map<Long, Long> users = new HashMap<>();
-        DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
-                .getAsJsonObject().get("database").getAsString());
-        DBCollection collection = database.getCollection("users");
-        DBCursor cursor = collection.find().limit(20); // TODO: descending order by coins
-
-        while (cursor.hasNext()) {
-            DBObject dbObject = cursor.next();
-            BasicDBObject pluginObject = (BasicDBObject) dbObject.get("currency");
-            users.put((long) dbObject.get("_id"), pluginObject.getLong("coins"));
-        }
-
-        LinkedHashMap<Long, Long> sortedUsers = new LinkedHashMap<>();
-        users.entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .forEachOrdered(x -> sortedUsers.put(x.getKey(), x.getValue()));
-
         String userNames = "", coins = "";
         int rank = 1;
-        for (Long id : sortedUsers.keySet()) {
-            if (rank == 20) {
-                break;
-            }
-            userNames = userNames + rank + ". " + LupoUser.getById(id).getAsMention() + "\n";
-            coins = coins + context.getServer().formatLong(sortedUsers.get(id)) + "\n";
+        for (Long id : LupoCurrencyPlugin.getInstance().getRichestList().getSortedUsers().keySet()) {
+            userNames = userNames + rank + ". " + LupoCurrencyPlugin.getInstance().getRichestList().getUsersAsMention().get(id) + "\n";
+            coins = coins + context.getServer().formatLong(LupoCurrencyPlugin.getInstance().getRichestList().getSortedUsers().get(id)) + "\n";
             rank++;
         }
 

@@ -1,4 +1,4 @@
-package de.nickkel.lupobot.plugin.currency.data;
+package de.nickkel.lupobot.plugin.currency.entities;
 
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.data.LupoServer;

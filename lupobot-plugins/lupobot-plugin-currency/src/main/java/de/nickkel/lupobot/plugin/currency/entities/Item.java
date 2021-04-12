@@ -1,4 +1,4 @@
-package de.nickkel.lupobot.plugin.currency.data;
+package de.nickkel.lupobot.plugin.currency.entities;
 
 import lombok.Getter;
 

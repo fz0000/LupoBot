@@ -9,8 +9,9 @@ import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.plugin.PluginInfo;
 import de.nickkel.lupobot.core.util.FileResourcesUtils;
 import de.nickkel.lupobot.plugin.currency.data.CurrencyUser;
-import de.nickkel.lupobot.plugin.currency.data.Item;
-import de.nickkel.lupobot.plugin.currency.data.Job;
+import de.nickkel.lupobot.plugin.currency.entities.Item;
+import de.nickkel.lupobot.plugin.currency.entities.Job;
+import de.nickkel.lupobot.plugin.currency.entities.RichestList;
 import de.nickkel.lupobot.plugin.currency.task.DailyRemindTask;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Member;
@@ -29,6 +30,8 @@ public class LupoCurrencyPlugin extends LupoPlugin {
     private final List<Item> items = new ArrayList<>();
     @Getter
     private final List<Job> jobs = new ArrayList<>();
+    @Getter
+    private RichestList richestList;
     private final Map<Long, CurrencyUser> currencyUser = new HashMap<>();
     private Timer dailyRemindTask;
 
@@ -50,6 +53,7 @@ public class LupoCurrencyPlugin extends LupoPlugin {
         this.loadJobs();
         this.dailyRemindTask = new Timer("DailyReminder");
         this.dailyRemindTask.schedule(new DailyRemindTask(), 600*1000, 3600*1000);
+        this.richestList = new RichestList();
     }
 
     @Override

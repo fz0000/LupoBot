@@ -5,6 +5,8 @@ import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.data.LupoUser;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.plugin.currency.LupoCurrencyPlugin;
+import de.nickkel.lupobot.plugin.currency.entities.Item;
+import de.nickkel.lupobot.plugin.currency.entities.Job;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.entities.*;
