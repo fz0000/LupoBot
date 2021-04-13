@@ -17,6 +17,7 @@ public class RestServer {
         }
 
         this.app = Javalin.create(config -> {
+            config.enableCorsForAllOrigins();
             config.accessManager((handler, ctx, permittedRoles) -> {
                 if (ctx.host().contains("localhost")) {
                     handler.handle(ctx);
