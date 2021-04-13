@@ -14,12 +14,19 @@ public class ShardController {
         app.routes(() -> {
             path("v1/shards", () -> {
                 get(this::getShards);
+                path("total", () -> {
+                   get(this::getTotalShards);
+                });
                 path(":id", () -> {
                     get(this::getShard);
                     post(this::editShard);
                 });
             });
         });
+    }
+
+    public void getTotalShards(Context ctx) {
+        ctx.result(new Document().append("totalShards", LupoBot.getInstance().getShardManager().getShardsTotal()).convertToJson());
     }
 
     public void getShards(Context ctx) {

@@ -37,6 +37,7 @@ GET | /servers/total | Get the total server count (also uncached servers)
 POST | /servers/:id | Edit server data by guild id. The params `key` and `value` are required, `plugin` (= plugin name) is optional. If the param plugin is not given, the data will be set as core data (e.g. the prefix). Only the value of keys which exist in the server data can be edited!
 GET | /servers/:id | Get a specific server by guild id (if it is not cached, it will be loaded)
 GET | /shards | Get all shards
+GET | /shards/total | Get the total shard count
 GET | /shards/:id | Get a shard by id (starts with 0)
 POST | /shards/:id | Shutdown or restart a shard by id. The query param `type` is required (the type can be "shutdown" or "restart")
 GET | /users | Get all cached servers
