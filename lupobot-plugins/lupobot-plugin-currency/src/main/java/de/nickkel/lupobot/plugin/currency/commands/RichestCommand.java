@@ -4,10 +4,11 @@ import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
-import de.nickkel.lupobot.core.data.LupoUser;
 import de.nickkel.lupobot.core.util.LupoColor;
 import de.nickkel.lupobot.plugin.currency.LupoCurrencyPlugin;
 import net.dv8tion.jda.api.EmbedBuilder;
+
+import java.time.Instant;
 
 @CommandInfo(name = "richest", category = "general")
 public class RichestCommand extends LupoCommand {
@@ -23,7 +24,8 @@ public class RichestCommand extends LupoCommand {
         }
 
         EmbedBuilder builder = new EmbedBuilder();
-        builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
+        builder.setFooter(context.getServer().translate(context.getPlugin(), "currency_richest-last-refresh"));
+        builder.setTimestamp(Instant.ofEpochMilli(LupoCurrencyPlugin.getInstance().getRichestList().getLastRefresh()));
         builder.setColor(LupoColor.BLUE.getColor());
         builder.setAuthor(context.getServer().translate(context.getPlugin(), "currency_richest-title"), null, LupoBot.getInstance().getSelfUser().getAvatarUrl());
         builder.addField(context.getServer().translate(context.getPlugin(), "currency_richest-name"), userNames, true);
