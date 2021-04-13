@@ -23,6 +23,13 @@ public class TimeUtils {
         return dateTime.format(formatter);
     }
 
+    public static String format(long millis) {
+        return String.format("%02d:%02d:%02d",
+                TimeUnit.MILLISECONDS.toHours(millis),
+                TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+                TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+    }
+
     public static String format(CommandContext context, long millis) {
         return String.format("%d " + context.getServer().translate(null, "core_hours") + ", %d " + context.getServer().translate(null, "core_minutes") + ", %d "
                         + context.getServer().translate(null, "core_seconds"),

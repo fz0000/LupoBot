@@ -32,6 +32,7 @@ public class RestServer {
         new UserController(this.app);
         new ShardController(this.app);
         new GuildController(this.app);
+        new BotController(this.app);
         new OAuth2Controller(this.app);
     }
 }
