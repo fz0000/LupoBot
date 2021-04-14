@@ -26,6 +26,9 @@ public class BotController {
         jsonObject.addProperty("ping", LupoBot.getInstance().getShardManager().getAverageGatewayPing());
         jsonObject.addProperty("runtime", TimeUtils.format(System.currentTimeMillis()-LupoBot.getInstance().getStartMillis()));
         jsonObject.addProperty("version", LupoBot.getInstance().getClass().getPackage().getImplementationVersion());
+        jsonObject.addProperty("status", LupoBot.getInstance().getSelfUser().getJDA().getPresence().getStatus().toString());
+        jsonObject.addProperty("activityName", LupoBot.getInstance().getSelfUser().getJDA().getPresence().getActivity().getName());
+        jsonObject.addProperty("activityType", LupoBot.getInstance().getSelfUser().getJDA().getPresence().getActivity().getType().name());
         jsonObject.add("languages", new Gson().toJsonTree(LupoBot.getInstance().getAvailableLanguages()));
 
         ctx.status(201).result(new Document(jsonObject).convertToJson());
