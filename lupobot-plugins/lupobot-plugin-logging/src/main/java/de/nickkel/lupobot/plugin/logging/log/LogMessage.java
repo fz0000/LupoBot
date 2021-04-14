@@ -56,15 +56,4 @@ public class LogMessage {
     public String get(String key) {
         return this.data.getString(key);
     }
-
-    public boolean exists() {
-        if(this.data.size() == 1) {
-            delete();
-            System.out.println("false");
-            return false;
-        } else {
-            System.out.println("true");
-            return true;
-        }
-    }
 }
