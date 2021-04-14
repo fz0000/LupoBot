@@ -159,20 +159,17 @@ public class LupoServer {
 
     public Member getMember(String arg) {
         try {
-            if (arg.contains("#") && !arg.startsWith("@")) { // only works if name does not contain any spaces
-                return this.guild.getMemberByTag(arg);
-            } else if (arg.startsWith("<@")) {
+            if (arg.startsWith("<@")) {
                 String id = arg.replace("@", "").replace("<", "").replace(">", "").replace("!", "");
                 if (id.length() == 18) {
-                    return this.guild.getMemberById(id);
+                    return this.guild.retrieveMemberById(id).complete();
                 } else {
                     return null;
                 }
             } else {
-                return this.guild.getMemberById(arg);
+                return this.guild.retrieveMemberById(arg).complete();
             }
         } catch(Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
