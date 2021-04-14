@@ -8,6 +8,7 @@ import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.plugin.PluginInfo;
 import de.nickkel.lupobot.core.util.ListenerRegister;
 import lombok.Getter;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 
@@ -40,10 +41,6 @@ public class LupoLevelingPlugin extends LupoPlugin {
         }
         long time = this.lastReceivedXP.get(server.getGuild().getIdLong()+user.getId())-System.currentTimeMillis();
         return time < 0;
-    }
-
-    public String getRank(LupoServer server, LupoUser user) {
-        return "#1";
     }
 
     public long getXP(LupoServer server, LupoUser user) {
@@ -97,16 +94,35 @@ public class LupoLevelingPlugin extends LupoPlugin {
             return;
         }
 
+
+        long level = getLevel(server, user);
         while (getXP(server, user)+xp >= getRequiredXP(getLevel(server, user)+1)) {
             addLevel(server, user);
             if (channel != null) {
+                Role role = null;
+                BasicDBObject rewardObject = (BasicDBObject) server.getPluginData(LupoBot.getInstance().getPlugin(this.getInfo().name()), "rewardRoles");
+                if (rewardObject.containsKey(String.valueOf(level))) {
+                    if (existsRewardRole(server, level)) {
+                        role = server.getGuild().getRoleById(rewardObject.getLong(String.valueOf(level)));
+                    }
+                }
+
                 if (server.getPluginData(LupoBot.getInstance().getPlugin(this.getInfo().name()), "levelUpMessage") == null) {
+                    String roleName = "/";
+                    if (role != null) {
+                        roleName = role.getName();
+                    }
                     channel.sendMessage(server.translate(LupoBot.getInstance().getPlugin(this.getInfo().name()), "leveling_level-up",
-                            user.getAsMention(), getLevel(server, user))).queue();
+                            user.getAsMention(), getLevel(server, user), roleName)).queue();
                 } else {
                     String message = (String) server.getPluginData(LupoBot.getInstance().getPlugin(this.getInfo().name()), "levelUpMessage");
-                    channel.sendMessage(message.replace("%member%", user.getAsMention())
-                            .replace("%level%", String.valueOf(getLevel(server, user)))).queue();
+                    message.replace("%member%", user.getAsMention()).replace("%level%", String.valueOf(getLevel(server, user)));
+                    if (role != null) {
+                        message = message.replace("%role%", role.getName());
+                    } else {
+                        message = message.replace("%role%", "/");
+                    }
+                    channel.sendMessage(message).queue();
                 }
             }
         }
