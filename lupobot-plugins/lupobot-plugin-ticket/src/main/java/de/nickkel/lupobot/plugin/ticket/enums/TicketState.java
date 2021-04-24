@@ -3,7 +3,7 @@ package de.nickkel.lupobot.plugin.ticket.enums;
 import lombok.Getter;
 
 public enum TicketState {
-    OPENED("openedCategory"), CLAIMED("claimedCategory"), CLOSED("closedCategory");
+    OPENED("openedCategory"), ASSIGNED("assignedCategory"), CLOSED("closedCategory");
 
     @Getter
     public final String key;

@@ -4,10 +4,9 @@ import com.mongodb.BasicDBList;
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.data.LupoServer;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
+import de.nickkel.lupobot.plugin.ticket.enums.TicketState;
 import lombok.Getter;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +22,7 @@ public class TicketServer {
     @Getter
     private final LupoPlugin plugin;
     @Getter
-    private final Map<TextChannel, Ticket> tickets = new HashMap<>();
+    private Map<Long, Ticket> tickets = new HashMap<>();
 
     public TicketServer(Guild guild) {
         this.plugin = LupoBot.getInstance().getPlugin("ticket");
@@ -52,5 +51,27 @@ public class TicketServer {
             }
         }
         return roles;
+    }
+
+    public long getCreationMessage() {
+        return this.server.getPluginLong(this.plugin, "creationMessage");
+    }
+
+    public TextChannel getNotifyChannel() {
+        long notifyChannel = this.server.getPluginLong(this.plugin, "notifyChannel");
+        if (notifyChannel != -1) {
+            if (this.guild.getTextChannelById(notifyChannel) != null) {
+                return this.guild.getTextChannelById(notifyChannel);
+            }
+        }
+        return null;
+    }
+
+    public Category getCategory(TicketState state) {
+        long category = this.server.getPluginLong(this.plugin, state.getKey());
+        if (category != -1) {
+            return this.guild.getCategoryById(category);
+        }
+        return null;
     }
 }
