@@ -1,6 +1,7 @@
 package de.nickkel.lupobot.core.plugin;
 
 import de.nickkel.lupobot.core.LupoBot;
+import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.language.LanguageHandler;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -10,6 +11,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.jar.JarFile;
 
@@ -77,10 +79,17 @@ public class PluginLoader {
 
     public void unloadPlugin(LupoPlugin plugin) {
         if (plugin.isEnabled()) {
-            for (ListenerAdapter listener : plugin.getListeners()) {
+            Iterator<ListenerAdapter> listeners = plugin.getListeners().iterator();
+            while (listeners.hasNext()) {
+                ListenerAdapter listener = listeners.next();
+                LupoBot.getInstance().getLogger().info("Unregistered listener " + listener.getClass().getSimpleName());
                 LupoBot.getInstance().getShardManager().removeEventListener(listener);
             }
-            LupoBot.getInstance().getCommands().removeAll(plugin.getCommands());
+
+            Iterator<LupoCommand> commands = plugin.getCommands().iterator();
+            while (commands.hasNext()) {
+                LupoBot.getInstance().getCommandHandler().unregisterCommand(commands.next());
+            }
             plugin.onDisable();
         }
         LupoBot.getInstance().getLogger().info("Unloaded plugin " + plugin.getInfo().name() + " version " + plugin.getInfo().version());
