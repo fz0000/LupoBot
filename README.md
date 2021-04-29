@@ -32,6 +32,7 @@ GET | /guilds/:id/roles/:role | Get a specific role on a guild by guild id and r
 GET | /guilds/members/:member | Get a specific role on a guild by member id
 GET | /oauth2 | Get information about the user and the guilds which the has joined. The query param `code` (of Discord OAuth2) is required
 GET | /plugins | Get all loaded plugins
+POST | /plugins/:name | Unload or reload a plugin by name. The query param `type` is required (the type can be "reload" or "unload")
 GET | /plugins/:name | Get a specific plugin by its name
 GET | /servers | Get all cached servers
 GET | /servers/total | Get the total server count (also uncached servers)

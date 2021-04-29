@@ -9,6 +9,7 @@ import de.nickkel.lupobot.core.language.Language;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import net.dv8tion.jda.api.JDA;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class PluginController {
               get(this::getPlugins);
               path(":name", () -> {
                   get(this::getPlugin);
+                  post(this::editPlugin);
               });
            });
         });
@@ -45,6 +47,20 @@ public class PluginController {
         }
     }
 
+    public void editPlugin(Context ctx) {
+        String type = ctx.queryParam("type");
+        if (type != null) {
+            LupoPlugin plugin = LupoBot.getInstance().getPlugin(ctx.pathParam("name"));
+            if (type.equals("unload")) {
+                LupoBot.getInstance().getPluginLoader().unloadPlugin(plugin);
+            } else {
+                LupoBot.getInstance().getPluginLoader().reloadPlugin(plugin);
+            }
+            ctx.status(201);
+        } else {
+            ctx.status(404).result("Not found");
+        }
+    }
 
     private JsonObject getPluginObject(LupoPlugin plugin) {
         List<String> commands = new ArrayList<>();
