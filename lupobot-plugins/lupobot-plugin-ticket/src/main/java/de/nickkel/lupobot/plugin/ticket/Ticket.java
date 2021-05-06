@@ -3,7 +3,6 @@ package de.nickkel.lupobot.plugin.ticket;
 import com.mongodb.BasicDBObject;
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.data.LupoServer;
-import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.util.LupoColor;
 import de.nickkel.lupobot.core.util.StringUtils;
 import de.nickkel.lupobot.plugin.ticket.enums.TicketState;
@@ -91,7 +90,7 @@ public class Ticket {
         if (server.getTickets().containsKey(channel.getIdLong())) {
             return server.getTickets().get(channel.getIdLong());
         }
-        if (((BasicDBObject) ((BasicDBObject) server.getServer().getPluginData(server.getPlugin(), server.getPlugin().getInfo().name())).get("tickets")).containsKey(channel.getId())) {
+        if (((BasicDBObject) ((BasicDBObject) server.getServer().getData().get(server.getPlugin().getInfo().name())).get("tickets")).containsKey(channel.getId())) {
             return new Ticket(channel);
         }
         return null;
