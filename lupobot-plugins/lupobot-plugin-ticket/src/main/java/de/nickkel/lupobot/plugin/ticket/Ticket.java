@@ -24,7 +24,7 @@ public class Ticket {
     public Ticket(TextChannel channel) {
         this.server = LupoTicketPlugin.getInstance().getTicketServer(channel.getGuild());
         this.channel = channel.getIdLong();
-        this.id = (String) this.getTicketData("id");
+        this.id = String.valueOf(this.getTicketData("id"));
         this.author = this.getTicketLong("author");
     }
 
@@ -32,16 +32,61 @@ public class Ticket {
         return TicketState.valueOf((String) this.getTicketData("state"));
     }
 
-    public void setState(TicketState state) {
+    public void delete() {
+        this.server.getTickets().remove(this.channel);
+        System.out.println(this.server.getServer().getPluginData(server.getPlugin(), "tickets"));
+        ((BasicDBObject) this.server.getServer().getPluginData(this.server.getPlugin(), "tickets")).remove(String.valueOf(this.channel));
+        System.out.println(this.server.getServer().getPluginData(server.getPlugin(), "tickets"));
+        this.server.getGuild().getTextChannelById(this.channel).delete().queue();
+    }
+
+    public void close(Member member) {
+        TextChannel channel = this.server.getGuild().getTextChannelById(this.channel);
+        if (channel != null) {
+            if (this.server.getCategory(TicketState.CLOSED) != null) {
+                channel.getManager().setParent(this.server.getCategory(TicketState.CLOSED)).complete();
+                channel.getManager().sync().queue();
+            }
+            channel.sendMessage(new EmbedBuilder()
+                    .setColor(LupoColor.RED.getColor())
+                    .setDescription(this.server.getServer().translate(this.server.getPlugin(), "ticket_close-description", member.getAsMention()))
+                    .setFooter(member.getUser().getAsTag() + " (" + member.getId() + ")", member.getUser().getAvatarUrl())
+                    .build()
+            ).queue(message -> {
+                message.addReaction("\uD83D\uDDD1").queue();
+            });
+        }
+        this.setState(TicketState.CLOSED);
+    }
+
+    public void assign(Member member) {
+        if (this.getAssignee() != member.getIdLong()) {
+            TextChannel channel = this.server.getGuild().getTextChannelById(this.channel);
+            if (channel != null) {
+                if (this.server.getCategory(TicketState.ASSIGNED) != null) {
+                    channel.getManager().setParent(this.server.getCategory(TicketState.ASSIGNED)).complete();
+                    channel.getManager().sync().queue();
+                    channel.getManager().getChannel().createPermissionOverride(member).setAllow(Permission.VIEW_CHANNEL).queue();
+                }
+                channel.getManager().setTopic(server.getServer().translate(server.getPlugin(), "ticket_assignee", member.getAsMention())).queue();
+                channel.sendMessage(new EmbedBuilder()
+                        .setColor(LupoColor.BLUE.getColor())
+                        .setDescription(this.server.getServer().translate(this.server.getPlugin(), "ticket_assign-description", member.getAsMention()))
+                        .setFooter(member.getUser().getAsTag() + " (" + member.getId() + ")", member.getUser().getAvatarUrl())
+                        .build()
+                ).queue();
+            }
+            this.appendTicketData("assignee", member.getIdLong());
+            this.setState(TicketState.ASSIGNED);
+        }
+    }
+
+    private void setState(TicketState state) {
         this.appendTicketData("state", state.name());
     }
 
     public long getAssignee() {
         return this.getTicketLong("assignee");
-    }
-
-    public void assign(long id) {
-        this.appendTicketData("assignee", id);
     }
 
     public static void create(TextChannel origin, Member author) {
@@ -57,6 +102,7 @@ public class Ticket {
         } else {
             channel = author.getGuild().createTextChannel("ticket-" + id, category).complete();
         }
+        channel.getManager().sync().complete();
         if (!ticketServer.isVisibleEveryone()) {
             channel.getManager().getChannel().createPermissionOverride(author.getGuild().getPublicRole()).setDeny(Permission.VIEW_CHANNEL).queue();
         }
@@ -72,6 +118,7 @@ public class Ticket {
                 .build()
         ).complete();
         message.addReaction("\uD83D\uDD12").queue();
+        message.addReaction("\uD83D\uDC64").queue();
 
         BasicDBObject tickets = (BasicDBObject) server.getPluginData(ticketServer.getPlugin(), "tickets");
 
