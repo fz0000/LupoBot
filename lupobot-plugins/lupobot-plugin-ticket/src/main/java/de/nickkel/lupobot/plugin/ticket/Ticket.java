@@ -45,9 +45,10 @@ public class Ticket {
     }
 
     public static void create(TextChannel origin, Member author) {
-        String id = StringUtils.getAlphaNumeric(4);
         TicketServer ticketServer = LupoTicketPlugin.getInstance().getTicketServer(author.getGuild());
         LupoServer server = ticketServer.getServer();
+        long id = server.getPluginLong(ticketServer.getPlugin(), "lastTicketId")+1;
+        server.appendPluginData(ticketServer.getPlugin(), "lastTicketId", id);
 
         Category category = ticketServer.getCategory(TicketState.OPENED);
         TextChannel channel;
