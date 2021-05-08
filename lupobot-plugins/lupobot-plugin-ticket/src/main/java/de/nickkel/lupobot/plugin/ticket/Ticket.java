@@ -4,13 +4,14 @@ import com.mongodb.BasicDBObject;
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.data.LupoServer;
 import de.nickkel.lupobot.core.util.LupoColor;
-import de.nickkel.lupobot.core.util.StringUtils;
 import de.nickkel.lupobot.plugin.ticket.enums.TicketState;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
+
+import java.time.OffsetDateTime;
 
 public class Ticket {
 
@@ -28,15 +29,20 @@ public class Ticket {
         this.author = this.getTicketLong("author");
     }
 
+    public void sendNotify(EmbedBuilder builder) {
+        if (this.getNotifyChannel() != null) {
+            builder.setTimestamp(OffsetDateTime.now());
+            this.getNotifyChannel().sendMessage(builder.build()).queue();
+        }
+    }
+
     public TicketState getState() {
         return TicketState.valueOf((String) this.getTicketData("state"));
     }
 
     public void delete() {
         this.server.getTickets().remove(this.channel);
-        System.out.println(this.server.getServer().getPluginData(server.getPlugin(), "tickets"));
         ((BasicDBObject) this.server.getServer().getPluginData(this.server.getPlugin(), "tickets")).remove(String.valueOf(this.channel));
-        System.out.println(this.server.getServer().getPluginData(server.getPlugin(), "tickets"));
         this.server.getGuild().getTextChannelById(this.channel).delete().queue();
     }
 
@@ -57,11 +63,24 @@ public class Ticket {
             });
         }
         this.setState(TicketState.CLOSED);
+
+        String assignee = "/";
+        if (getAssignee() != -1) {
+            assignee = member.getGuild().getMemberById(getAssignee()).getAsMention();
+        }
+        sendNotify(new EmbedBuilder()
+                .setColor(LupoColor.RED.getColor())
+                .setAuthor(member.getUser().getAsTag() + " (" + member.getId() + ")", null, member.getUser().getAvatarUrl())
+                .setDescription(this.server.getServer().translate(this.server.getPlugin(), "ticket_notify-close", member.getAsMention()))
+                .addField(this.server.getServer().translate(this.server.getPlugin(), "ticket_notify-owner"), member.getGuild().getMemberById(this.author).getAsMention(), false)
+                .addField(this.server.getServer().translate(this.server.getPlugin(), "ticket_notify-channel"), channel.getAsMention(), false)
+                .addField(this.server.getServer().translate(this.server.getPlugin(), "ticket_notify-assignee"), assignee, false)
+        );
     }
 
     public void assign(Member member) {
         if (this.getAssignee() != member.getIdLong()) {
-            TextChannel channel = this.server.getGuild().getTextChannelById(this.channel);
+            TextChannel channel = member.getGuild().getTextChannelById(this.channel);
             if (channel != null) {
                 if (this.server.getCategory(TicketState.ASSIGNED) != null) {
                     channel.getManager().setParent(this.server.getCategory(TicketState.ASSIGNED)).complete();
@@ -87,6 +106,19 @@ public class Ticket {
 
     public long getAssignee() {
         return this.getTicketLong("assignee");
+    }
+
+    public TextChannel getNotifyChannel() {
+        long id = this.server.getServer().getPluginLong(this.server.getPlugin(), "notifyChannel");
+        if (id != -1) {
+            TextChannel channel = this.server.getGuild().getTextChannelById(id);
+            if (channel != null) {
+                return channel;
+            } else {
+                this.server.getServer().appendPluginData(this.server.getPlugin(), "notifyChannel", -1);
+            }
+        }
+        return null;
     }
 
     public static void create(TextChannel origin, Member author) {
@@ -122,14 +154,23 @@ public class Ticket {
 
         BasicDBObject tickets = (BasicDBObject) server.getPluginData(ticketServer.getPlugin(), "tickets");
 
-        BasicDBObject ticket = new BasicDBObject();
-        ticket.append("id", id);
-        ticket.append("state", TicketState.OPENED.name());
-        ticket.append("author", author.getIdLong());
-        ticket.append("assignee", -1);
+        BasicDBObject ticketObject = new BasicDBObject();
+        ticketObject.append("id", id);
+        ticketObject.append("state", TicketState.OPENED.name());
+        ticketObject.append("author", author.getIdLong());
+        ticketObject.append("assignee", -1);
 
-        tickets.append(channel.getId(), ticket);
+        tickets.append(channel.getId(), ticketObject);
         server.appendPluginData(ticketServer.getPlugin(), "tickets", tickets);
+
+        Ticket ticket = Ticket.getByChannel(channel);
+        ticket.sendNotify(new EmbedBuilder()
+                .setColor(LupoColor.GREEN.getColor())
+                .setAuthor(author.getUser().getAsTag() + " (" + author.getId() + ")", null, author.getUser().getAvatarUrl())
+                .setDescription(ticketServer.getServer().translate(ticketServer.getPlugin(), "ticket_notify-create"))
+                .addField(ticketServer.getServer().translate(ticketServer.getPlugin(), "ticket_notify-owner"), author.getAsMention(), false)
+                .addField(ticketServer.getServer().translate(ticketServer.getPlugin(), "ticket_notify-channel"), channel.getAsMention(), false)
+        );
 
     }
 
