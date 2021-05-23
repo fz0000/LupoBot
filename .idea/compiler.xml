@@ -12,6 +12,7 @@
         <module name="music" />
         <module name="ticket" />
         <module name="profile" />
+        <module name="roles" />
         <module name="logging" />
         <module name="currency" />
         <module name="leveling" />

@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.nickkel.lupobot.plugin</groupId>
-    <artifactId>help</artifactId>
+    <artifactId>roles</artifactId>
 
     <dependencies>
         <dependency>
@@ -37,7 +37,7 @@
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
-                                        <Main-Class>de.nickkel.lupobot.plugin.help.LupoHelpPlugin</Main-Class>
+                                        <Main-Class>de.nickkel.lupobot.plugin.roles.LupoRolesPlugin</Main-Class>
                                         <Build-Number>123</Build-Number>
                                     </manifestEntries>
                                 </transformer>
@@ -48,7 +48,7 @@
             </plugin>
         </plugins>
     </build>
-
+    
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
