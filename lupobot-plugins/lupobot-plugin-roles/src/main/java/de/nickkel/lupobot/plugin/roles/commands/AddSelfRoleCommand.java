@@ -20,7 +20,7 @@ public class AddSelfRoleCommand extends LupoCommand {
     public void onCommand(CommandContext context) {
         RolesServer server = LupoRolesPlugin.getInstance().getRolesServer(context.getGuild());
         if (context.getArgs().length == 1) {
-            Role role = context.getServer().getRole(context.getArgs()[0]);
+            Role role = context.getServer().getRole(context.getArgsAsString());
             if (role == null) {
                 sendSyntaxError(context, "roles_addselfrole-invalid-role");
                 return;

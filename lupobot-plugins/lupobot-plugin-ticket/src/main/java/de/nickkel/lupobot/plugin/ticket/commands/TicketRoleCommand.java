@@ -20,7 +20,7 @@ public class TicketRoleCommand extends LupoCommand {
     public void onCommand(CommandContext context) {
         TicketServer server = LupoTicketPlugin.getInstance().getTicketServer(context.getGuild());
         if (context.getArgs().length == 1) {
-            Role role = context.getServer().getRole(context.getArgs()[0]);
+            Role role = context.getServer().getRole(context.getArgsAsString());
             if (role == null) {
                 sendSyntaxError(context, "ticket_ticketrole-invalid-role");
                 return;
