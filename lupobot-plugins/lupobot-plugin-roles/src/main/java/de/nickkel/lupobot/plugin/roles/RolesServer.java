@@ -1,15 +1,19 @@
 package de.nickkel.lupobot.plugin.roles;
 
 import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.data.LupoServer;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import lombok.Getter;
+import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class RolesServer {
 
@@ -24,6 +28,17 @@ public class RolesServer {
         this.plugin = LupoBot.getInstance().getPlugin("roles");
         this.guild = guild;
         this.server = LupoServer.getByGuild(guild);
+    }
+
+    public void addReactionRoleMessage(Message message, Map<String, Long> roles) {
+        BasicDBObject reactionRoles = (BasicDBObject) this.server.getPluginData(this.plugin, "reactionRoles");
+        BasicDBObject reactionRole = new BasicDBObject();
+
+        for (String emoji : roles.keySet()) {
+            reactionRole.append(emoji, roles.get(emoji));
+            message.addReaction(emoji).queue();
+        }
+        reactionRoles.append(message.getId(), reactionRole);
     }
 
     public List<Role> getSelfAssignRoles() {

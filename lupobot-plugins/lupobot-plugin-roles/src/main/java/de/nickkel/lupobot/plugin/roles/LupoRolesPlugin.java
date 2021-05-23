@@ -3,6 +3,7 @@ package de.nickkel.lupobot.plugin.roles;
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.plugin.PluginInfo;
+import de.nickkel.lupobot.core.util.ListenerRegister;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Guild;
 
@@ -20,6 +21,7 @@ public class LupoRolesPlugin extends LupoPlugin {
     public void onEnable() {
         instance = this;
         LupoBot.getInstance().getCommandHandler().registerCommands(this, "de.nickkel.lupobot.plugin.roles.commands");
+        new ListenerRegister(this, "de.nickkel.lupobot.plugin.roles.listener");
     }
 
     @Override
