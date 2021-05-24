@@ -19,6 +19,10 @@ public class ItemChestCommand extends LupoCommand {
             sendSyntaxError(context, "currency_itemchest-buy-item");
             return;
         }
+        if (user.getUsedInventorySlots()+1 > user.getInventorySlots()) {
+            sendSyntaxError(context, "currency_itemchest-no-inventory-space");
+            return;
+        }
         user.addItem(LupoCurrencyPlugin.getInstance().getItem("itemchest"), -1);
         Item item1 = user.getRandomItem(65, 33, 2), item2 = user.getRandomItem(75, 23, 2);
         user.addItem(item1, 1);
