@@ -19,6 +19,7 @@ public class LootCommand extends LupoCommand {
         CurrencyUser user = LupoCurrencyPlugin.getInstance().getCurrencyUser(context.getMember());
         if (user.getUsedInventorySlots()+1 > user.getInventorySlots()) {
             sendSyntaxError(context, "currency_loot-no-inventory-space");
+            user.getUser().getCooldowns().remove(this);
             return;
         }
 
