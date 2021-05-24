@@ -28,11 +28,11 @@ public class OAuth2 {
                 .build();
     }
 
-    public String getUser(String code) {
+    public String getUser(String redirect, String code) {
         Session session;
         OAuth2User user;
         try {
-            session = this.client.startSession(code, this.client.getStateController().generateNewState(LupoBot.getInstance().getConfig().getString("authRedirectUri")), "", Scope.IDENTIFY, Scope.GUILDS).complete();
+            session = this.client.startSession(code, this.client.getStateController().generateNewState(redirect), "", Scope.IDENTIFY, Scope.GUILDS).complete();
             user = this.client.getUser(session).complete();
 
             if (user != null) {

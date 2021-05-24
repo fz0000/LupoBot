@@ -18,6 +18,6 @@ public class OAuth2Controller {
     }
 
     public void getUser(Context ctx) {
-        ctx.result(LupoBot.getInstance().getRestServer().getOAuth2().getUser(ctx.queryParam("code")));
+        ctx.result(LupoBot.getInstance().getRestServer().getOAuth2().getUser(ctx.queryParam("redirect"), ctx.queryParam("code")));
     }
 }

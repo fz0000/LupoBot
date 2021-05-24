@@ -110,7 +110,7 @@ public class LupoBot {
         this.languageHandler = new LanguageHandler(this.getClass());
         this.commandHandler = new CommandHandler();
 
-        this.mongoClient = new MongoClient(new MongoClientURI("mongodb://localhost:27017"));
+        this.mongoClient = new MongoClient(new MongoClientURI(LupoBot.getInstance().getConfig().getString("mongoClientUri")));
         this.login(builder);
 
         try {
