@@ -1,9 +1,9 @@
 package de.nickkel.lupobot.core.command;
 
+import com.github.ygimenez.method.Pages;
+import com.github.ygimenez.model.Page;
+import com.github.ygimenez.type.PageType;
 import de.nickkel.lupobot.core.data.LupoServer;
-import de.nickkel.lupobot.core.pagination.method.Pages;
-import de.nickkel.lupobot.core.pagination.model.Page;
-import de.nickkel.lupobot.core.pagination.type.PageType;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.util.LupoColor;
 import lombok.Getter;

@@ -1,12 +1,12 @@
 package de.nickkel.lupobot.plugin.currency.commands;
 
+import com.github.ygimenez.method.Pages;
+import com.github.ygimenez.model.Page;
+import com.github.ygimenez.type.PageType;
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
-import de.nickkel.lupobot.core.pagination.method.Pages;
-import de.nickkel.lupobot.core.pagination.model.Page;
-import de.nickkel.lupobot.core.pagination.type.PageType;
 import de.nickkel.lupobot.core.util.LupoColor;
 import de.nickkel.lupobot.plugin.currency.LupoCurrencyPlugin;
 import de.nickkel.lupobot.plugin.currency.data.CurrencyUser;

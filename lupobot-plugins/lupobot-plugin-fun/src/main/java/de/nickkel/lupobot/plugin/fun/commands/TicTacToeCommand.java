@@ -1,9 +1,10 @@
 package de.nickkel.lupobot.plugin.fun.commands;
 
+import com.github.ygimenez.method.Pages;
+import com.github.ygimenez.model.ThrowingBiConsumer;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
-import de.nickkel.lupobot.core.pagination.method.Pages;
 import de.nickkel.lupobot.plugin.fun.LupoFunPlugin;
 import de.nickkel.lupobot.plugin.fun.game.TicTacToeGame;
 import net.dv8tion.jda.api.entities.Member;
@@ -11,7 +12,6 @@ import net.dv8tion.jda.api.entities.Message;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BiConsumer;
 
 @CommandInfo(name = "tictactoe", aliases = "ttt", cooldown = 5, category = "game")
 public class TicTacToeCommand extends LupoCommand {
@@ -36,13 +36,13 @@ public class TicTacToeCommand extends LupoCommand {
 
             TicTacToeGame game = new TicTacToeGame(context);
 
-            BiConsumer<Member, Message> accept = (reactor, message) -> {
+            ThrowingBiConsumer<Member, Message> accept = (reactor, message) -> {
                 if (member == reactor && LupoFunPlugin.getInstance().getTicTacToeGames().contains(game) && game.getParticipant() == null) {
                     game.start(reactor);
                 }
             };
 
-            BiConsumer<Member, Message> deny = (reactor, message) -> {
+            ThrowingBiConsumer<Member, Message> deny = (reactor, message) -> {
                 if (member == reactor && LupoFunPlugin.getInstance().getTicTacToeGames().contains(game) && game.getParticipant() == null) {
                     LupoFunPlugin.getInstance().getTicTacToeGames().remove(game);
                     context.getChannel().sendMessage(context.getServer().translate(context.getPlugin(), "fun_tictactoe-request-deny",
@@ -50,7 +50,7 @@ public class TicTacToeCommand extends LupoCommand {
                 }
             };
 
-            HashMap<String, BiConsumer<Member, Message>> buttons = new HashMap<>();
+            HashMap<String, ThrowingBiConsumer<Member, Message>> buttons = new HashMap<>();
             buttons.put("✅", accept);
             buttons.put("❌", deny);
 

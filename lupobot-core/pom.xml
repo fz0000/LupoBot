@@ -23,6 +23,10 @@
             <name>bintray</name>
             <url>https://jcenter.bintray.com</url>
         </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -70,6 +74,11 @@
             <artifactId>javalin</artifactId>
             <version>3.13.7</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.ygimenez</groupId>
+            <artifactId>Pagination-Utils</artifactId>
+            <version>aa14def</version>
         </dependency>
     </dependencies>
 

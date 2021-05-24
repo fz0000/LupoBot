@@ -1,7 +1,8 @@
 package de.nickkel.lupobot.plugin.fun.game;
 
+import com.github.ygimenez.method.Pages;
+import com.github.ygimenez.model.ThrowingBiConsumer;
 import de.nickkel.lupobot.core.command.CommandContext;
-import de.nickkel.lupobot.core.pagination.method.Pages;
 import de.nickkel.lupobot.core.util.LupoColor;
 import de.nickkel.lupobot.plugin.fun.LupoFunPlugin;
 import lombok.Getter;
@@ -11,7 +12,6 @@ import net.dv8tion.jda.api.entities.Message;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BiConsumer;
 
 public class TicTacToeGame {
 
@@ -78,10 +78,10 @@ public class TicTacToeGame {
             return;
         }
 
-        Map<Integer, BiConsumer<Member, Message>> consumers = new HashMap<>();
+        Map<Integer, ThrowingBiConsumer<Member, Message>> consumers = new HashMap<>();
         for (int i = 1; i < 10; i++) {
             int finalI = i;
-            BiConsumer<Member, Message> consumer = (member, message) -> {
+            ThrowingBiConsumer<Member, Message> consumer = (member, message) -> {
                 if (this.winner == null) {
                     if (this.getCurrentPlayer().getIdLong() == member.getIdLong()) {
                         String emoji = ":o:";
@@ -118,7 +118,7 @@ public class TicTacToeGame {
         if (this.message == null) {
             this.context.getChannel().sendMessage(builder.build()).queue(success -> {
                 this.message = success;
-                HashMap<String, BiConsumer<Member, Message>> buttons = new HashMap<>();
+                HashMap<String, ThrowingBiConsumer<Member, Message>> buttons = new HashMap<>();
                 for (int i = 1; i < 10; i++) {
                     if (!this.field.get(i).equals(":x:") && !this.field.get(i).equals(":o:")) {
                         buttons.put(getEmoji(i), consumers.get(i));
@@ -133,7 +133,7 @@ public class TicTacToeGame {
                 }
             }
             this.message.editMessage(builder.build()).queue(success -> {
-                HashMap<String, BiConsumer<Member, Message>> buttons = new HashMap<>();
+                HashMap<String, ThrowingBiConsumer<Member, Message>> buttons = new HashMap<>();
                 for (int i = 1; i < 10; i++) {
                     if (!this.field.get(i).equals(":x:") && !this.field.get(i).equals(":o:")) {
                         buttons.put(getEmoji(i), consumers.get(i));

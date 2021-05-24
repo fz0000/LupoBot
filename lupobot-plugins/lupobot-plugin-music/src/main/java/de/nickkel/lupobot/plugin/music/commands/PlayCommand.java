@@ -1,5 +1,7 @@
 package de.nickkel.lupobot.plugin.music.commands;
 
+import com.github.ygimenez.method.Pages;
+import com.github.ygimenez.model.ThrowingBiConsumer;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
@@ -7,7 +9,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
-import de.nickkel.lupobot.core.pagination.method.Pages;
 import de.nickkel.lupobot.core.util.LupoColor;
 import de.nickkel.lupobot.plugin.music.LupoMusicPlugin;
 import de.nickkel.lupobot.plugin.music.lavaplayer.MusicServer;
@@ -19,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BiConsumer;
 
 @CommandInfo(name = "play", category = "player")
 public class PlayCommand extends LupoCommand {
@@ -44,7 +44,7 @@ public class PlayCommand extends LupoCommand {
                     @Override
                     public void playlistLoaded(AudioPlaylist audioPlaylist) {
                         List<AudioTrack> tracks = audioPlaylist.getTracks();
-                        Map<Integer, BiConsumer<Member, Message>> consumers = new HashMap<>();
+                        Map<Integer, ThrowingBiConsumer<Member, Message>> consumers = new HashMap<>();
 
                         EmbedBuilder builder = new EmbedBuilder();
                         builder.setColor(LupoColor.ORANGE.getColor());
@@ -57,7 +57,7 @@ public class PlayCommand extends LupoCommand {
                                 AudioTrack track = tracks.get(i-1);
                                 description = description + "**" + i + ":** " + track.getInfo().title + "\n";
 
-                                BiConsumer<Member, Message> consumer = (member, message) -> {
+                                ThrowingBiConsumer<Member, Message> consumer = (member, message) -> {
                                     server.scheduler.queue(track);
                                     server.onQueue(context, track);
                                 };
@@ -70,7 +70,7 @@ public class PlayCommand extends LupoCommand {
                         builder.setTimestamp(context.getMessage().getTimeCreated());
 
                         context.getChannel().sendMessage(builder.build()).queue(success -> {
-                            HashMap<String, BiConsumer<Member, Message>> buttons = new HashMap<>();
+                            HashMap<String, ThrowingBiConsumer<Member, Message>> buttons = new HashMap<>();
                             for (int i = 1; i < consumers.size()+1; i++) {
                                 buttons.put(getEmoji(i), consumers.get(i));
                             }

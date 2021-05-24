@@ -1,5 +1,8 @@
 package de.nickkel.lupobot.core;
 
+import com.github.ygimenez.exception.InvalidHandlerException;
+import com.github.ygimenez.method.Pages;
+import com.github.ygimenez.model.PaginatorBuilder;
 import com.google.gson.JsonObject;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
@@ -11,8 +14,6 @@ import de.nickkel.lupobot.core.data.LupoServer;
 import de.nickkel.lupobot.core.data.LupoUser;
 import de.nickkel.lupobot.core.internal.listener.MaintenanceListener;
 import de.nickkel.lupobot.core.language.LanguageHandler;
-import de.nickkel.lupobot.core.pagination.method.Pages;
-import de.nickkel.lupobot.core.pagination.model.PaginatorBuilder;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.plugin.PluginLoader;
 import de.nickkel.lupobot.core.rest.RestServer;
@@ -112,7 +113,11 @@ public class LupoBot {
         this.mongoClient = new MongoClient(new MongoClientURI("mongodb://localhost:27017"));
         this.login(builder);
 
-        Pages.activate(PaginatorBuilder.createSimplePaginator(this.shardManager));
+        try {
+            Pages.activate(PaginatorBuilder.createSimplePaginator(this.shardManager));
+        } catch (InvalidHandlerException e) {
+            e.printStackTrace();
+        }
         this.commandHandler.registerCommands(this.getClass().getClassLoader(), "de.nickkel.lupobot.core.internal.commands");
         this.pluginLoader = new PluginLoader();
         this.loadBotData();
