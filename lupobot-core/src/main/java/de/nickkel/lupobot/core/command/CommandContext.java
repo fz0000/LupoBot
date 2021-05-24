@@ -47,6 +47,6 @@ public class CommandContext {
         for (String arg : this.args) {
             argString = argString + arg + " ";
         }
-        return argString;
+        return argString.substring(0, argString.length() -1);
     }
 }

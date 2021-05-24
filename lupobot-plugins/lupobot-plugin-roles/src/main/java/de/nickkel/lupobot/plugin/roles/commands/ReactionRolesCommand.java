@@ -42,9 +42,6 @@ public class ReactionRolesCommand extends LupoCommand {
         Map<String, Long> reactionRoles = new HashMap<>();
         for (int i = 1; i < context.getArgsAsString().split("\n").length; i++) {
             String line = context.getArgsAsString().split("\n")[i];
-            if (i == context.getArgsAsString().split("\n").length-1) {
-                line = line.substring(0, line.length() -1);
-            }
             String emoji = line.split(" ")[0];
             Role role = context.getServer().getRole(line.replace(emoji + " ", ""));
             if (role != null) {
