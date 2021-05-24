@@ -139,6 +139,10 @@ public class LupoBot {
         }
     }
 
+    public Guild getHub() {
+        return this.shardManager.getGuildById(LupoBot.getInstance().getConfig().getLong("supportServer"));
+    }
+
     public LupoPlugin getPlugin(String name) {
         for (LupoPlugin plugin : this.plugins) {
             if (plugin.getInfo().name().equalsIgnoreCase(name)) {
