@@ -126,7 +126,12 @@ public class LupoBot {
         this.dataServer.schedule(new SaveDataTask(), 600*1000, 600*1000);
 
         this.logger.info("LupoBot is running on " + this.shardManager.getGuilds().size() + " servers");
-        this.restServer = new RestServer(this.config.getInt("restServerPort"));
+
+        try {
+            this.restServer = new RestServer(this.config.getInt("restServerPort"));
+        } catch (Exception e) {
+            this.logger.error("Could not start RestServer: " + e.getMessage());
+        }
     }
 
     private void login(DefaultShardManagerBuilder builder) {
@@ -140,7 +145,7 @@ public class LupoBot {
     }
 
     public Guild getHub() {
-        return this.shardManager.getGuildById(LupoBot.getInstance().getConfig().getLong("supportServer"));
+        return this.shardManager.getGuildById(this.config.getLong("supportServer"));
     }
 
     public LupoPlugin getPlugin(String name) {
