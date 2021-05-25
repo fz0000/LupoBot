@@ -114,7 +114,7 @@ public class LupoBot {
         this.login(builder);
 
         try {
-            Pages.activate(PaginatorBuilder.createSimplePaginator(this.shardManager));
+            Pages.activate(PaginatorBuilder.createPaginator().setHandler(this.shardManager).shouldRemoveOnReact(true).build());
         } catch (InvalidHandlerException e) {
             e.printStackTrace();
         }
