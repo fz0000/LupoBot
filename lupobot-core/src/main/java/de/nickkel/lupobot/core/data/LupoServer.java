@@ -34,7 +34,7 @@ public class LupoServer {
         this.guild = guild;
 
         DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
-                .getAsJsonObject().get("database").getAsString());
+                .getAsJsonObject().get("name").getAsString());
         DBCollection collection = database.getCollection("servers");
         DBObject query = new BasicDBObject("_id", guild.getIdLong());
         DBCursor cursor = collection.find(query);
@@ -133,7 +133,7 @@ public class LupoServer {
 
     public void saveData() {
         DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
-                .getAsJsonObject().get("database").getAsString());
+                .getAsJsonObject().get("name").getAsString());
         DBCollection collection = database.getCollection("servers");
         DBObject query = new BasicDBObject("_id", guild.getIdLong());
         collection.update(query, this.data);

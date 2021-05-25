@@ -32,7 +32,7 @@ public class UserController {
 
     public void getTotalUsers(Context ctx) {
         DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
-                .getAsJsonObject().get("database").getAsString());
+                .getAsJsonObject().get("name").getAsString());
         DBCollection collection = database.getCollection("users");
         ctx.result(new Document().append("totalUsers", collection.getCount()).convertToJson());
     }

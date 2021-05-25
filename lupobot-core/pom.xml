@@ -79,6 +79,7 @@
             <groupId>com.github.ygimenez</groupId>
             <artifactId>Pagination-Utils</artifactId>
             <version>aa14def</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

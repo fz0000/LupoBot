@@ -15,7 +15,7 @@ public class LogMessage {
     public LogMessage(long messageId, boolean createIfNotExists) {
         this.id = messageId;
         DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
-                .getAsJsonObject().get("database").getAsString());
+                .getAsJsonObject().get("name").getAsString());
         DBCollection collection = database.getCollection("messages");
         DBObject query = new BasicDBObject("_id", messageId);
         DBCursor cursor = collection.find(query);
@@ -35,7 +35,7 @@ public class LogMessage {
 
     public void update(Message message) {
         DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
-                .getAsJsonObject().get("database").getAsString());
+                .getAsJsonObject().get("name").getAsString());
         DBCollection collection = database.getCollection("messages");
         DBObject query = new BasicDBObject("_id", message.getIdLong());
         this.data.append("content", message.getContentRaw());
@@ -47,7 +47,7 @@ public class LogMessage {
 
     public void delete() {
         DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
-                .getAsJsonObject().get("database").getAsString());
+                .getAsJsonObject().get("name").getAsString());
         DBCollection collection = database.getCollection("messages");
         DBObject query = new BasicDBObject("_id", this.id);
         collection.remove(query);

@@ -110,7 +110,7 @@ public class LupoBot {
         this.languageHandler = new LanguageHandler(this.getClass());
         this.commandHandler = new CommandHandler();
 
-        this.mongoClient = new MongoClient(new MongoClientURI(LupoBot.getInstance().getConfig().getString("mongoClientUri")));
+        this.mongoClient = new MongoClient(new MongoClientURI((LupoBot.getInstance().getConfig().getJsonElement("database").getAsJsonObject()).get("clientUri").getAsString()));
         this.login(builder);
 
         try {
@@ -168,7 +168,7 @@ public class LupoBot {
 
     private void loadBotData() {
         DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
-                .getAsJsonObject().get("database").getAsString());
+                .getAsJsonObject().get("name").getAsString());
         DBCollection collection = database.getCollection("bot");
         DBObject query = new BasicDBObject("_id", this.getSelfUser().getIdLong());
         DBCursor cursor = collection.find(query);

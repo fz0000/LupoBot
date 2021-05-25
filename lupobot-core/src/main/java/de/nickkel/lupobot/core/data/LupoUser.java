@@ -35,7 +35,7 @@ public class LupoUser {
         LupoBot.getInstance().getLogger().info("Loading user " + discordUser.getAsTag() + " (" + id + ") ...");
 
         DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
-                .getAsJsonObject().get("database").getAsString());
+                .getAsJsonObject().get("name").getAsString());
         DBCollection collection = database.getCollection("users");
         DBObject query = new BasicDBObject("_id", id);
         DBCursor cursor = collection.find(query);

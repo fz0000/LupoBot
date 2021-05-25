@@ -44,7 +44,7 @@ public class RichestList {
     public void loadFromDatabase() {
         LupoBot.getInstance().getLogger().info("Loading currency richest list ...");
         MongoDatabase database = LupoBot.getInstance().getMongoClient().getDatabase(LupoBot.getInstance().getConfig().getJsonElement("database")
-                .getAsJsonObject().get("database").getAsString());
+                .getAsJsonObject().get("name").getAsString());
         Bson sort = eq("currency.coins", -1L);
 
         MongoCollection<Document> collection = database.getCollection("users");
