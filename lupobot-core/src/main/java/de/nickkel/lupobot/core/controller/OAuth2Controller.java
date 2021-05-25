@@ -18,6 +18,10 @@ public class OAuth2Controller {
     }
 
     public void getUser(Context ctx) {
+        if (ctx.queryParam("redirect") == null || ctx.queryParam("code") == null) {
+            ctx.status(404).result("Not found");
+            return;
+        }
         ctx.result(LupoBot.getInstance().getRestServer().getOAuth2().getUser(ctx.queryParam("redirect"), ctx.queryParam("code")));
     }
 }

@@ -30,7 +30,7 @@ GET | /guilds/:id/channels/:channel | Get a specific channel on a guild by guild
 GET | /guilds/:id/roles | Get all roles on a guild by guild id
 GET | /guilds/:id/roles/:role | Get a specific role on a guild by guild id and role id
 GET | /guilds/members/:member | Get a specific role on a guild by member id
-GET | /oauth2 | Get information about the user and the guilds which the has joined. The query param `code` (of Discord OAuth2) is required
+GET | /oauth2 | Get information about the user and the guilds which the has joined. The query params `code` (of Discord OAuth2) and `redirect` (redirect url after auth) are required
 GET | /plugins | Get all loaded plugins
 POST | /plugins/:name | Unload or reload a plugin by name. The query param `type` is required (the type can be "reload" or "unload")
 GET | /plugins/:name | Get a specific plugin by its name
