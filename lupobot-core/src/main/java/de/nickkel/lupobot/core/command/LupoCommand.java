@@ -1,26 +1,17 @@
 package de.nickkel.lupobot.core.command;
 
-import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.data.LupoServer;
 import de.nickkel.lupobot.core.pagination.Page;
 import de.nickkel.lupobot.core.pagination.Paginator;
-import de.nickkel.lupobot.core.pagination.RelatedPages;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.util.LupoColor;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Emoji;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.interactions.components.Button;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.concurrent.TimeUnit;
-import java.util.function.BiConsumer;
 
 public abstract class LupoCommand {
 
@@ -50,7 +41,7 @@ public abstract class LupoCommand {
         // Help page
         pages.add(new Page(Button.primary("/", context.getServer().translate(null, "core_command-help")), getHelpBuilder(context)));
 
-        Paginator.categorize(context.getChannel(), pages);
+        Paginator.categorize(context.getChannel(), pages, 90);
     }
 
     public EmbedBuilder getHelpBuilder(CommandContext context) {
