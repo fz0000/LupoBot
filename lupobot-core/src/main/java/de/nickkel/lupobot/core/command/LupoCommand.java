@@ -1,19 +1,26 @@
 package de.nickkel.lupobot.core.command;
 
-import com.github.ygimenez.method.Pages;
-import com.github.ygimenez.model.Page;
-import com.github.ygimenez.type.PageType;
+import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.data.LupoServer;
+import de.nickkel.lupobot.core.pagination.Page;
+import de.nickkel.lupobot.core.pagination.Paginator;
+import de.nickkel.lupobot.core.pagination.RelatedPages;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.util.LupoColor;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Emoji;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.interactions.components.Button;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiConsumer;
 
 public abstract class LupoCommand {
 
@@ -38,14 +45,12 @@ public abstract class LupoCommand {
         builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null, context.getMember().getUser().getAvatarUrl());
         builder.setFooter(server.translate(null, "core_used-command", server.getPrefix() + context.getLabel()));
         builder.setDescription(server.translate(plugin, errorKey, params));
-        pages.add(new Page(PageType.EMBED, builder.build()));
+        pages.add(new Page(Button.danger("/", context.getServer().translate(null, "core_command-error")), builder));
 
         // Help page
-        pages.add(new Page(PageType.EMBED, getHelpBuilder(context).build()));
+        pages.add(new Page(Button.primary("/", context.getServer().translate(null, "core_command-help")), getHelpBuilder(context)));
 
-        context.getChannel().sendMessage((MessageEmbed) pages.get(0).getContent()).queue(success -> {
-            Pages.paginate(success, pages, 60, TimeUnit.SECONDS, user -> context.getUser().getId() == user.getIdLong());
-        });
+        Paginator.categorize(context.getChannel(), pages);
     }
 
     public EmbedBuilder getHelpBuilder(CommandContext context) {

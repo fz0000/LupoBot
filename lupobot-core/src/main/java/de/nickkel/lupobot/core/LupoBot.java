@@ -14,12 +14,12 @@ import de.nickkel.lupobot.core.data.LupoServer;
 import de.nickkel.lupobot.core.data.LupoUser;
 import de.nickkel.lupobot.core.internal.listener.MaintenanceListener;
 import de.nickkel.lupobot.core.language.LanguageHandler;
+import de.nickkel.lupobot.core.pagination.PaginationListener;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.plugin.PluginLoader;
 import de.nickkel.lupobot.core.rest.RestServer;
 import de.nickkel.lupobot.core.tasks.SaveDataTask;
 import de.nickkel.lupobot.core.util.FileResourcesUtils;
-import de.nickkel.lupobot.core.util.LupoColor;
 import lombok.Getter;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
@@ -105,7 +105,7 @@ public class LupoBot {
 
         DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(this.config.getString("token"))
                 .setChunkingFilter(ChunkingFilter.ALL)
-                .addEventListeners(new CommandListener())
+                .addEventListeners(new CommandListener(), new PaginationListener())
                 .setActivity(Activity.watching("?help"));
 
         this.languageHandler = new LanguageHandler(this.getClass());
