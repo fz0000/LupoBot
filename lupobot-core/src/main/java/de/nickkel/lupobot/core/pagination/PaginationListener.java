@@ -48,9 +48,12 @@ public class PaginationListener extends ListenerAdapter {
                     if (page.getEmbed() != null && (page.getWhitelist().size() == 0 || page.getWhitelist().contains(event.getMember().getIdLong()))) {
                         event.getMessage().editMessage(page.getEmbed()).queue();
                     }
-                    System.out.println(page.getConsumer() != null);
                     if (page.getConsumer() != null) {
-                        page.getConsumer().accept(event.getMember(), event.getMessage());
+                        try {
+                            page.getConsumer().accept(event.getMember(), event.getMessage());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
