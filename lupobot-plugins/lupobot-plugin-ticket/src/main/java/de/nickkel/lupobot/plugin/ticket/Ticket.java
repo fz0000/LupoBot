@@ -87,7 +87,7 @@ public class Ticket {
                     channel.getManager().sync().queue();
                     channel.getManager().getChannel().createPermissionOverride(member).setAllow(Permission.VIEW_CHANNEL).queue();
                 }
-                channel.getManager().setTopic(server.getServer().translate(server.getPlugin(), "ticket_assignee", member.getAsMention())).queue();
+                channel.getManager().setTopic(this.server.getServer().translate(this.server.getPlugin(), "ticket_assignee", member.getAsMention())).queue();
                 channel.sendMessage(new EmbedBuilder()
                         .setColor(LupoColor.BLUE.getColor())
                         .setDescription(this.server.getServer().translate(this.server.getPlugin(), "ticket_assign-description", member.getAsMention()))
@@ -97,6 +97,15 @@ public class Ticket {
             }
             this.appendTicketData("assignee", member.getIdLong());
             this.setState(TicketState.CLAIMED);
+
+            sendNotify(new EmbedBuilder()
+                    .setColor(LupoColor.ORANGE.getColor())
+                    .setAuthor(member.getUser().getAsTag() + " (" + member.getId() + ")", null, member.getUser().getAvatarUrl())
+                    .setDescription(this.server.getServer().translate(this.server.getPlugin(), "ticket_notify-assign", member.getAsMention()))
+                    .addField(this.server.getServer().translate(this.server.getPlugin(), "ticket_notify-owner"), member.getGuild().getMemberById(this.author).getAsMention(), false)
+                    .addField(this.server.getServer().translate(this.server.getPlugin(), "ticket_notify-channel"), channel.getAsMention(), false)
+                    .addField(this.server.getServer().translate(this.server.getPlugin(), "ticket_notify-assignee"), member.getAsMention(), false)
+            );
         }
     }
 
