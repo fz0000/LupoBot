@@ -215,7 +215,7 @@ public class LupoBot {
 
     public void saveData() {
         DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
-                .getAsJsonObject().get("database").getAsString());
+                .getAsJsonObject().get("name").getAsString());
         DBCollection collection = database.getCollection("bot");
         DBObject query = new BasicDBObject("_id", this.getSelfUser().getIdLong());
         collection.update(query, this.data);

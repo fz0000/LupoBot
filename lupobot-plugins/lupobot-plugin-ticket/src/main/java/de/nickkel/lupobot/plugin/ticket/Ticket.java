@@ -82,8 +82,8 @@ public class Ticket {
         if (this.getAssignee() != member.getIdLong()) {
             TextChannel channel = member.getGuild().getTextChannelById(this.channel);
             if (channel != null) {
-                if (this.server.getCategory(TicketState.ASSIGNED) != null) {
-                    channel.getManager().setParent(this.server.getCategory(TicketState.ASSIGNED)).complete();
+                if (this.server.getCategory(TicketState.CLAIMED) != null) {
+                    channel.getManager().setParent(this.server.getCategory(TicketState.CLAIMED)).complete();
                     channel.getManager().sync().queue();
                     channel.getManager().getChannel().createPermissionOverride(member).setAllow(Permission.VIEW_CHANNEL).queue();
                 }
@@ -96,7 +96,7 @@ public class Ticket {
                 ).queue();
             }
             this.appendTicketData("assignee", member.getIdLong());
-            this.setState(TicketState.ASSIGNED);
+            this.setState(TicketState.CLAIMED);
         }
     }
 
