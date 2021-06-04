@@ -1,12 +1,11 @@
 package de.nickkel.lupobot.plugin.currency.commands;
 
-import com.github.ygimenez.method.Pages;
-import com.github.ygimenez.model.Page;
-import com.github.ygimenez.type.PageType;
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
+import de.nickkel.lupobot.core.pagination.Page;
+import de.nickkel.lupobot.core.pagination.Paginator;
 import de.nickkel.lupobot.core.util.LupoColor;
 import de.nickkel.lupobot.plugin.currency.LupoCurrencyPlugin;
 import de.nickkel.lupobot.plugin.currency.data.CurrencyUser;
@@ -126,14 +125,14 @@ public class ShopCommand extends LupoCommand {
                 builder.addField(item.getIcon() + " " + item.getName(), context.getServer().translate(context.getPlugin(), "currency_shop-buy-sell-item",
                         context.getServer().formatLong(item.getBuy()), context.getServer().formatLong(item.getSell())), true);
                 if (String.valueOf(i).length() != 1 && (String.valueOf(i).endsWith("0") || i == LupoCurrencyPlugin.getInstance().getItems().size()-1)) {
-                    pages.add(new Page(PageType.EMBED, builder.build()));
+                    Page page = new Page(builder.build());
+                    page.getWhitelist().add(context.getMember().getIdLong());
+                    pages.add(page);
                     builder.clearFields();
                 }
             }
 
-            context.getChannel().sendMessage((MessageEmbed) pages.get(0).getContent()).queue(success -> {
-                Pages.paginate(success, pages, 60, TimeUnit.SECONDS, user -> context.getUser().getId() == user.getIdLong());
-            });
+            Paginator.paginate(context.getChannel(), pages, 90);
         }
     }
 }

@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.interactions.components.Button;
 
 import java.time.OffsetDateTime;
 
@@ -58,9 +59,9 @@ public class Ticket {
                     .setDescription(this.server.getServer().translate(this.server.getPlugin(), "ticket_close-description", member.getAsMention()))
                     .setFooter(member.getUser().getAsTag() + " (" + member.getId() + ")", member.getUser().getAvatarUrl())
                     .build()
-            ).queue(message -> {
-                message.addReaction("\uD83D\uDDD1").queue();
-            });
+            ).setActionRow(
+                    Button.danger("TICKET;DELETE", this.server.getServer().translate(this.server.getPlugin(), "ticket_button-delete")).withEmoji(Emoji.fromUnicode("🗑"))
+            ).queue();
         }
         this.setState(TicketState.CLOSED);
 
@@ -150,16 +151,17 @@ public class Ticket {
         for (Role role : ticketServer.getSupportTeamRoles()) {
             channel.getManager().getChannel().createPermissionOverride(role).setAllow(Permission.VIEW_CHANNEL).queue();
         }
-        Message message = channel.sendMessage(new MessageBuilder()
+        channel.sendMessage(new MessageBuilder()
                 .setContent(server.translate(ticketServer.getPlugin(), "ticket_welcome-message", author.getAsMention()))
                 .setEmbed(new EmbedBuilder()
                         .setDescription(server.translate(ticketServer.getPlugin(), "ticket_welcome-description"))
                         .setColor(LupoColor.BLUE.getColor())
                         .build())
                 .build()
-        ).complete();
-        message.addReaction("\uD83D\uDD12").queue();
-        message.addReaction("\uD83D\uDC64").queue();
+        ).setActionRow(
+                Button.danger("TICKET;CLOSE", server.translate(ticketServer.getPlugin(), "ticket_button-close")).withEmoji(Emoji.fromUnicode("🔒")),
+                Button.primary("TICKET;CLAIM", server.translate(ticketServer.getPlugin(), "ticket_button-claim")).withEmoji(Emoji.fromUnicode("👤"))
+        ).queue();
 
         BasicDBObject tickets = (BasicDBObject) server.getPluginData(ticketServer.getPlugin(), "tickets");
 

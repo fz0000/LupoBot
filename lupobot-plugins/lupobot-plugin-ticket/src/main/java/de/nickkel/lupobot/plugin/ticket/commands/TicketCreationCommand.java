@@ -6,7 +6,9 @@ import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.interactions.components.Button;
 
 @CommandInfo(name = "ticketcreation", category = "setup", permissions = Permission.ADMINISTRATOR)
 public class TicketCreationCommand extends LupoCommand {
@@ -27,10 +29,11 @@ public class TicketCreationCommand extends LupoCommand {
             builder.setFooter(context.getServer().translate(context.getPlugin(), "ticket_ticketcreation-footer"));
             builder.setColor(LupoColor.BLUE.getColor());
 
-            channel.sendMessage(builder.build()).queue(success -> {
-                success.addReaction("\uD83D\uDCE9").queue();
-                context.getServer().appendPluginData(context.getPlugin(), "creationMessage", success.getIdLong());
-            });
+            channel.sendMessage(builder.build())
+                    .setActionRow(Button.primary("TICKET;CREATE", context.getServer().translate(context.getPlugin(), "ticket_button-create")).withEmoji(Emoji.fromUnicode("📩")))
+                    .queue(success -> {
+                        context.getServer().appendPluginData(context.getPlugin(), "creationMessage", success.getIdLong());
+                    });
         } else {
             sendHelp(context);
         }

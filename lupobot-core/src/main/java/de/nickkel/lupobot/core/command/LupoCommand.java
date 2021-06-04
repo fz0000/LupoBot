@@ -36,10 +36,10 @@ public abstract class LupoCommand {
         builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null, context.getMember().getUser().getAvatarUrl());
         builder.setFooter(server.translate(null, "core_used-command", server.getPrefix() + context.getLabel()));
         builder.setDescription(server.translate(plugin, errorKey, params));
-        pages.add(new Page(Button.danger("/", context.getServer().translate(null, "core_command-error")), builder));
+        pages.add(new Page(Button.danger("/", context.getServer().translate(null, "core_command-error")), builder.build()));
 
         // Help page
-        pages.add(new Page(Button.primary("/", context.getServer().translate(null, "core_command-help")), getHelpBuilder(context)));
+        pages.add(new Page(Button.primary("/", context.getServer().translate(null, "core_command-help")), getHelpBuilder(context).build()));
 
         Paginator.categorize(context.getChannel(), pages, 90);
     }

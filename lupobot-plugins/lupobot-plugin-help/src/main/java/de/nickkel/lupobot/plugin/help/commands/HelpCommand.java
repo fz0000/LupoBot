@@ -7,6 +7,7 @@ import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.interactions.components.Button;
 
 @CommandInfo(name = "help", category = "general")
 public class HelpCommand extends LupoCommand {
@@ -60,7 +61,10 @@ public class HelpCommand extends LupoCommand {
             builder.addField(context.getServer().translate(context.getPlugin(), "help_help-all-details"),
                     context.getServer().translate(context.getPlugin(), "help_help-all-details-description"), false);
             
-            context.getChannel().sendMessage(builder.build()).queue();
+            context.getChannel().sendMessage(builder.build()).setActionRow(
+                    Button.link(LupoBot.getInstance().getConfig().getString("inviteUrl"), context.getServer().translate(context.getPlugin(), "help_help-link-invite")),
+                    Button.link(LupoBot.getInstance().getConfig().getString("supportServerUrl"), context.getServer().translate(context.getPlugin(), "help_help-link-support"))
+            ).queue();
         }
     }
 }

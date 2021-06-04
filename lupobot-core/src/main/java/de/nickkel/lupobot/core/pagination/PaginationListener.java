@@ -27,10 +27,10 @@ public class PaginationListener extends ListenerAdapter {
 
                     if (pages.getPages().get(pages.getCurrentPage()).getWhitelist().size() == 0 || pages.getPages().get(pages.getCurrentPage()).getWhitelist().contains(event.getMember().getIdLong())) {
                         if (type.equals("NEXT") && pages.getCurrentPage()+1 < pages.getPages().size()) {
-                            event.getMessage().editMessage(pages.getPages().get(pages.getCurrentPage()+1).getBuilder().build()).queue();
+                            event.getMessage().editMessage(pages.getPages().get(pages.getCurrentPage()+1).getEmbed()).queue();
                             pages.increaseCurrentPage();
                         } else if(type.equals("LAST") && pages.getCurrentPage() != 0) {
-                            event.getMessage().editMessage(pages.getPages().get(pages.getCurrentPage()-1).getBuilder().build()).queue();
+                            event.getMessage().editMessage(pages.getPages().get(pages.getCurrentPage()-1).getEmbed()).queue();
                             pages.decreaseCurrentPage();
                         }
                         event.deferEdit().queue();
@@ -45,9 +45,10 @@ public class PaginationListener extends ListenerAdapter {
                 if (Paginator.getPages().containsKey(UUID.fromString(uuid))) {
                     Page page = Paginator.getPages().get(UUID.fromString(uuid));
                     event.deferEdit().queue();
-                    if (page.getBuilder() != null && (page.getWhitelist().size() == 0 || page.getWhitelist().contains(event.getMember().getIdLong()))) {
-                        event.getMessage().editMessage(page.getBuilder().build()).queue();
+                    if (page.getEmbed() != null && (page.getWhitelist().size() == 0 || page.getWhitelist().contains(event.getMember().getIdLong()))) {
+                        event.getMessage().editMessage(page.getEmbed()).queue();
                     }
+                    System.out.println(page.getConsumer() != null);
                     if (page.getConsumer() != null) {
                         page.getConsumer().accept(event.getMember(), event.getMessage());
                     }

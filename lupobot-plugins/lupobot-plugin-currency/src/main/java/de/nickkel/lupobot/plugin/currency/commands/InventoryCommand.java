@@ -1,11 +1,11 @@
 package de.nickkel.lupobot.plugin.currency.commands;
 
-import com.github.ygimenez.method.Pages;
-import com.github.ygimenez.model.Page;
-import com.github.ygimenez.type.PageType;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
+import de.nickkel.lupobot.core.pagination.Page;
+import de.nickkel.lupobot.core.pagination.Paginator;
+import de.nickkel.lupobot.core.pagination.RelatedPages;
 import de.nickkel.lupobot.core.util.LupoColor;
 import de.nickkel.lupobot.plugin.currency.LupoCurrencyPlugin;
 import de.nickkel.lupobot.plugin.currency.data.CurrencyUser;
@@ -83,7 +83,9 @@ public class InventoryCommand extends LupoCommand {
                     builder.addField(item.getIcon() + " " + user.getItem(item) + "x " + item.getName(), context.getServer().translate(context.getPlugin(), "currency_inventory-price",
                             context.getServer().formatLong(item.getBuy()), context.getServer().formatLong(item.getSell())), false);
                     if (String.valueOf(i).length() != 1 && (String.valueOf(i).endsWith("0") || i == max-1)) {
-                        pages.add(new Page(PageType.EMBED, builder.build()));
+                        Page page = new Page(builder.build());
+                        page.getWhitelist().add(context.getMember().getIdLong());
+                        pages.add(page);
                         builder.clearFields();
                     }
                     i++;
@@ -91,9 +93,7 @@ public class InventoryCommand extends LupoCommand {
             }
 
             if (pages.size() != 0) {
-                context.getChannel().sendMessage((MessageEmbed) pages.get(0).getContent()).queue(success -> {
-                    Pages.paginate(success, pages, 60, TimeUnit.SECONDS, reactUser -> context.getUser().getId() == reactUser.getIdLong());
-                });
+                Paginator.paginate(context.getChannel(), pages, 60);
             } else {
                 context.getChannel().sendMessage(builder.build()).queue();
             }

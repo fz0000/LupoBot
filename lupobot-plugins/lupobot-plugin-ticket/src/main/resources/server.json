@@ -5,7 +5,7 @@
   "visibleEveryone": false,
   "creationMessage": -1,
   "notifyChannel": -1,
-  "assignedCategory": -1,
+  "claimedCategory": -1,
   "openedCategory": -1,
   "closedCategory": -1,
   "tickets": {}

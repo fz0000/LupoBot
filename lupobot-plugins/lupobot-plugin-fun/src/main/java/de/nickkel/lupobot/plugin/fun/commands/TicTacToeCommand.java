@@ -5,13 +5,20 @@ import com.github.ygimenez.model.ThrowingBiConsumer;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
+import de.nickkel.lupobot.core.pagination.Page;
+import de.nickkel.lupobot.core.pagination.Paginator;
 import de.nickkel.lupobot.plugin.fun.LupoFunPlugin;
 import de.nickkel.lupobot.plugin.fun.game.TicTacToeGame;
+import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.interactions.components.Button;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiConsumer;
 
 @CommandInfo(name = "tictactoe", aliases = "ttt", cooldown = 5, category = "game")
 public class TicTacToeCommand extends LupoCommand {
@@ -36,13 +43,13 @@ public class TicTacToeCommand extends LupoCommand {
 
             TicTacToeGame game = new TicTacToeGame(context);
 
-            ThrowingBiConsumer<Member, Message> accept = (reactor, message) -> {
+            BiConsumer<Member, Message> accept = (reactor, message) -> {
                 if (member == reactor && LupoFunPlugin.getInstance().getTicTacToeGames().contains(game) && game.getParticipant() == null) {
                     game.start(reactor);
                 }
             };
 
-            ThrowingBiConsumer<Member, Message> deny = (reactor, message) -> {
+            BiConsumer<Member, Message> deny = (reactor, message) -> {
                 if (member == reactor && LupoFunPlugin.getInstance().getTicTacToeGames().contains(game) && game.getParticipant() == null) {
                     LupoFunPlugin.getInstance().getTicTacToeGames().remove(game);
                     context.getChannel().sendMessage(context.getServer().translate(context.getPlugin(), "fun_tictactoe-request-deny",
@@ -50,12 +57,12 @@ public class TicTacToeCommand extends LupoCommand {
                 }
             };
 
-            HashMap<String, ThrowingBiConsumer<Member, Message>> buttons = new HashMap<>();
-            buttons.put("✅", accept);
-            buttons.put("❌", deny);
+            List<Page> pages = new ArrayList<>();
+            pages.add(new Page(Button.success("/", context.getServer().translate(context.getPlugin(), "fun_tictactoe-accept")), accept));
+            pages.add(new Page(Button.danger("/", context.getServer().translate(context.getPlugin(), "fun_tictactoe-deny")), deny));
 
             context.getChannel().sendMessage(context.getServer().translate(context.getPlugin(), "fun_tictactoe-request", member.getAsMention(), context.getMember().getAsMention())).queue(success -> {
-                Pages.buttonize(success, buttons, false, 120, TimeUnit.SECONDS);
+                Paginator.categorize(success, pages, 60);
             });
         } else {
             sendSyntaxError(context, "fun_tictactoe-no-player");

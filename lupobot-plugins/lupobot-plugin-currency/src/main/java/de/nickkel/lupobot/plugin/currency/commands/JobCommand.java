@@ -1,12 +1,11 @@
 package de.nickkel.lupobot.plugin.currency.commands;
 
-import com.github.ygimenez.method.Pages;
-import com.github.ygimenez.model.Page;
-import com.github.ygimenez.type.PageType;
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
+import de.nickkel.lupobot.core.pagination.Page;
+import de.nickkel.lupobot.core.pagination.Paginator;
 import de.nickkel.lupobot.core.util.LupoColor;
 import de.nickkel.lupobot.core.util.TimeUtils;
 import de.nickkel.lupobot.plugin.currency.LupoCurrencyPlugin;
@@ -90,14 +89,14 @@ public class JobCommand extends LupoCommand {
                         context.getServer().formatLong(job.getCoins()), job.getNeededItem().getIcon() + " " + job.getNeededItem().getName())
                         + job.getTranslatedDescription(context.getServer()), false);
                 if (String.valueOf(id).length() != 1 && (String.valueOf(id).endsWith("0") || id == LupoCurrencyPlugin.getInstance().getJobs().size())) {
-                    pages.add(new Page(PageType.EMBED, builder.build()));
+                    Page page = new Page(builder.build());
+                    page.getWhitelist().add(context.getMember().getIdLong());
+                    pages.add(page);
                     builder.clearFields();
                 }
                 id++;
             }
-            context.getChannel().sendMessage((MessageEmbed) pages.get(0).getContent()).queue(success -> {
-                Pages.paginate(success, pages, 120, TimeUnit.SECONDS, reactUser -> context.getUser().getId() == reactUser.getIdLong());
-            });
+            Paginator.paginate(context.getChannel(), pages, 120);
         }
     }
 }

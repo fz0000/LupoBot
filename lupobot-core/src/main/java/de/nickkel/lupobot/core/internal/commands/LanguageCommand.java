@@ -1,20 +1,17 @@
 package de.nickkel.lupobot.core.internal.commands;
 
-import com.github.ygimenez.method.Pages;
-import com.github.ygimenez.model.Page;
-import com.github.ygimenez.type.PageType;
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
+import de.nickkel.lupobot.core.pagination.Page;
+import de.nickkel.lupobot.core.pagination.Paginator;
 import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 @CommandInfo(name = "language", aliases = "lang", permissions = Permission.ADMINISTRATOR, category = "core")
 public class LanguageCommand extends LupoCommand {
@@ -55,14 +52,16 @@ public class LanguageCommand extends LupoCommand {
                 String flag = ":flag_" + language.split("_")[1].toLowerCase() + ":";
                 builder.addField(flag + " " + name, language, false);
             }
-            pages.add(new Page(PageType.EMBED, builder.build()));
+            Page list = new Page(builder.build());
+            list.getWhitelist().add(context.getUser().getId());
+            pages.add(list);
 
             // Page with help
-            pages.add(new Page(PageType.EMBED, getHelpBuilder(context).build()));
+            Page help = new Page(getHelpBuilder(context).build());
+            help.getWhitelist().add(context.getUser().getId());
+            pages.add(help);
 
-            context.getChannel().sendMessage((MessageEmbed) pages.get(0).getContent()).queue(success -> {
-                Pages.paginate(success, pages, 120, TimeUnit.SECONDS, user -> context.getUser().getId() == user.getIdLong());
-            });
+            Paginator.paginate(context.getChannel(), pages, 120);
         }
     }
 
