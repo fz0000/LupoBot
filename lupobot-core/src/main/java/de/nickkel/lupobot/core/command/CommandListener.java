@@ -14,6 +14,15 @@ public class CommandListener extends ListenerAdapter {
         LupoServer server = LupoServer.getByGuild(event.getGuild());
         String prefix = server.getPrefix();
 
+        if (event.getMessage().getContentRaw().replace("!", "").equals(LupoBot.getInstance().getSelfUser().getAsMention())) {
+            LupoCommand command = LupoBot.getInstance().getCommand("help");
+            if (command != null) {
+                CommandContext context = new CommandContext(event.getMember(), event.getChannel(), event.getMessage(), "prefix", new String[]{});
+                context.setPlugin(LupoBot.getInstance().getPlugin("help"));
+                command.onCommand(context);
+            }
+        }
+
         if (!event.getMessage().getContentRaw().startsWith(prefix) || event.getMessage().getContentRaw().equals(prefix)) {
             return;
         }

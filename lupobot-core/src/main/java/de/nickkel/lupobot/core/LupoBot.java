@@ -19,6 +19,7 @@ import de.nickkel.lupobot.core.plugin.PluginLoader;
 import de.nickkel.lupobot.core.rest.RestServer;
 import de.nickkel.lupobot.core.tasks.SaveDataTask;
 import de.nickkel.lupobot.core.util.FileResourcesUtils;
+import de.nickkel.lupobot.core.util.LupoColor;
 import lombok.Getter;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
@@ -146,6 +147,15 @@ public class LupoBot {
 
     public Guild getHub() {
         return this.shardManager.getGuildById(this.config.getLong("supportServer"));
+    }
+
+    public LupoCommand getCommand(String name) {
+        for (LupoCommand command : this.commands) {
+            if (command.getInfo().name().equalsIgnoreCase(name)) {
+                return command;
+            }
+        }
+        return null;
     }
 
     public LupoPlugin getPlugin(String name) {
