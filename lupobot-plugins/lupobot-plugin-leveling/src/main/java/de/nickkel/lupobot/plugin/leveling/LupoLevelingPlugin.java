@@ -112,7 +112,7 @@ public class LupoLevelingPlugin extends LupoPlugin {
                     if (role != null) {
                         roleName = role.getName();
                     }
-                    channel.sendMessage(server.translate(LupoBot.getInstance().getPlugin(this.getInfo().name()), "leveling_level-up",
+                    channel.sendMessage(server.translate(LupoBot.getInstance().getPlugin(this.getInfo().name()), "leveling_level-up-" + (role != null),
                             user.getAsMention(), getLevel(server, user), roleName)).queue();
                 } else {
                     String message = (String) server.getPluginData(LupoBot.getInstance().getPlugin(this.getInfo().name()), "levelUpMessage");
