@@ -7,6 +7,7 @@ import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.util.LupoColor;
 import de.nickkel.lupobot.core.util.TimeUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -90,5 +91,10 @@ public class ExportDataCommand extends LupoCommand {
             }
             context.getUser().getData().append("lastDataExport", System.currentTimeMillis());
         });
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+
     }
 }

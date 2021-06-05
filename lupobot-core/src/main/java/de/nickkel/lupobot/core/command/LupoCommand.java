@@ -1,13 +1,16 @@
 package de.nickkel.lupobot.core.command;
 
+import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.data.LupoServer;
 import de.nickkel.lupobot.core.pagination.Page;
 import de.nickkel.lupobot.core.pagination.Paginator;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.util.LupoColor;
 import lombok.Getter;
+import lombok.Setter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.components.Button;
 
 import java.awt.*;
@@ -17,8 +20,16 @@ public abstract class LupoCommand {
 
     @Getter
     private final CommandInfo info = this.getClass().getAnnotation(CommandInfo.class);
+    @Getter
+    private final SlashOption[] slashOptions = this.getClass().getAnnotationsByType(SlashOption.class);
+    @Getter
+    private final SlashSubCommand[] slashSubCommands = this.getClass().getAnnotationsByType(SlashSubCommand.class);
+    @Getter @Setter
+    private LupoPlugin plugin;
 
     public abstract void onCommand(CommandContext context);
+
+    public abstract void onSlashCommand(CommandContext context, SlashCommandEvent slash);
 
     public void sendHelp(CommandContext context) {
         context.getChannel().sendMessage(getHelpBuilder(context).build()).queue();

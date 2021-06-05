@@ -8,6 +8,7 @@ import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,5 +62,10 @@ public class UninstallPluginCommand extends LupoCommand {
         } else {
             sendHelp(context);
         }
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+
     }
 }

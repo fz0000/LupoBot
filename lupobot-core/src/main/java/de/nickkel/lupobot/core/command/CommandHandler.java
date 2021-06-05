@@ -1,8 +1,6 @@
 package de.nickkel.lupobot.core.command;
 
 import com.google.common.reflect.ClassPath;
-import com.google.gson.JsonObject;
-import com.mongodb.BasicDBObject;
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.data.LupoServer;
 import de.nickkel.lupobot.core.data.LupoUser;
@@ -10,9 +8,15 @@ import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.exceptions.PermissionException;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
+import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class CommandHandler {
@@ -95,7 +99,11 @@ public class CommandHandler {
         }
 
         try {
-            command.onCommand(context);
+            if (context.getSlash() != null) {
+                command.onSlashCommand(context, context.getSlash());
+            } else {
+                command.onCommand(context);
+            }
             if (command.getInfo().cooldown() != 0) {
                 user.getCooldowns().put(command, System.currentTimeMillis());
             }
@@ -122,7 +130,6 @@ public class CommandHandler {
             builder.setFooter(server.translate(null, "core_used-command", server.getPrefix() + context.getLabel()));
             context.getChannel().sendMessage(builder.build()).queue();
         }
-
     }
 
     private boolean existsCommand(LupoCommand command) {
@@ -134,6 +141,7 @@ public class CommandHandler {
             LupoBot.getInstance().getCommands().add(command);
             if (plugin != null) {
                 plugin.getCommands().add(command);
+                command.setPlugin(plugin);
             }
             LupoBot.getInstance().getLogger().info("Registered command " + command.getInfo().name());
         }
@@ -144,6 +152,35 @@ public class CommandHandler {
             LupoBot.getInstance().getCommands().remove(command);
             LupoBot.getInstance().getLogger().info("Unregistered command " + command.getInfo().name());
         }
+    }
+
+    public void registerSlashCommands() {
+        LupoBot.getInstance().getSelfUser().getJDA().updateCommands().complete();
+        CommandListUpdateAction commands = LupoBot.getInstance().getSelfUser().getJDA().updateCommands();
+
+        List<CommandData> commandData = new ArrayList<>();
+        for (LupoCommand command : LupoBot.getInstance().getCommands()) {
+            String plugin = "core";
+            if (command.getPlugin() != null) plugin = command.getPlugin().getInfo().name();
+
+            String description = LupoBot.getInstance().getLanguageHandler().translate("en_US", plugin + "_" + command.getInfo().name() + "-description");
+            if (command.getPlugin() != null) command.getPlugin().getLanguageHandler().translate("en_US", plugin + "_" + command.getInfo().name() + "-description");
+            if (description.length() > 100) description = description.substring(0, 100);
+
+            CommandData data = new CommandData(command.getInfo().name(), description);
+            for (SlashOption option : command.getSlashOptions()) {
+                data.addOption(option.type(), option.name(), description, option.required());
+            }
+            for (SlashSubCommand subCommand : command.getSlashSubCommands()) {
+                SubcommandData subData = new SubcommandData(subCommand.name(), description);
+                for (SlashOption option : subCommand.options()) {
+                    subData.addOption(option.type(), option.name(), description, option.required());
+                }
+                data.addSubcommands(subData);
+            }
+            commandData.add(data);
+        }
+        commands.addCommands(commandData).queue();
     }
 
     public void registerCommands(ClassLoader loader, String packageName) { // only for the core

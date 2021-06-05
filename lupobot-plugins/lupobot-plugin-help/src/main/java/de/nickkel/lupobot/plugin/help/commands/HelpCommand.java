@@ -33,7 +33,7 @@ public class HelpCommand extends LupoCommand {
                 return;
             }
 
-            CommandContext helpContext = new CommandContext(context.getMember(), context.getChannel(), context.getMessage(), command.getInfo().name(), new String[0]);
+            CommandContext helpContext = new CommandContext(context.getGuild(), context.getMember(), context.getChannel(), context.getMessage(), command.getInfo().name(), new String[0], null);
             LupoPlugin plugin = null;
             for (LupoPlugin all : LupoBot.getInstance().getPlugins()) {
                 if (all.getCommands().contains(command)) {

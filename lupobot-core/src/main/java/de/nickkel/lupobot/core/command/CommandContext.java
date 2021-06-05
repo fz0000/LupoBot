@@ -9,6 +9,9 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+
+import java.time.OffsetDateTime;
 
 public class CommandContext {
 
@@ -30,16 +33,26 @@ public class CommandContext {
     private final String[] args;
     @Getter
     private final String label;
+    @Getter
+    private final OffsetDateTime time;
+    @Getter
+    private final SlashCommandEvent slash;
 
-    public CommandContext(Member member, TextChannel channel, Message message, String label, String[] args) {
+    public CommandContext(Guild guild, Member member, TextChannel channel, Message message, String label, String[] args, SlashCommandEvent event) {
         this.member = member;
         this.channel = channel;
         this.message = message;
         this.args = args;
         this.label = label;
-        this.guild = message.getGuild();
+        this.guild = guild;
         this.server = LupoServer.getByGuild(this.guild);
         this.user = LupoUser.getByMember(this.member);
+        this.slash = event;
+        if (this.slash == null) {
+            this.time = this.message.getTimeCreated();
+        } else {
+            this.time = this.slash.getTimeCreated();
+        }
     }
 
     public String getArgsAsString() {

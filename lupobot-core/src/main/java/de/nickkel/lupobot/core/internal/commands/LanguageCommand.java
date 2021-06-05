@@ -9,6 +9,7 @@ import de.nickkel.lupobot.core.pagination.Paginator;
 import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -63,6 +64,11 @@ public class LanguageCommand extends LupoCommand {
 
             Paginator.paginate(context.getChannel(), pages, 120);
         }
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+
     }
 
     private String getLanguageCodeByName(String name) {

@@ -7,6 +7,7 @@ import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 @CommandInfo(name = "plugins", aliases = "listplugins", category = "core")
 public class PluginsCommand extends LupoCommand {
@@ -30,5 +31,10 @@ public class PluginsCommand extends LupoCommand {
         }
 
         context.getChannel().sendMessage(builder.build()).queue();
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+
     }
 }

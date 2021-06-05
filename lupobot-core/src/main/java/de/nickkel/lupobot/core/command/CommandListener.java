@@ -2,6 +2,7 @@ package de.nickkel.lupobot.core.command;
 
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.data.LupoServer;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -17,7 +18,7 @@ public class CommandListener extends ListenerAdapter {
         if (event.getMessage().getContentRaw().replace("!", "").equals(LupoBot.getInstance().getSelfUser().getAsMention())) {
             LupoCommand command = LupoBot.getInstance().getCommand("help");
             if (command != null) {
-                CommandContext context = new CommandContext(event.getMember(), event.getChannel(), event.getMessage(), "prefix", new String[]{});
+                CommandContext context = new CommandContext(event.getGuild(), event.getMember(), event.getChannel(), event.getMessage(), "prefix", new String[]{}, null);
                 context.setPlugin(LupoBot.getInstance().getPlugin("help"));
                 command.onCommand(context);
             }
@@ -37,7 +38,16 @@ public class CommandListener extends ListenerAdapter {
         if (Arrays.toString(args).equals("[]")) {
             args = new String[0];
         }
-        CommandContext context = new CommandContext(event.getMember(), event.getChannel(), event.getMessage(), label, args);
+        CommandContext context = new CommandContext(event.getGuild(), event.getMember(), event.getChannel(), event.getMessage(), label, args, null);
         LupoBot.getInstance().getCommandHandler().runCommand(context);
+    }
+
+    @Override
+    public void onSlashCommand(SlashCommandEvent event) {
+        if (event.getGuild() == null) {
+            return;
+        }
+        LupoBot.getInstance().getCommandHandler().runCommand(new CommandContext(event.getGuild(), event.getMember(), event.getTextChannel(),
+                null, event.getName(), new String[]{}, event));
     }
 }
