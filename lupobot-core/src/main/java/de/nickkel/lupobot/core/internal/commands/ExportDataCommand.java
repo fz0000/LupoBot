@@ -37,7 +37,7 @@ public class ExportDataCommand extends LupoCommand {
         builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null,
                 context.getMember().getUser().getAvatarUrl());
         builder.setTimestamp(context.getMessage().getTimeCreated());
-        builder.setDescription(context.getServer().translate(context.getPlugin(), "core_exportdata-description"));
+        builder.setDescription(context.getServer().translate(context.getPlugin(), "core_exportdata-channel-description"));
 
         builder.addField(context.getServer().translate(context.getPlugin(), "core_exportdata-user"),
                 context.getServer().translate(context.getPlugin(), "core_exportdata-user-description"), false);
