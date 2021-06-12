@@ -24,6 +24,10 @@ LupoBot offers a RESTful API as interface for other services, like our website. 
 HTTP request | Route | Explanation
 ------------ |-------| -----------
 GET | /bot | Get information about the bot
+GET | /bot/status | Get the status of the bot
+POST | /bot/status/:key | Set the status of the bot (`ONLINE`, `IDLE`, `DO_NOT_DISTURB`, `INVISIBLE`, `OFFLINE`)
+GET | /bot/activity-name | Get the current activity name of the bot
+POST | /bot/activity-name/:name | Set the activity name of the bot
 POST | /guilds/:id/messages | Create or edit a message on a guild. The query params `id` (= guild id) and `channelId` are required, the param `messageId` is optional if you want to edit a message and don't want to create a new one. Optional params to build the message or embed: `content, description, thumbnail, authorName, authorIconUrl, authorUrl, title, titleUrl, footer, footerIconUrl, image, color` (as int)
 GET | /guilds/:id/channels | Get all channels on a guild by guild id
 GET | /guilds/:id/channels/:channel | Get a specific channel on a guild by guild id and channel id

@@ -7,6 +7,8 @@ import de.nickkel.lupobot.core.config.Document;
 import de.nickkel.lupobot.core.util.TimeUtils;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
 
@@ -16,6 +18,18 @@ public class BotController {
         app.routes(() -> {
             path("v1/bot", () -> {
                 get(this::getBot);
+                path("status", () -> {
+                    get(this::getStatus);
+                    path(":key", () -> {
+                        post(this::setStatus);
+                    });
+                });
+                path("activity-name", () -> {
+                    get(this::getActivityName);
+                    path(":name", () -> {
+                        post(this::setActivityName);
+                    });
+                });
             });
         });
     }
@@ -32,5 +46,23 @@ public class BotController {
         jsonObject.add("languages", new Gson().toJsonTree(LupoBot.getInstance().getAvailableLanguages()));
 
         ctx.status(201).result(new Document(jsonObject).convertToJson());
+    }
+
+    public void getStatus(Context ctx) {
+        ctx.status(201).result(new Document().append("status", LupoBot.getInstance().getSelfUser().getJDA().getPresence().getStatus().toString()).convertToJson());
+    }
+
+    public void setStatus(Context ctx) {
+        OnlineStatus status = OnlineStatus.fromKey(ctx.pathParam("key"));
+        if (status == OnlineStatus.UNKNOWN) return;
+        LupoBot.getInstance().getShardManager().setStatus(OnlineStatus.fromKey(ctx.pathParam("key")));
+    }
+
+    public void getActivityName(Context ctx) {
+        ctx.status(201).result(new Document().append("activityName", LupoBot.getInstance().getSelfUser().getJDA().getPresence().getActivity().getName()).convertToJson());
+    }
+
+    public void setActivityName(Context ctx) {
+        LupoBot.getInstance().getShardManager().setActivity(Activity.of(LupoBot.getInstance().getSelfUser().getJDA().getPresence().getActivity().getType(), ctx.pathParam("name")));
     }
 }
