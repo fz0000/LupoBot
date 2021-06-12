@@ -164,17 +164,22 @@ public class CommandHandler {
             if (command.getPlugin() != null) plugin = command.getPlugin().getInfo().name();
 
             String description = LupoBot.getInstance().getLanguageHandler().translate("en_US", plugin + "_" + command.getInfo().name() + "-description");
-            if (command.getPlugin() != null) command.getPlugin().getLanguageHandler().translate("en_US", plugin + "_" + command.getInfo().name() + "-description");
             if (description.length() > 100) description = description.substring(0, 100);
 
             CommandData data = new CommandData(command.getInfo().name(), description);
             for (SlashOption option : command.getSlashOptions()) {
-                data.addOption(option.type(), option.name(), description, option.required());
+                String optionDesc = LupoBot.getInstance().getLanguageHandler().translate("en_US", plugin + "_" + command.getInfo().name() + "-option-" + option.name());
+                if (optionDesc.length() > 100) optionDesc = optionDesc.substring(0, 100);
+                data.addOption(option.type(), option.name(), optionDesc, option.required());
             }
             for (SlashSubCommand subCommand : command.getSlashSubCommands()) {
-                SubcommandData subData = new SubcommandData(subCommand.name(), description);
+                String subDesc = LupoBot.getInstance().getLanguageHandler().translate("en_US", plugin + "_" + command.getInfo().name() + "-sub-" + subCommand.name());
+                if (subDesc.length() > 100) subDesc = subDesc.substring(0, 100);
+                SubcommandData subData = new SubcommandData(subCommand.name(), subDesc);
                 for (SlashOption option : subCommand.options()) {
-                    subData.addOption(option.type(), option.name(), description, option.required());
+                    String subOptionDesc = LupoBot.getInstance().getLanguageHandler().translate("en_US", plugin + "_" + command.getInfo().name() + "-sub-" + subCommand.name() + "-option-" + option.name());
+                    if (subOptionDesc.length() > 100) subOptionDesc = subOptionDesc.substring(0, 100);
+                    subData.addOption(option.type(), option.name(), subOptionDesc, option.required());
                 }
                 data.addSubcommands(subData);
             }
