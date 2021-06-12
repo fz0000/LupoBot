@@ -28,6 +28,7 @@ public class Paginator {
 
         if (timeout == 0) {
             channel.sendMessage(pages.getPages().get(0).getEmbed()).setActionRow(last, next).queue();
+            return;
         }
 
         channel.sendMessage(pages.getPages().get(0).getEmbed()).setActionRow(last, next)
