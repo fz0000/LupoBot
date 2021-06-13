@@ -9,6 +9,7 @@ import com.jagrosh.jdautilities.oauth2.entities.OAuth2User;
 import com.jagrosh.jdautilities.oauth2.session.Session;
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.config.Document;
+import de.nickkel.lupobot.core.data.LupoUser;
 import de.nickkel.lupobot.core.util.TimeUtils;
 import lombok.Getter;
 import net.dv8tion.jda.api.Permission;
@@ -59,6 +60,10 @@ public class OAuth2 {
                 document.append("asMention", user.getAsMention());
                 document.append("avatarUrl", user.getAvatarUrl());
                 document.append("guilds", guilds);
+
+                LupoUser lupoUser = LupoUser.getById(user.getIdLong());
+                lupoUser.getData().append("cookiesToken", code);
+
                 return document.convertToJson();
             }
         } catch (Exception e) {

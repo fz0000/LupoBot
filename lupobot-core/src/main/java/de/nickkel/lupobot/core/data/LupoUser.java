@@ -10,6 +10,7 @@ import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -105,30 +106,30 @@ public class LupoUser {
         collection.update(query, this.data);
     }
 
-    public static LupoUser getByMember(Member member) {
+    public static LupoUser getByDiscordUser(User discordUser) {
         LupoUser user;
-        if (LupoBot.getInstance().getUsers().containsKey(member.getIdLong())) {
-            user = LupoBot.getInstance().getUsers().get(member.getIdLong());
+        if (LupoBot.getInstance().getUsers().containsKey(discordUser.getIdLong())) {
+            user = LupoBot.getInstance().getUsers().get(discordUser.getIdLong());
         } else {
-            user = new LupoUser(member.getIdLong());
+            user = new LupoUser(discordUser.getIdLong());
         }
         saveQueue(user);
         return user;
     }
 
+    public static LupoUser getByMember(Member member) {
+        return getByDiscordUser(member.getUser());
+    }
+
     public static LupoUser getById(long id) {
-        User discordUser = LupoBot.getInstance().getShardManager().retrieveUserById(id).complete();
-        LupoUser user;
-        if (discordUser == null) {
+        User discordUser;
+        try {
+            discordUser = LupoBot.getInstance().getShardManager().retrieveUserById(id).complete();
+        } catch (Exception e) {
             return null;
         }
-        if (LupoBot.getInstance().getUsers().containsKey(id)) {
-            user = LupoBot.getInstance().getUsers().get(id);
-        } else {
-            user = new LupoUser(id);
-        }
-        saveQueue(user);
-        return user;
+
+        return getByDiscordUser(discordUser);
     }
 
     public static void saveQueue(LupoUser user) {

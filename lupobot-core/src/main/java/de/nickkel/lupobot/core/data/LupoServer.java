@@ -203,7 +203,7 @@ public class LupoServer {
     }
 
     public static LupoServer getByGuild(Guild guild) {
-        LupoServer server = null;
+        LupoServer server;
         if (LupoBot.getInstance().getServers().containsKey(guild)) {
             server = LupoBot.getInstance().getServers().get(guild);
         } else {
@@ -214,17 +214,14 @@ public class LupoServer {
     }
 
     public static LupoServer getById(long id) {
-        LupoServer server;
-        if (LupoBot.getInstance().getShardManager().getGuildById(id) == null) {
+        Guild guild;
+        try {
+            guild = LupoBot.getInstance().getShardManager().getGuildById(id);
+        } catch (Exception e) {
             return null;
         }
-        if (LupoBot.getInstance().getServers().containsKey(LupoBot.getInstance().getShardManager().getGuildById(id))) {
-            server =  LupoBot.getInstance().getServers().get(LupoBot.getInstance().getShardManager().getGuildById(id));
-        } else {
-            server = new LupoServer(LupoBot.getInstance().getShardManager().getGuildById(id));
-        }
-        saveQueue(server);
-        return server;
+
+        return getByGuild(guild);
     }
 
     public String formatLong(Long value) {
