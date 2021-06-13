@@ -15,6 +15,8 @@ import java.time.OffsetDateTime;
 
 public class CommandContext {
 
+    @Getter @Setter
+    private LupoCommand command;
     @Getter
     private final Member member;
     @Getter
@@ -37,8 +39,10 @@ public class CommandContext {
     private final OffsetDateTime time;
     @Getter
     private final SlashCommandEvent slash;
+    @Getter @Setter
+    private boolean ephemeral;
 
-    public CommandContext(Guild guild, Member member, TextChannel channel, Message message, String label, String[] args, SlashCommandEvent event) {
+    public CommandContext(Guild guild, Member member, TextChannel channel, Message message, String label, String[] args, SlashCommandEvent event, Boolean ephemeral) {
         this.member = member;
         this.channel = channel;
         this.message = message;
@@ -48,6 +52,7 @@ public class CommandContext {
         this.server = LupoServer.getByGuild(this.guild);
         this.user = LupoUser.getByMember(this.member);
         this.slash = event;
+        this.ephemeral = ephemeral;
         if (this.slash == null) {
             this.time = this.message.getTimeCreated();
         } else {

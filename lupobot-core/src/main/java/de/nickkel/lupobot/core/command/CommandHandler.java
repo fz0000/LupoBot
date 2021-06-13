@@ -48,6 +48,7 @@ public class CommandHandler {
             context.getChannel().sendMessage(builder.build()).queue();
             return;
         }
+        context.setCommand(command);
 
         LupoPlugin plugin = null;
         for (LupoPlugin all : LupoBot.getInstance().getPlugins()) {

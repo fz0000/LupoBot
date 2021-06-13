@@ -15,10 +15,10 @@ public class CommandListener extends ListenerAdapter {
         LupoServer server = LupoServer.getByGuild(event.getGuild());
         String prefix = server.getPrefix();
 
-        if (event.getMessage().getContentRaw().replace("!", "").equals(LupoBot.getInstance().getSelfUser().getAsMention())) {
+        if (event.getMessage().getContentRaw().replace("!", "").startsWith(LupoBot.getInstance().getSelfUser().getAsMention())) {
             LupoCommand command = LupoBot.getInstance().getCommand("help");
             if (command != null) {
-                CommandContext context = new CommandContext(event.getGuild(), event.getMember(), event.getChannel(), event.getMessage(), "prefix", new String[]{}, null);
+                CommandContext context = new CommandContext(event.getGuild(), event.getMember(), event.getChannel(), event.getMessage(), "prefix", new String[]{}, null, server.isSlashVisible());
                 context.setPlugin(LupoBot.getInstance().getPlugin("help"));
                 command.onCommand(context);
             }
@@ -38,7 +38,7 @@ public class CommandListener extends ListenerAdapter {
         if (Arrays.toString(args).equals("[]")) {
             args = new String[0];
         }
-        CommandContext context = new CommandContext(event.getGuild(), event.getMember(), event.getChannel(), event.getMessage(), label, args, null);
+        CommandContext context = new CommandContext(event.getGuild(), event.getMember(), event.getChannel(), event.getMessage(), label, args, null, server.isSlashVisible());
         LupoBot.getInstance().getCommandHandler().runCommand(context);
     }
 
@@ -48,6 +48,6 @@ public class CommandListener extends ListenerAdapter {
             return;
         }
         LupoBot.getInstance().getCommandHandler().runCommand(new CommandContext(event.getGuild(), event.getMember(), event.getTextChannel(),
-                null, event.getName(), new String[]{}, event));
+                null, event.getName(), new String[]{}, event, LupoServer.getByGuild(event.getGuild()).isSlashVisible()));
     }
 }

@@ -14,7 +14,7 @@ public class PrefixCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        if (context.getArgs().length == 1) {
+        if (context.getArgs().length == 1 || context.getSlash() != null) {
             String prefix;
             if (context.getSlash() == null) {
                 prefix = context.getArgs()[0];
@@ -36,7 +36,7 @@ public class PrefixCommand extends LupoCommand {
                 builder.setAuthor(LupoBot.getInstance().getSelfUser().getName() + " (" + context.getGuild().getId() + ")", null, LupoBot.getInstance().getSelfUser().getAvatarUrl());
                 builder.setDescription(context.getServer().translate(null, "core_prefix-changed", prefix));
                 builder.setTimestamp(context.getTime());
-                context.getChannel().sendMessage(builder.build()).queue();
+                send(context, builder);
             } else {
                 sendSyntaxError(context, "core_prefix-too-long");
             }
@@ -47,7 +47,6 @@ public class PrefixCommand extends LupoCommand {
 
     @Override
     public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
-        slash.deferReply().queue();
         onCommand(context);
     }
 }

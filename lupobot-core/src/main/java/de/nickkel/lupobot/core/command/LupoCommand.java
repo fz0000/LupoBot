@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.components.Button;
 
@@ -31,8 +33,32 @@ public abstract class LupoCommand {
 
     public abstract void onSlashCommand(CommandContext context, SlashCommandEvent slash);
 
+    public void send(CommandContext context, EmbedBuilder builder) {
+        if (context.getSlash() == null) {
+            context.getChannel().sendMessage(builder.build()).queue();
+        } else {
+            context.getSlash().replyEmbeds(builder.build()).setEphemeral(context.isEphemeral()).queue();
+        }
+    }
+
+    public void send(CommandContext context, Message message) {
+        if (context.getSlash() == null) {
+            context.getChannel().sendMessage(message).queue();
+        } else {
+            context.getSlash().reply(message).setEphemeral(context.isEphemeral()).queue();
+        }
+    }
+
+    public void send(CommandContext context, MessageEmbed embed) {
+        if (context.getSlash() == null) {
+            context.getChannel().sendMessage(embed).queue();
+        } else {
+            context.getSlash().replyEmbeds(embed).setEphemeral(context.isEphemeral()).queue();
+        }
+    }
+
     public void sendHelp(CommandContext context) {
-        context.getChannel().sendMessage(getHelpBuilder(context).build()).queue();
+        send(context, getHelpBuilder(context).build());
     }
 
     public void sendSyntaxError(CommandContext context, String errorKey, Object... params) {

@@ -27,6 +27,8 @@ public class LupoServer {
     @Getter
     private String prefix, language;
     @Getter
+    private boolean slashVisible;
+    @Getter
     private BasicDBObject data;
 
     public LupoServer(Guild guild) {
@@ -60,6 +62,7 @@ public class LupoServer {
         }
         this.prefix = this.data.getString("prefix");
         this.language = this.data.getString("language");
+        this.slashVisible = this.data.getBoolean("slashVisible");
         BasicDBList dbList = (BasicDBList) this.data.get("plugins");
         for (Object name : dbList) {
             if (LupoBot.getInstance().getPlugin((String) name) != null) {
@@ -129,6 +132,11 @@ public class LupoServer {
     public void setLanguage(String language) {
         this.language = language;
         this.data.append("language", language);
+    }
+
+    public void setSlashVisible(Boolean visible) {
+        this.slashVisible = visible;
+        this.data.append("slashVisible", visible);
     }
 
     public void saveData() {
