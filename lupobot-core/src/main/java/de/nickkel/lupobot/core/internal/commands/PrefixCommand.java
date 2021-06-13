@@ -14,7 +14,7 @@ public class PrefixCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        if (context.getArgs().length == 1 || context.getSlash() != null) {
+        if (context.getArgs().length == 1) {
             String prefix;
             if (context.getSlash() == null) {
                 prefix = context.getArgs()[0];

@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
@@ -170,7 +171,11 @@ public class CommandHandler {
             for (SlashOption option : command.getSlashOptions()) {
                 String optionDesc = LupoBot.getInstance().getLanguageHandler().translate("en_US", plugin + "_" + command.getInfo().name() + "-option-" + option.name());
                 if (optionDesc.length() > 100) optionDesc = optionDesc.substring(0, 100);
-                data.addOption(option.type(), option.name(), optionDesc, option.required());
+                OptionData optionData = new OptionData(option.type(), option.name(), optionDesc, option.required());
+                for (String choice : option.choices()) {
+                    optionData.addChoice(choice, choice);
+                }
+                data.addOptions(optionData);
             }
             for (SlashSubCommand subCommand : command.getSlashSubCommands()) {
                 String subDesc = LupoBot.getInstance().getLanguageHandler().translate("en_US", plugin + "_" + command.getInfo().name() + "-sub-" + subCommand.name());

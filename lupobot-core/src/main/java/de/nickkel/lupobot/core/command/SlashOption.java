@@ -12,5 +12,7 @@ public @interface SlashOption {
 
     OptionType type();
 
+    String[] choices() default {};
+
     boolean required() default true;
 }
