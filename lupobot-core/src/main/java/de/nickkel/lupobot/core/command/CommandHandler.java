@@ -4,6 +4,7 @@ import com.google.common.reflect.ClassPath;
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.data.LupoServer;
 import de.nickkel.lupobot.core.data.LupoUser;
+import de.nickkel.lupobot.core.language.LanguageHandler;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -162,15 +163,17 @@ public class CommandHandler {
 
         List<CommandData> commandData = new ArrayList<>();
         for (LupoCommand command : LupoBot.getInstance().getCommands()) {
+            LanguageHandler handler = LupoBot.getInstance().getLanguageHandler();
             String plugin = "core";
             if (command.getPlugin() != null) plugin = command.getPlugin().getInfo().name();
+            if (command.getPlugin() != null) handler = command.getPlugin().getLanguageHandler();
 
-            String description = LupoBot.getInstance().getLanguageHandler().translate("en_US", plugin + "_" + command.getInfo().name() + "-description");
+            String description = handler.translate("en_US", plugin + "_" + command.getInfo().name() + "-description");
             if (description.length() > 100) description = description.substring(0, 100);
 
             CommandData data = new CommandData(command.getInfo().name(), description);
             for (SlashOption option : command.getSlashOptions()) {
-                String optionDesc = LupoBot.getInstance().getLanguageHandler().translate("en_US", plugin + "_" + command.getInfo().name() + "-option-" + option.name());
+                String optionDesc = handler.translate("en_US", plugin + "_" + command.getInfo().name() + "-option-" + option.name());
                 if (optionDesc.length() > 100) optionDesc = optionDesc.substring(0, 100);
                 OptionData optionData = new OptionData(option.type(), option.name(), optionDesc, option.required());
                 for (String choice : option.choices()) {
@@ -179,11 +182,11 @@ public class CommandHandler {
                 data.addOptions(optionData);
             }
             for (SlashSubCommand subCommand : command.getSlashSubCommands()) {
-                String subDesc = LupoBot.getInstance().getLanguageHandler().translate("en_US", plugin + "_" + command.getInfo().name() + "-sub-" + subCommand.name());
+                String subDesc = handler.translate("en_US", plugin + "_" + command.getInfo().name() + "-sub-" + subCommand.name());
                 if (subDesc.length() > 100) subDesc = subDesc.substring(0, 100);
                 SubcommandData subData = new SubcommandData(subCommand.name(), subDesc);
                 for (SlashOption option : subCommand.options()) {
-                    String subOptionDesc = LupoBot.getInstance().getLanguageHandler().translate("en_US", plugin + "_" + command.getInfo().name() + "-sub-" + subCommand.name() + "-option-" + option.name());
+                    String subOptionDesc = handler.translate("en_US", plugin + "_" + command.getInfo().name() + "-sub-" + subCommand.name() + "-option-" + option.name());
                     if (subOptionDesc.length() > 100) subOptionDesc = subOptionDesc.substring(0, 100);
                     subData.addOption(option.type(), option.name(), subOptionDesc, option.required());
                 }
