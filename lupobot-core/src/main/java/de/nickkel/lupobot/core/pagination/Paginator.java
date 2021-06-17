@@ -32,7 +32,7 @@ public class Paginator {
             if (context.getSlash() == null) {
                 context.getChannel().sendMessage(pages.getPages().get(0).getEmbed()).setActionRow(last, next).queue();
             } else {
-                context.getSlash().replyEmbeds(pages.getPages().get(0).getEmbed()).addActionRow(last, next).queue();
+                context.getSlash().replyEmbeds(pages.getPages().get(0).getEmbed()).addActionRow(last, next).setEphemeral(context.isEphemeral()).queue();
             }
             return;
         }
@@ -43,7 +43,7 @@ public class Paginator {
                     .flatMap((it) -> it.editMessage(it).setActionRow(last.asDisabled(), next.asDisabled()))
                     .queue();
         } else {
-            context.getSlash().replyEmbeds(pages.getPages().get(0).getEmbed()).addActionRow(last, next).setEphemeral(server.isSlashVisible())
+            context.getSlash().replyEmbeds(pages.getPages().get(0).getEmbed()).addActionRow(last, next).setEphemeral(context.isEphemeral())
                     .delay(timeout, TimeUnit.SECONDS)
                     .flatMap((it) -> it.editOriginalComponents(ActionRow.of(last.asDisabled(), next.asDisabled())))
                     .queue();
@@ -87,7 +87,6 @@ public class Paginator {
     }
 
     public static void categorize(CommandContext context, List<Page> pages, long timeout) {
-        LupoServer server = LupoServer.getByGuild(context.getGuild());
         List<Button> buttons = new ArrayList<>();
         for (Page page : pages) {
             page.setButton(page.getButton().withId(PREFIX + ";" + page.getUuid()));
@@ -98,7 +97,7 @@ public class Paginator {
             if (context.getSlash() == null) {
                 context.getChannel().sendMessage(pages.get(0).getEmbed()).setActionRow(buttons).queue();
             } else {
-                context.getSlash().replyEmbeds(pages.get(0).getEmbed()).addActionRows(ActionRow.of(buttons)).queue();
+                context.getSlash().replyEmbeds(pages.get(0).getEmbed()).addActionRows(ActionRow.of(buttons)).setEphemeral(context.isEphemeral()).queue();
             }
             return;
         }
@@ -110,7 +109,7 @@ public class Paginator {
                     .flatMap((it) -> it.editMessage(it).setActionRow(disabledButtons))
                     .queue();
         } else {
-            context.getSlash().replyEmbeds(pages.get(0).getEmbed()).addActionRows(ActionRow.of(buttons)).setEphemeral(server.isSlashVisible())
+            context.getSlash().replyEmbeds(pages.get(0).getEmbed()).addActionRows(ActionRow.of(buttons)).setEphemeral(context.isEphemeral())
                     .delay(timeout, TimeUnit.SECONDS)
                     .flatMap((it) -> it.editOriginalComponents(ActionRow.of(disabledButtons)))
                     .queue();

@@ -27,7 +27,7 @@ public class LupoServer {
     @Getter
     private String prefix, language;
     @Getter
-    private boolean slashVisible;
+    private boolean slashInvisible;
     @Getter
     private BasicDBObject data;
 
@@ -62,7 +62,7 @@ public class LupoServer {
         }
         this.prefix = this.data.getString("prefix");
         this.language = this.data.getString("language");
-        this.slashVisible = this.data.getBoolean("slashVisible");
+        this.slashInvisible = this.data.getBoolean("slashInvisible");
         BasicDBList dbList = (BasicDBList) this.data.get("plugins");
         for (Object name : dbList) {
             if (LupoBot.getInstance().getPlugin((String) name) != null) {
@@ -134,8 +134,8 @@ public class LupoServer {
         this.data.append("language", language);
     }
 
-    public void setSlashVisible(Boolean visible) {
-        this.slashVisible = visible;
+    public void setSlashInvisible(Boolean visible) {
+        this.slashInvisible = visible;
         this.data.append("slashVisible", visible);
     }
 
@@ -211,7 +211,7 @@ public class LupoServer {
     }
 
     public static LupoServer getByGuild(Guild guild) {
-        LupoServer server = null;
+        LupoServer server;
         if (LupoBot.getInstance().getServers().containsKey(guild)) {
             server = LupoBot.getInstance().getServers().get(guild);
         } else {

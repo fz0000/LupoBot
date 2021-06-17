@@ -1,5 +1,6 @@
 {
   "prefix": "?",
   "language": "en_US",
-  "plugins": ["help"]
+  "plugins": ["help"],
+  "slashInvisible": true
 }

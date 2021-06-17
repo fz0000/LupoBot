@@ -78,7 +78,7 @@ public abstract class LupoCommand {
         // Help page
         pages.add(new Page(Button.primary("/", context.getServer().translate(null, "core_command-help")), getHelpBuilder(context).build()));
 
-        Paginator.categorize(context.getChannel(), pages, 90);
+        Paginator.categorize(context, pages, 90);
     }
 
     public EmbedBuilder getHelpBuilder(CommandContext context) {

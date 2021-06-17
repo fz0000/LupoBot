@@ -31,7 +31,7 @@ public class LanguageCommand extends LupoCommand {
             }
             if (LupoBot.getInstance().getAvailableLanguages().contains(languageCode) || getLanguageCodeByName(languageCode) != null) {
                 if (getLanguageCodeByName(languageCode) != null) {
-                    languageCode = getLanguageCodeByName(context.getArgs()[0]);
+                    languageCode = getLanguageCodeByName(languageCode);
                 }
                 Locale locale = new Locale(languageCode.split("_")[0]);
                 if (context.getServer().getLanguage().equals(languageCode)) {

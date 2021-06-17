@@ -133,7 +133,6 @@ public class LupoBot {
         } catch (Exception e) {
             this.logger.error("Could not start RestServer: " + e.getMessage());
         }
-        this.commandHandler.registerSlashCommands();
     }
 
     private void login(DefaultShardManagerBuilder builder) {
