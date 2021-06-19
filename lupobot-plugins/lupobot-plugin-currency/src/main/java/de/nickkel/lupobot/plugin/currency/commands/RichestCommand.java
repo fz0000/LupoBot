@@ -7,6 +7,7 @@ import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.util.LupoColor;
 import de.nickkel.lupobot.plugin.currency.LupoCurrencyPlugin;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.time.Instant;
 
@@ -30,6 +31,11 @@ public class RichestCommand extends LupoCommand {
         builder.setAuthor(context.getServer().translate(context.getPlugin(), "currency_richest-title"), null, LupoBot.getInstance().getSelfUser().getAvatarUrl());
         builder.addField(context.getServer().translate(context.getPlugin(), "currency_richest-name"), userNames, true);
         builder.addField(context.getServer().translate(context.getPlugin(), "currency_richest-coins"), coins, true);
-        context.getChannel().sendMessage(builder.build()).queue();
+        send(context, builder);
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+        onCommand(context);
     }
 }

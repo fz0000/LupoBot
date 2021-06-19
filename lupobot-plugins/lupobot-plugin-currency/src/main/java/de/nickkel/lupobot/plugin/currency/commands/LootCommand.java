@@ -8,6 +8,7 @@ import de.nickkel.lupobot.plugin.currency.LupoCurrencyPlugin;
 import de.nickkel.lupobot.plugin.currency.data.CurrencyUser;
 import de.nickkel.lupobot.plugin.currency.entities.Item;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.util.Random;
 
@@ -29,12 +30,16 @@ public class LootCommand extends LupoCommand {
         user.addItem(item, 1);
 
         EmbedBuilder builder = new EmbedBuilder();
-        builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
+        builder.setTimestamp(context.getTime());
         builder.setColor(LupoColor.GREEN.getColor());
         builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getIdLong() + ")", null, context.getMember().getUser().getAvatarUrl());
         builder.setDescription(context.getServer().translate(context.getPlugin(), "currency_loot-success",
                 context.getServer().formatLong(Long.parseLong(String.valueOf(randomCoins))), item.getIcon() + " " + item.getName(), context.getServer().formatLong(item.getBuy())));
+        send(context, builder);
+    }
 
-        context.getChannel().sendMessage(builder.build()).queue();
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+        onCommand(context);
     }
 }

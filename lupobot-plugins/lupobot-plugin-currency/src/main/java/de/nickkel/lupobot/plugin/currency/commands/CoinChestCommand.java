@@ -7,6 +7,7 @@ import de.nickkel.lupobot.core.util.LupoColor;
 import de.nickkel.lupobot.plugin.currency.LupoCurrencyPlugin;
 import de.nickkel.lupobot.plugin.currency.data.CurrencyUser;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.util.Random;
 
@@ -35,10 +36,15 @@ public class CoinChestCommand extends LupoCommand {
         user.addCoins(coins);
 
         EmbedBuilder builder = new EmbedBuilder();
-        builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
+        builder.setTimestamp(context.getTime());
         builder.setColor(LupoColor.GREEN.getColor());
         builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getIdLong() + ")", null, context.getMember().getUser().getAvatarUrl());
         builder.setDescription(context.getServer().translate(context.getPlugin(), "currency_coinchest-success", context.getServer().formatLong(coins)));
-        context.getChannel().sendMessage(builder.build()).queue();
+        send(context, builder);
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+        onCommand(context);
     }
 }
