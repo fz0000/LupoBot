@@ -19,12 +19,12 @@ import java.util.concurrent.TimeUnit;
 @CommandInfo(name = "shop", category = "items")
 @SlashSubCommand(name = "sellall")
 @SlashSubCommand(name = "sell", options = {
-        @SlashOption(name = "amount", type = OptionType.INTEGER, required = false),
-        @SlashOption(name = "item", type = OptionType.STRING)
+        @SlashOption(name = "item", type = OptionType.STRING),
+        @SlashOption(name = "amount", type = OptionType.INTEGER, required = false)
 })
 @SlashSubCommand(name = "buy", options = {
-        @SlashOption(name = "amount", type = OptionType.INTEGER, required = false),
-        @SlashOption(name = "item", type = OptionType.STRING)
+        @SlashOption(name = "item", type = OptionType.STRING),
+        @SlashOption(name = "amount", type = OptionType.INTEGER, required = false)
 })
 public class ShopCommand extends LupoCommand {
 
