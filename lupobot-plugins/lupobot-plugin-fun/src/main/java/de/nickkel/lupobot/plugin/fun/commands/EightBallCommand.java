@@ -37,6 +37,6 @@ public class EightBallCommand extends LupoCommand {
 
     @Override
     public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
-
+        onCommand(context);
     }
 }
