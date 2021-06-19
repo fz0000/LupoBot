@@ -46,7 +46,11 @@ public class MusicServer {
         LupoMusicPlugin.getInstance().getAudioPlayerManager().loadItemOrdered(this, trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack audioTrack) {
-                MusicServer.this.scheduler.queue(audioTrack);
+                if (MusicServer.this.scheduler.getQueue().contains(audioTrack)) {
+                    MusicServer.this.scheduler.queue(audioTrack.makeClone());
+                } else {
+                    MusicServer.this.scheduler.queue(audioTrack);
+                }
                 onQueue(context, audioTrack);
             }
 
