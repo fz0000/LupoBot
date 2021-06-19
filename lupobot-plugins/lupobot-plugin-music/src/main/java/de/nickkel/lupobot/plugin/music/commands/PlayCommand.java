@@ -79,6 +79,7 @@ public class PlayCommand extends LupoCommand {
                         builder.setDescription(description);
                         builder.setTimestamp(context.getTime());
                         context.setEphemeral(false);
+                        context.getSlash().deferReply().queue();
                         context.getChannel().sendMessage(builder.build()).queue(success -> {
                             HashMap<String, ThrowingBiConsumer<Member, Message>> buttons = new HashMap<>();
                             for (int i = 1; i < consumers.size()+1; i++) {
