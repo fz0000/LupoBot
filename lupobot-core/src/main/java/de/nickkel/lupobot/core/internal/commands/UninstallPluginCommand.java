@@ -51,7 +51,7 @@ public class UninstallPluginCommand extends LupoCommand {
                             builder.setAuthor(context.getGuild().getName() + " (" + context.getGuild().getId() + ")", null, context.getGuild().getIconUrl());
                             builder.setDescription(context.getServer().translate(null, "core_plugin-uninstalled", context.getServer().translatePluginName(plugin)));
                             builder.setTimestamp(context.getTime());
-                            context.getChannel().sendMessage(builder.build()).queue();
+                            send(context, builder);
                             return;
                         } else {
                             EmbedBuilder builder = new EmbedBuilder();
@@ -59,7 +59,7 @@ public class UninstallPluginCommand extends LupoCommand {
                             builder.setAuthor(context.getGuild().getName() + " (" + context.getGuild().getId() + ")", null,  context.getGuild().getIconUrl());
                             builder.setDescription(context.getServer().translate(null, "core_plugin-not-installed", context.getServer().translatePluginName(plugin)));
                             builder.setTimestamp(context.getTime());
-                            context.getChannel().sendMessage(builder.build()).queue();
+                            send(context, builder);
                             return;
                         }
                     }
