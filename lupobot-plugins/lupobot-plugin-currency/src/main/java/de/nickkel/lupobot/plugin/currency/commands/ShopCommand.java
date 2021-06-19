@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 @CommandInfo(name = "shop", category = "items")
+@SlashSubCommand(name = "see")
 @SlashSubCommand(name = "sellall")
 @SlashSubCommand(name = "sell", options = {
         @SlashOption(name = "item", type = OptionType.STRING),
@@ -33,8 +34,8 @@ public class ShopCommand extends LupoCommand {
         if (context.getArgs().length == 2 || context.getArgs().length == 3 || context.getSlash() != null) {
             CurrencyUser user = LupoCurrencyPlugin.getInstance().getCurrencyUser(context.getMember());
 
-            if ((context.getArgs()[0].equalsIgnoreCase("sell") && context.getArgs()[1].equalsIgnoreCase("all"))
-                    || (context.getSlash() != null && context.getSlash().getSubcommandName().equalsIgnoreCase("sellall"))) {
+            if ((context.getSlash() != null && context.getSlash().getSubcommandName().equalsIgnoreCase("sellall"))
+                    || (context.getArgs().length == 2 && context.getArgs()[0].equalsIgnoreCase("sell") && context.getArgs()[1].equalsIgnoreCase("all"))) {
                 long coins = 0;
                 long items = 0;
                 for (Item item : LupoCurrencyPlugin.getInstance().getItems()) {
@@ -56,7 +57,7 @@ public class ShopCommand extends LupoCommand {
                 builder.setColor(LupoColor.GREEN.getColor());
                 builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getIdLong() + ")", null, context.getMember().getUser().getAvatarUrl());
                 builder.setDescription(context.getServer().translate(context.getPlugin(), "currency_shop-sell-all-success", items, context.getServer().formatLong(coins)));
-                context.getChannel().sendMessage(builder.build()).queue();
+                send(context, builder);
                 return;
             }
 
@@ -102,7 +103,8 @@ public class ShopCommand extends LupoCommand {
             builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getIdLong() + ")", null, context.getMember().getUser().getAvatarUrl());
 
             long coins = 0;
-            if ((context.getArgs()[0].equalsIgnoreCase("buy")) || (context.getSlash() != null && context.getSlash().getSubcommandName().equalsIgnoreCase("buy"))) {
+            if ((context.getArgs().length == 1 && context.getArgs()[0].equalsIgnoreCase("buy"))
+                    || (context.getSlash() != null && context.getSlash().getSubcommandName().equalsIgnoreCase("buy"))) {
                 coins = amount*item.getBuy();
                 if (user.getCoins()-coins < 0) {
                     sendSyntaxError(context, "currency_shop-buy-not-enough-coins", context.getServer().formatLong(user.getCoins()));
@@ -115,7 +117,8 @@ public class ShopCommand extends LupoCommand {
                 user.addCoins(-coins);
                 user.addItem(item, amount);
                 builder.setDescription(context.getServer().translate(context.getPlugin(), "currency_shop-buy"));
-            } else if ((context.getArgs()[0].equalsIgnoreCase("sell")) || (context.getSlash() != null && context.getSlash().getSubcommandName().equalsIgnoreCase("sell"))) {
+            } else if ((context.getArgs().length == 1 && context.getArgs()[0].equalsIgnoreCase("sell"))
+                    || (context.getSlash() != null && context.getSlash().getSubcommandName().equalsIgnoreCase("sell"))) {
                 if (user.getItem(item)-amount < 0) {
                     sendSyntaxError(context, "currency_shop-sell-not-enough-items", context.getServer().formatLong(user.getItem(item)));
                     return;
