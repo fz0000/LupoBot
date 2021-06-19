@@ -6,6 +6,7 @@ import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 @CommandInfo(name = "ticketvisibility", category = "config", permissions = Permission.ADMINISTRATOR)
 public class TicketVisibilityCommand extends LupoCommand {
@@ -27,6 +28,11 @@ public class TicketVisibilityCommand extends LupoCommand {
             builder.setDescription(context.getServer().translate(context.getPlugin(), "ticket_ticketvisibility-everyone"));
             builder.setColor(LupoColor.GREEN.getColor());
         }
-        context.getChannel().sendMessage(builder.build()).queue();
+        send(context, builder);
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+        onCommand(context);
     }
 }
