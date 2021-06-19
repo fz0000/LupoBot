@@ -50,6 +50,14 @@ public abstract class LupoCommand {
         }
     }
 
+    public void send(CommandContext context, String message) {
+        if (context.getSlash() == null) {
+            context.getChannel().sendMessage(message).queue();
+        } else {
+            context.getSlash().reply(message).setEphemeral(context.isEphemeral()).queue();
+        }
+    }
+
     public void send(CommandContext context, Message message) {
         if (context.getSlash() == null) {
             context.getChannel().sendMessage(message).queue();

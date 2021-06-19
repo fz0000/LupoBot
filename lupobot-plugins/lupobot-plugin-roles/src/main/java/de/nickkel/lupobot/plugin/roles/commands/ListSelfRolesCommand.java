@@ -9,6 +9,7 @@ import de.nickkel.lupobot.plugin.roles.RolesServer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +23,11 @@ public class ListSelfRolesCommand extends LupoCommand {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setColor(LupoColor.BLUE.getColor());
         builder.setAuthor(context.getGuild().getName() + " (" + context.getGuild().getId() + ")", null, context.getGuild().getIconUrl());
-        builder.setTimestamp(context.getMessage().getTimeCreated());
+        builder.setTimestamp(context.getTime());
 
         if (server.getSelfAssignRoles().size() == 0) {
             builder.setDescription(context.getServer().translate(context.getPlugin(), "roles_listselfroles-none"));
-            context.getChannel().sendMessage(builder.build()).queue();
+            send(context, builder);
             return;
         }
 
@@ -36,6 +37,11 @@ public class ListSelfRolesCommand extends LupoCommand {
             roles = role.getAsMention() + " (" + role.getId() + ")\n";
         }
         builder.addField(context.getServer().translate(context.getPlugin(), "roles_listselfroles-title"), roles, false);
-        context.getChannel().sendMessage(builder.build()).queue();
+        send(context, builder);
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+        onCommand(context);
     }
 }
