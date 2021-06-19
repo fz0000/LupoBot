@@ -83,6 +83,7 @@ public class TicTacToeCommand extends LupoCommand {
 
     @Override
     public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
-
+        slash.deferReply().queue();
+        onCommand(context);
     }
 }

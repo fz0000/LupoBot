@@ -67,7 +67,7 @@ public class CommandHandler {
                 builder.addField(server.translate(null, "core_command-permission"), permission.toString(), false);
                 builder.setColor(LupoColor.DARK_GRAY.getColor());
                 builder.setFooter(server.translate(null, "core_used-command", server.getPrefix() + context.getLabel()));
-                context.getChannel().sendMessage(builder.build()).queue();
+                command.send(context, builder);
                 return;
             }
         }
@@ -78,7 +78,7 @@ public class CommandHandler {
             builder.addField(server.translate(null, "core_command-plugin"), server.translatePluginName(plugin), false);
             builder.setColor(LupoColor.DARK_GRAY.getColor());
             builder.setFooter(server.translate(null, "core_used-command", server.getPrefix() + context.getLabel()));
-            context.getChannel().sendMessage(builder.build()).queue();
+            command.send(context, builder);
             return;
         }
 
@@ -94,7 +94,7 @@ public class CommandHandler {
                 builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null, context.getMember().getUser().getAvatarUrl());
                 builder.setDescription(context.getServer().translate(null, "core_command-cooldown", time));
                 builder.setFooter(server.translate(null, "core_used-command", server.getPrefix() + context.getLabel()));
-                context.getChannel().sendMessage(builder.build()).queue();
+                command.send(context, builder);
                 return;
             } else {
                 user.getCooldowns().remove(command);
@@ -117,7 +117,7 @@ public class CommandHandler {
             builder.addField(server.translate(null, "core_command-permission"), permissionException.getPermission().toString(), false);
             builder.setColor(LupoColor.DARK_GRAY.getColor());
             builder.setFooter(server.translate(null, server.getPrefix() + "core_used-command", server.getPrefix() + context.getLabel()));
-            context.getChannel().sendMessage(builder.build()).queue();
+            command.send(context, builder);
         } catch (Exception e) {
             e.printStackTrace();
             String stackTrace = "";
@@ -131,7 +131,7 @@ public class CommandHandler {
             builder.addField("StackTrace:", "```" + stackTrace.substring(0, 1000) + "```", false);
             builder.setColor(LupoColor.RED.getColor());
             builder.setFooter(server.translate(null, "core_used-command", server.getPrefix() + context.getLabel()));
-            context.getChannel().sendMessage(builder.build()).queue();
+            command.send(context, builder);
         }
     }
 

@@ -16,7 +16,7 @@ public class TicketVisibilityCommand extends LupoCommand {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setAuthor(context.getGuild().getName() + " (" + context.getGuild().getId() + ")", null, context.getGuild().getIconUrl());
         builder.setDescription(context.getServer().translate(context.getPlugin(), "ticket_ticketvisibility-everyone"));
-        builder.setTimestamp(context.getMessage().getTimeCreated());
+        builder.setTimestamp(context.getTime());
 
         boolean visibleEveryone = (boolean) context.getServer().getPluginData(context.getPlugin(), "visibleEveryone");
         if (visibleEveryone) {
