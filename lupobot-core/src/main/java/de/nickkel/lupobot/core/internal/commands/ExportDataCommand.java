@@ -59,7 +59,7 @@ public class ExportDataCommand extends LupoCommand {
             dataBuilder.setAuthor(context.getServer().translate(context.getPlugin(), "core_exportdata-request"), null,
                     LupoBot.getInstance().getSelfUser().getAvatarUrl());
             dataBuilder.setDescription(context.getServer().translate(context.getPlugin(), "core_exportdata-request-description"));
-            dataBuilder.setTimestamp(context.getMessage().getTimeCreated());
+            dataBuilder.setTimestamp(context.getTime());
 
             String userContent = context.getUser().getData().toJson();
             String serverContent = context.getServer().getData().toJson();
