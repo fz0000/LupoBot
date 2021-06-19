@@ -61,6 +61,9 @@ public class CommandContext {
     }
 
     public String getArgsAsString() {
+        if(args.length == 0) {
+            return "";
+        }
         String argString = "";
         for (String arg : this.args) {
             argString = argString + arg + " ";
