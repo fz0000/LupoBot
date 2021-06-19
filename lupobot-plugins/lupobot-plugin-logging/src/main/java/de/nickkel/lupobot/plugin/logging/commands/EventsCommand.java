@@ -8,6 +8,7 @@ import de.nickkel.lupobot.plugin.logging.log.LogEvent;
 import de.nickkel.lupobot.plugin.logging.LupoLoggingPlugin;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 @CommandInfo(name = "events", aliases = "e", category = "general", permissions = Permission.MANAGE_SERVER)
 public class EventsCommand extends LupoCommand {
@@ -17,7 +18,7 @@ public class EventsCommand extends LupoCommand {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle(context.getServer().translate(context.getPlugin(), "logging_events-title"));
         builder.setDescription(context.getServer().translate(context.getPlugin(), "logging_events-info"));
-        builder.setTimestamp(context.getMessage().getTimeCreated());
+        builder.setTimestamp(context.getTime());
         builder.setColor(LupoColor.ORANGE.getColor());
 
         for (LogEvent event : LogEvent.values()) {
@@ -33,6 +34,11 @@ public class EventsCommand extends LupoCommand {
             }
         }
 
-        context.getChannel().sendMessage(builder.build()).queue();
+        send(context, builder);
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+        onCommand(context);
     }
 }
