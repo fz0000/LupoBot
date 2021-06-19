@@ -127,7 +127,7 @@ public class CommandHandler {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setAuthor(server.translate(null, "core_command-error-report"), LupoBot.getInstance().getConfig().getString("supportServerUrl"),
                     LupoBot.getInstance().getSelfUser().getAvatarUrl());
-            builder.addField("Message:", e.getMessage(), false);
+            builder.addField("Message:", e.getMessage() + " ", false);
             builder.addField("StackTrace:", "```" + stackTrace.substring(0, 1000) + "```", false);
             builder.setColor(LupoColor.RED.getColor());
             builder.setFooter(server.translate(null, "core_used-command", server.getPrefix() + context.getLabel()));
