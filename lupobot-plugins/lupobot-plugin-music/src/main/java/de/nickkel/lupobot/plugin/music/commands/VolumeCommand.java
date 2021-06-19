@@ -38,8 +38,8 @@ public class VolumeCommand extends LupoCommand {
                     builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null,
                             context.getMember().getUser().getAvatarUrl());
                     builder.setDescription(context.getServer().translate(context.getPlugin(), "music_volume-changed", volume));
-                    builder.setTimestamp(context.getMessage().getTimeCreated());
-                    context.getChannel().sendMessage(builder.build()).queue();
+                    builder.setTimestamp(context.getTime());
+                    send(context, builder);
                 } else {
                     sendSyntaxError(context, "music_volume-range");
                 }
