@@ -45,6 +45,7 @@ public class CommandListener extends ListenerAdapter {
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
         if (event.getGuild() == null) {
+            event.reply("Commands can only be used on guilds which have invited LupoBot!").queue();
             return;
         }
         LupoBot.getInstance().getCommandHandler().runCommand(new CommandContext(event.getGuild(), event.getMember(), event.getTextChannel(),
