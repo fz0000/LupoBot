@@ -42,6 +42,9 @@ public class PlayCommand extends LupoCommand {
                 return;
             }
             if (arg.startsWith("http") && arg.contains("/")) {
+                if (context.getSlash() != null) {
+                    context.getSlash().deferReply().queue();
+                }
                 server.play(this, context, arg);
             } else {
                 LupoMusicPlugin.getInstance().getAudioPlayerManager().loadItemOrdered(server, "ytsearch: " + arg, new AudioLoadResultHandler() {
