@@ -38,11 +38,13 @@ public class SkipCommand extends LupoCommand {
             if (members == 1) {
                 server.getScheduler().next();
                 builder.setDescription(context.getServer().translate(context.getPlugin(), "music_skip-only-user"));
+                send(context, builder);
+                return;
             } else {
                 if (server.getScheduler().getVoteSkip().contains(context.getMember())) {
                     builder.setColor(LupoColor.RED.getColor());
                     builder.setDescription(context.getServer().translate(context.getPlugin(), "music_already-voted"));
-                    context.getChannel().sendMessage(builder.build()).queue();
+                    send(context, builder);
                     return;
                 }
                 server.getScheduler().getVoteSkip().add(context.getMember());
