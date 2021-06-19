@@ -104,6 +104,6 @@ public class MusicServer {
         builder.setDescription(context.getServer().translate(context.getPlugin(), "music_queued-track"));
         builder.addField(context.getServer().translate(context.getPlugin(), "music_queued-track-title"), track.getInfo().title, true);
         builder.addField(context.getServer().translate(context.getPlugin(), "music_queued-track-duration"), TimeUtils.format(context, track.getDuration()), true);
-        context.getCommand().send(context, builder);
+        context.getChannel().sendMessage(builder.build()).queue();
     }
 }
