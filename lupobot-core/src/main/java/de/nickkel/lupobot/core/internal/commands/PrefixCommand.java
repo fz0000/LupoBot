@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 @CommandInfo(name = "prefix", permissions = Permission.ADMINISTRATOR, category = "core")
-@SlashOption(name = "text", type = OptionType.STRING)
+@SlashOption(name = "prefix", type = OptionType.STRING)
 public class PrefixCommand extends LupoCommand {
 
     @Override
@@ -19,7 +19,7 @@ public class PrefixCommand extends LupoCommand {
             if (context.getSlash() == null) {
                 prefix = context.getArgs()[0];
             } else {
-                prefix = context.getSlash().getOption("text").getAsString();
+                prefix = context.getSlash().getOption("prefix").getAsString();
                 if (prefix.contains(" ")) {
                     sendHelp(context);
                     return;

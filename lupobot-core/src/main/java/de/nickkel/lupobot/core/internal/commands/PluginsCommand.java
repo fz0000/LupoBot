@@ -18,7 +18,7 @@ public class PluginsCommand extends LupoCommand {
         builder.setColor(LupoColor.BLUE.getColor());
         builder.setTitle(context.getServer().translate(null, "core_plugin-list"));
         builder.setDescription(context.getServer().translate(null, "core_plugin-list-description"));
-        builder.setTimestamp(context.getMessage().getTimeCreated());
+        builder.setTimestamp(context.getTime());
 
         for (LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
             if (!plugin.getInfo().hidden()) {
@@ -30,11 +30,11 @@ public class PluginsCommand extends LupoCommand {
             }
         }
 
-        context.getChannel().sendMessage(builder.build()).queue();
+        send(context, builder);
     }
 
     @Override
     public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
-
+        onCommand(context);
     }
 }
