@@ -41,7 +41,7 @@ public class PlayCommand extends LupoCommand {
             if (!server.joinedVoiceChannel(context)) {
                 return;
             }
-            if (arg.split(" ").length == 0 && arg.startsWith("http") && arg.contains("/")) {
+            if (arg.startsWith("http") && arg.contains("/")) {
                 server.play(this, context, arg);
             } else {
                 LupoMusicPlugin.getInstance().getAudioPlayerManager().loadItemOrdered(server, "ytsearch: " + arg, new AudioLoadResultHandler() {
