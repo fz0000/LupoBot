@@ -77,6 +77,6 @@ public class InstallPluginCommand extends LupoCommand {
 
     @Override
     public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
-
+        onCommand(context);
     }
 }
