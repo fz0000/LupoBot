@@ -8,6 +8,7 @@ import de.nickkel.lupobot.plugin.music.LupoMusicPlugin;
 import de.nickkel.lupobot.plugin.music.lavaplayer.MusicServer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 @CommandInfo(name = "clearqueue", category = "queue", permissions = Permission.MANAGE_SERVER)
 public class ClearQueueCommand extends LupoCommand {
@@ -22,8 +23,13 @@ public class ClearQueueCommand extends LupoCommand {
             builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null,
                     context.getMember().getUser().getAvatarUrl());
             builder.setDescription(context.getServer().translate(context.getPlugin(), "music_clearqueue"));
-            builder.setTimestamp(context.getMessage().getTimeCreated());
-            context.getChannel().sendMessage(builder.build()).queue();
+            builder.setTimestamp(context.getTime());
+            send(context, builder);
         }
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+        onCommand(context);
     }
 }

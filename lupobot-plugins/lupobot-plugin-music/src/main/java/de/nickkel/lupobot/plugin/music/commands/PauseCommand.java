@@ -8,6 +8,7 @@ import de.nickkel.lupobot.plugin.music.LupoMusicPlugin;
 import de.nickkel.lupobot.plugin.music.lavaplayer.MusicServer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 @CommandInfo(name = "pause", aliases = "resume", category = "player", permissions = Permission.MANAGE_SERVER)
 public class PauseCommand extends LupoCommand {
@@ -22,7 +23,7 @@ public class PauseCommand extends LupoCommand {
         builder.setColor(LupoColor.ORANGE.getColor());
         builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null,
                 context.getMember().getUser().getAvatarUrl());
-        builder.setTimestamp(context.getMessage().getTimeCreated());
+        builder.setTimestamp(context.getTime());
 
         if (server.getAudioPlayer().isPaused()) {
             server.getAudioPlayer().setPaused(false);
@@ -32,6 +33,11 @@ public class PauseCommand extends LupoCommand {
             builder.setDescription(context.getServer().translate(context.getPlugin(), "music_pause-true"));
         }
 
-        context.getChannel().sendMessage(builder.build()).queue();
+        send(context, builder);
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+        onCommand(context);
     }
 }

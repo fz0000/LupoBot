@@ -15,6 +15,7 @@ import de.nickkel.lupobot.plugin.music.lavaplayer.MusicServer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 @CommandInfo(name = "play", category = "player")
 public class PlayCommand extends LupoCommand {
+
     @Override
     public void onCommand(CommandContext context) {
         if (context.getArgs().length >= 1) {
@@ -67,8 +69,8 @@ public class PlayCommand extends LupoCommand {
                             }
                         }
                         builder.setDescription(description);
-                        builder.setTimestamp(context.getMessage().getTimeCreated());
-
+                        builder.setTimestamp(context.getTime());
+                        context.setEphemeral(false);
                         context.getChannel().sendMessage(builder.build()).queue(success -> {
                             HashMap<String, ThrowingBiConsumer<Member, Message>> buttons = new HashMap<>();
                             for (int i = 1; i < consumers.size()+1; i++) {
@@ -92,6 +94,11 @@ public class PlayCommand extends LupoCommand {
         } else {
             sendHelp(context);
         }
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+        onCommand(context);
     }
 
     private String getEmoji(int number) {
