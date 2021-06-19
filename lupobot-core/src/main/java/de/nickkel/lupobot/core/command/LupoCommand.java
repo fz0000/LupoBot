@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.components.Button;
+import net.dv8tion.jda.api.interactions.components.Component;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -32,6 +33,14 @@ public abstract class LupoCommand {
     public abstract void onCommand(CommandContext context);
 
     public abstract void onSlashCommand(CommandContext context, SlashCommandEvent slash);
+
+    public void send(CommandContext context, EmbedBuilder builder, Component... components) {
+        if (context.getSlash() == null) {
+            context.getChannel().sendMessage(builder.build()).setActionRow(components).queue();
+        } else {
+            context.getSlash().replyEmbeds(builder.build()).addActionRow(components).setEphemeral(context.isEphemeral()).queue();
+        }
+    }
 
     public void send(CommandContext context, EmbedBuilder builder) {
         if (context.getSlash() == null) {

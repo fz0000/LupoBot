@@ -4,10 +4,13 @@ import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
+import de.nickkel.lupobot.core.command.SlashOption;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,17 +18,24 @@ import java.util.List;
 import java.util.Map;
 
 @CommandInfo(name = "commands", category = "general", aliases = "cmds")
+@SlashOption(name = "plugin", type = OptionType.STRING)
 public class CommandsCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
 
-        if (context.getArgs().length == 1) {
+        if (context.getArgs().length == 1 || context.getSlash() != null) {
+            String name;
+            if (context.getSlash() != null) {
+                name = context.getSlash().getOption("plugin").getAsString();
+            } else {
+                name = context.getArgs()[0];
+            }
             boolean match = false;
             int plugins = 0;
             for (LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
                 plugins++;
-                if (context.getArgs()[0].equalsIgnoreCase(plugin.getInfo().name()) || context.getArgs()[0].equalsIgnoreCase(context.getServer().translatePluginName(plugin))) {
+                if (name.equalsIgnoreCase(plugin.getInfo().name()) || name.equalsIgnoreCase(context.getServer().translatePluginName(plugin))) {
                     match = true;
                     List<String> categories = new ArrayList<>();
                     Map<LupoCommand, String> commands = new HashMap<>();
@@ -59,7 +69,7 @@ public class CommandsCommand extends LupoCommand {
                     }
 
                     builder.setFooter(context.getServer().translate(context.getPlugin(),"help_commands-footer"));
-                    context.getChannel().sendMessage(builder.build()).queue();
+                    send(context, builder);
                 }
             }
 
@@ -69,5 +79,10 @@ public class CommandsCommand extends LupoCommand {
         } else {
             sendHelp(context);
         }
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+        onCommand(context);
     }
 }
