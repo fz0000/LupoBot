@@ -29,7 +29,7 @@ public class JobCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        if(context.getArgs().length == 1) {
+        if(context.getArgs().length == 1 || context.getSlash() != null) {
             CurrencyUser user = LupoCurrencyPlugin.getInstance().getCurrencyUser(context.getMember());
             int id;
             try {
@@ -105,7 +105,7 @@ public class JobCommand extends LupoCommand {
                 }
                 id++;
             }
-            Paginator.paginate(context.getChannel(), pages, 120);
+            Paginator.paginate(context, pages, 120);
         }
     }
 

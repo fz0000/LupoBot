@@ -100,7 +100,7 @@ public class InventoryCommand extends LupoCommand {
             }
 
             if (pages.size() != 0) {
-                Paginator.paginate(context.getChannel(), pages, 60);
+                Paginator.paginate(context, pages, 60);
             } else {
                 send(context, builder);
             }

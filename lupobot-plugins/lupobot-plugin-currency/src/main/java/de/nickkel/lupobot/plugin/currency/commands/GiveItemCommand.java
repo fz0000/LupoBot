@@ -21,7 +21,7 @@ public class GiveItemCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        if (context.getArgs().length == 3) {
+        if (context.getArgs().length == 3 || context.getSlash() != null) {
             Member giveMember = context.getMember();
             CurrencyUser giveUser = LupoCurrencyPlugin.getInstance().getCurrencyUser(context.getMember());
 

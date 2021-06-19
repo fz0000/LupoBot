@@ -151,7 +151,7 @@ public class ShopCommand extends LupoCommand {
                 }
             }
 
-            Paginator.paginate(context.getChannel(), pages, 90);
+            Paginator.paginate(context, pages, 90);
         }
     }
 

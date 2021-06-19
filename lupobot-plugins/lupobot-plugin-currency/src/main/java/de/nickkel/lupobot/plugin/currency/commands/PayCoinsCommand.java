@@ -19,7 +19,7 @@ public class PayCoinsCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        if (context.getArgs().length == 2) {
+        if (context.getArgs().length == 2 || context.getSlash() != null) {
             Member receiveMember;
             if (context.getSlash() == null) {
                 receiveMember = context.getServer().getMember(context.getArgs()[0]);
