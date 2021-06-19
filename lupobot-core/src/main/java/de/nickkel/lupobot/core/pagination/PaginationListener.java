@@ -12,8 +12,7 @@ public class PaginationListener extends ListenerAdapter {
 
     @Override
     public void onButtonClick(ButtonClickEvent event) {
-        if (event.getComponentType() == Component.Type.BUTTON && event.getComponentId().startsWith(Paginator.PREFIX) &&
-            event.getMessage() != null && event.getMember() != null && event.getMessage().getAuthor().getIdLong() == LupoBot.getInstance().getSelfUser().getIdLong()) {
+        if (event.getComponentType() == Component.Type.BUTTON && event.getComponentId().startsWith(Paginator.PREFIX)) {
             LupoServer server = LupoServer.getByGuild(event.getGuild());
             String[] id = event.getComponentId().split(";");
 
@@ -27,10 +26,18 @@ public class PaginationListener extends ListenerAdapter {
 
                     if (pages.getPages().get(pages.getCurrentPage()).getWhitelist().size() == 0 || pages.getPages().get(pages.getCurrentPage()).getWhitelist().contains(event.getMember().getIdLong())) {
                         if (type.equals("NEXT") && pages.getCurrentPage()+1 < pages.getPages().size()) {
-                            event.getMessage().editMessage(pages.getPages().get(pages.getCurrentPage()+1).getEmbed()).queue();
+                            if (event.getMessage() == null) {
+                                event.getHook().editOriginalEmbeds(pages.getPages().get(pages.getCurrentPage()+1).getEmbed()).queue();
+                            } else {
+                                event.getMessage().editMessage(pages.getPages().get(pages.getCurrentPage()+1).getEmbed()).queue();
+                            }
                             pages.increaseCurrentPage();
                         } else if(type.equals("LAST") && pages.getCurrentPage() != 0) {
-                            event.getMessage().editMessage(pages.getPages().get(pages.getCurrentPage()-1).getEmbed()).queue();
+                            if (event.getMessage() == null) {
+                                event.getHook().editOriginalEmbeds(pages.getPages().get(pages.getCurrentPage()-1).getEmbed()).queue();
+                            } else {
+                                event.getMessage().editMessage(pages.getPages().get(pages.getCurrentPage()-1).getEmbed()).queue();
+                            }
                             pages.decreaseCurrentPage();
                         }
                         event.deferEdit().queue();
@@ -46,7 +53,11 @@ public class PaginationListener extends ListenerAdapter {
                     Page page = Paginator.getPages().get(UUID.fromString(uuid));
                     event.deferEdit().queue();
                     if (page.getEmbed() != null && (page.getWhitelist().size() == 0 || page.getWhitelist().contains(event.getMember().getIdLong()))) {
-                        event.getMessage().editMessage(page.getEmbed()).queue();
+                        if (event.getMessage() == null) {
+                            event.getHook().editOriginalEmbeds(page.getEmbed()).queue();
+                        } else {
+                            event.getMessage().editMessage(page.getEmbed()).queue();
+                        }
                     }
                     if (page.getConsumer() != null) {
                         try {
