@@ -17,8 +17,10 @@ public class StopCommand extends LupoCommand {
     public void onCommand(CommandContext context) {
         MusicServer server = LupoMusicPlugin.getInstance().getMusicServer(context.getGuild());
         if (server.joinedVoiceChannel(context)) {
-            context.getGuild().getAudioManager().closeAudioConnection();
+            server.getScheduler().getPlayer().stopTrack();
             server.getScheduler().getQueue().clear();
+            context.getGuild().getAudioManager().closeAudioConnection();
+            
             EmbedBuilder builder = new EmbedBuilder();
             builder.setColor(LupoColor.GREEN.getColor());
             builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null,
