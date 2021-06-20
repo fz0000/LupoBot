@@ -128,7 +128,7 @@ public class RewardRoleCommand extends LupoCommand {
                     builder.addField(context.getServer().translate(context.getPlugin(), "leveling_rewardrole-level-list", level), role.getName() + " (" + role.getId() + ")", false);
                 }
             }
-            send(context, builder);;
+            send(context, builder);
         } else {
             sendHelp(context);
         }
