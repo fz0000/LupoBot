@@ -36,6 +36,11 @@ public class AddSelfRoleCommand extends LupoCommand {
                 return;
             }
 
+            if (role.isManaged()) {
+                sendSyntaxError(context, "roles_addselfrole-managed-role");
+                return;
+            }
+
             if (server.getSelfAssignRoles().contains(role)) {
                 sendSyntaxError(context, "roles_addselfrole-already-exists");
             } else {
