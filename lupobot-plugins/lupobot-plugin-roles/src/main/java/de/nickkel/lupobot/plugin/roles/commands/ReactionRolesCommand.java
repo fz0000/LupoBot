@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -62,5 +63,10 @@ public class ReactionRolesCommand extends LupoCommand {
         RolesServer server = LupoRolesPlugin.getInstance().getRolesServer(context.getGuild());
         server.addReactionRoleMessage(message, reactionRoles);
         context.getMessage().addReaction("✅").queue();
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+        send(context, context.getServer().translate(null, "core_command-not-available-slash", context.getCommand().getInfo().name()));
     }
 }

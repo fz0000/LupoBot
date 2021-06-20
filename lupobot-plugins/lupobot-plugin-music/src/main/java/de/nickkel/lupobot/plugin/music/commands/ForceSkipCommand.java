@@ -8,9 +8,11 @@ import de.nickkel.lupobot.plugin.music.LupoMusicPlugin;
 import de.nickkel.lupobot.plugin.music.lavaplayer.MusicServer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 @CommandInfo(name = "forceskip", category = "skip", permissions = Permission.MANAGE_SERVER)
 public class ForceSkipCommand extends LupoCommand {
+
     @Override
     public void onCommand(CommandContext context) {
         MusicServer server = LupoMusicPlugin.getInstance().getMusicServer(context.getGuild());
@@ -21,7 +23,7 @@ public class ForceSkipCommand extends LupoCommand {
         builder.setColor(LupoColor.ORANGE.getColor());
         builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null,
                 context.getMember().getUser().getAvatarUrl());
-        builder.setTimestamp(context.getMessage().getTimeCreated());
+        builder.setTimestamp(context.getTime());
 
         if (server.getScheduler().getQueue().size() == 0) {
             builder.setDescription(context.getServer().translate(context.getPlugin(), "music_forceskip-nothing"));
@@ -30,6 +32,11 @@ public class ForceSkipCommand extends LupoCommand {
             builder.setDescription(context.getServer().translate(context.getPlugin(), "music_forceskip-success", server.getAudioPlayer().getPlayingTrack().getInfo().title));
         }
 
-        context.getChannel().sendMessage(builder.build()).queue();
+        send(context, builder);
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+        onCommand(context);
     }
 }

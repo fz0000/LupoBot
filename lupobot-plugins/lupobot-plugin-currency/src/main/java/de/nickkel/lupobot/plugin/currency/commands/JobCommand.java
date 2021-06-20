@@ -4,6 +4,7 @@ import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
+import de.nickkel.lupobot.core.command.SlashOption;
 import de.nickkel.lupobot.core.pagination.Page;
 import de.nickkel.lupobot.core.pagination.Paginator;
 import de.nickkel.lupobot.core.util.LupoColor;
@@ -13,22 +14,30 @@ import de.nickkel.lupobot.plugin.currency.data.CurrencyUser;
 import de.nickkel.lupobot.plugin.currency.entities.Job;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 @CommandInfo(name = "job", category = "general")
+@SlashOption(name = "id", type = OptionType.INTEGER)
 public class JobCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        if(context.getArgs().length == 1) {
+        if(context.getArgs().length == 1 || context.getSlash() != null) {
             CurrencyUser user = LupoCurrencyPlugin.getInstance().getCurrencyUser(context.getMember());
-            int id = -1;
+            int id;
             try {
-                id = Integer.parseInt(context.getArgs()[0]);
+                if (context.getSlash() == null) {
+                    id = Integer.parseInt(context.getArgs()[0]);
+                } else {
+                    id = Integer.parseInt(String.valueOf(context.getSlash().getOption("id").getAsLong()));
+                }
             } catch (NumberFormatException e) {
                 sendSyntaxError(context, "currency_job-invalid-id");
                 return;
@@ -49,7 +58,7 @@ public class JobCommand extends LupoCommand {
             }
             user.setCurrentJob(job);
             EmbedBuilder builder = new EmbedBuilder();
-            builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
+            builder.setTimestamp(context.getTime());
             builder.setColor(LupoColor.GREEN.getColor());
             builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getIdLong() + ")", null, context.getMember().getUser().getAvatarUrl());
             builder.setThumbnail(job.getImage());
@@ -64,7 +73,7 @@ public class JobCommand extends LupoCommand {
                     user.addCoins(job.getCoins());
                     context.getMember().getUser().openPrivateChannel().queue(success -> {
                         EmbedBuilder builder = new EmbedBuilder();
-                        builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
+                        builder.setTimestamp(context.getTime());
                         builder.setColor(LupoColor.GREEN.getColor());
                         builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getIdLong() + ")", null, context.getMember().getUser().getAvatarUrl());
                         builder.setThumbnail(job.getImage());
@@ -77,7 +86,7 @@ public class JobCommand extends LupoCommand {
             }, job.getDuration()*1000L);
         } else {
             EmbedBuilder builder = new EmbedBuilder();
-            builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
+            builder.setTimestamp(context.getTime());
             builder.setColor(LupoColor.AQUA.getColor());
             builder.setAuthor(context.getServer().translate(context.getPlugin(), "currency_job-title"), null, LupoBot.getInstance().getSelfUser().getAvatarUrl());
             builder.setDescription(context.getServer().translate(context.getPlugin(), "currency_job-choose"));
@@ -96,7 +105,12 @@ public class JobCommand extends LupoCommand {
                 }
                 id++;
             }
-            Paginator.paginate(context.getChannel(), pages, 120);
+            Paginator.paginate(context, pages, 120);
         }
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+        onCommand(context);
     }
 }

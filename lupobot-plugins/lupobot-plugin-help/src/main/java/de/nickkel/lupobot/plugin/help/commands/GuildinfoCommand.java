@@ -7,6 +7,7 @@ import de.nickkel.lupobot.core.util.LupoColor;
 import de.nickkel.lupobot.core.util.TimeUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emote;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 @CommandInfo(name = "guildinfo", category = "information")
 public class GuildinfoCommand extends LupoCommand {
@@ -24,7 +25,7 @@ public class GuildinfoCommand extends LupoCommand {
         }
 
         EmbedBuilder builder = new EmbedBuilder();
-        builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
+        builder.setTimestamp(context.getTime());
         builder.setColor(LupoColor.BLUE.getColor());
         builder.setAuthor(context.getGuild().getName() + " (" + context.getGuild().getIdLong() + ")", null, context.getGuild().getIconUrl());
 
@@ -37,6 +38,11 @@ public class GuildinfoCommand extends LupoCommand {
         builder.addField(context.getServer().translate(context.getPlugin(), "help_guildinfo-afkchannel"), afkChannel, false);
         builder.addField(context.getServer().translate(context.getPlugin(), "help_guildinfo-emotes"), emotes, false);
 
-        context.getChannel().sendMessage(builder.build()).queue();
+        send(context, builder);
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+        onCommand(context);
     }
 }

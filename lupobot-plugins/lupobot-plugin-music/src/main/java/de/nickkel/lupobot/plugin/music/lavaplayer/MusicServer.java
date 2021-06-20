@@ -46,7 +46,11 @@ public class MusicServer {
         LupoMusicPlugin.getInstance().getAudioPlayerManager().loadItemOrdered(this, trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack audioTrack) {
-                MusicServer.this.scheduler.queue(audioTrack);
+                if (MusicServer.this.scheduler.getQueue().contains(audioTrack)) {
+                    MusicServer.this.scheduler.queue(audioTrack.makeClone());
+                } else {
+                    MusicServer.this.scheduler.queue(audioTrack);
+                }
                 onQueue(context, audioTrack);
             }
 
@@ -58,10 +62,10 @@ public class MusicServer {
                 }
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setColor(LupoColor.GREEN.getColor());
-                builder.setTimestamp(context.getMessage().getTimeCreated());
+                builder.setTimestamp(context.getTime());
                 builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null, context.getMember().getUser().getAvatarUrl());
                 builder.setDescription(context.getServer().translate(context.getPlugin(), "music_loaded-playlist", audioPlaylist.getName(), audioPlaylist.getTracks().size()));
-                context.getChannel().sendMessage(builder.build()).queue();
+                command.send(context, builder);
             }
 
             @Override
@@ -82,13 +86,13 @@ public class MusicServer {
         AudioManager audioManager = this.guild.getAudioManager();
 
         if (!memberVoiceState.inVoiceChannel()) {
-            context.getChannel().sendMessage(this.server.translate(context.getPlugin(), "music_member-not-in-voicechannel",
-                    context.getMember().getAsMention())).queue();
+            context.getCommand().send(context, this.server.translate(context.getPlugin(), "music_member-not-in-voicechannel",
+                    context.getMember().getAsMention()));
             return false;
         }
         if (selfVoiceState.inVoiceChannel() && memberVoiceState.getChannel().getIdLong() != selfVoiceState.getChannel().getIdLong()) {
-            context.getChannel().sendMessage(this.server.translate(context.getPlugin(), "music_bot-already-in-voicechannel",
-                    context.getMember().getAsMention())).queue();
+            context.getCommand().send(context, this.server.translate(context.getPlugin(), "music_bot-already-in-voicechannel",
+                    context.getMember().getAsMention()));
             return false;
         }
 
@@ -99,7 +103,7 @@ public class MusicServer {
     public void onQueue(CommandContext context, AudioTrack track) {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setColor(LupoColor.GREEN.getColor());
-        builder.setTimestamp(context.getMessage().getTimeCreated());
+        builder.setTimestamp(context.getTime());
         builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null, context.getMember().getUser().getAvatarUrl());
         builder.setDescription(context.getServer().translate(context.getPlugin(), "music_queued-track"));
         builder.addField(context.getServer().translate(context.getPlugin(), "music_queued-track-title"), track.getInfo().title, true);

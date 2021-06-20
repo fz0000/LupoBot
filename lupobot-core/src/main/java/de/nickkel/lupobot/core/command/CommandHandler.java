@@ -1,18 +1,23 @@
 package de.nickkel.lupobot.core.command;
 
 import com.google.common.reflect.ClassPath;
-import com.google.gson.JsonObject;
-import com.mongodb.BasicDBObject;
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.data.LupoServer;
 import de.nickkel.lupobot.core.data.LupoUser;
+import de.nickkel.lupobot.core.language.LanguageHandler;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.exceptions.PermissionException;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
+import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class CommandHandler {
@@ -43,6 +48,7 @@ public class CommandHandler {
             context.getChannel().sendMessage(builder.build()).queue();
             return;
         }
+        context.setCommand(command);
 
         LupoPlugin plugin = null;
         for (LupoPlugin all : LupoBot.getInstance().getPlugins()) {
@@ -52,6 +58,7 @@ public class CommandHandler {
         }
         context.setPlugin(plugin);
 
+        context.setEphemeral(server.isSlashInvisible());
         for (Permission permission : command.getInfo().permissions()) {
             if (!context.getMember().getPermissions().contains(permission)) {
                 EmbedBuilder builder = new EmbedBuilder();
@@ -60,7 +67,7 @@ public class CommandHandler {
                 builder.addField(server.translate(null, "core_command-permission"), permission.toString(), false);
                 builder.setColor(LupoColor.DARK_GRAY.getColor());
                 builder.setFooter(server.translate(null, "core_used-command", server.getPrefix() + context.getLabel()));
-                context.getChannel().sendMessage(builder.build()).queue();
+                command.send(context, builder);
                 return;
             }
         }
@@ -71,7 +78,7 @@ public class CommandHandler {
             builder.addField(server.translate(null, "core_command-plugin"), server.translatePluginName(plugin), false);
             builder.setColor(LupoColor.DARK_GRAY.getColor());
             builder.setFooter(server.translate(null, "core_used-command", server.getPrefix() + context.getLabel()));
-            context.getChannel().sendMessage(builder.build()).queue();
+            command.send(context, builder);
             return;
         }
 
@@ -87,7 +94,7 @@ public class CommandHandler {
                 builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null, context.getMember().getUser().getAvatarUrl());
                 builder.setDescription(context.getServer().translate(null, "core_command-cooldown", time));
                 builder.setFooter(server.translate(null, "core_used-command", server.getPrefix() + context.getLabel()));
-                context.getChannel().sendMessage(builder.build()).queue();
+                command.send(context, builder);
                 return;
             } else {
                 user.getCooldowns().remove(command);
@@ -95,7 +102,11 @@ public class CommandHandler {
         }
 
         try {
-            command.onCommand(context);
+            if (context.getSlash() != null) {
+                command.onSlashCommand(context, context.getSlash());
+            } else {
+                command.onCommand(context);
+            }
             if (command.getInfo().cooldown() != 0) {
                 user.getCooldowns().put(command, System.currentTimeMillis());
             }
@@ -106,7 +117,7 @@ public class CommandHandler {
             builder.addField(server.translate(null, "core_command-permission"), permissionException.getPermission().toString(), false);
             builder.setColor(LupoColor.DARK_GRAY.getColor());
             builder.setFooter(server.translate(null, server.getPrefix() + "core_used-command", server.getPrefix() + context.getLabel()));
-            context.getChannel().sendMessage(builder.build()).queue();
+            command.send(context, builder);
         } catch (Exception e) {
             e.printStackTrace();
             String stackTrace = "";
@@ -116,13 +127,12 @@ public class CommandHandler {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setAuthor(server.translate(null, "core_command-error-report"), LupoBot.getInstance().getConfig().getString("supportServerUrl"),
                     LupoBot.getInstance().getSelfUser().getAvatarUrl());
-            builder.addField("Message:", e.getMessage(), false);
+            builder.addField("Message:", e.getMessage() + " ", false);
             builder.addField("StackTrace:", "```" + stackTrace.substring(0, 1000) + "```", false);
             builder.setColor(LupoColor.RED.getColor());
             builder.setFooter(server.translate(null, "core_used-command", server.getPrefix() + context.getLabel()));
-            context.getChannel().sendMessage(builder.build()).queue();
+            command.send(context, builder);
         }
-
     }
 
     private boolean existsCommand(LupoCommand command) {
@@ -134,6 +144,7 @@ public class CommandHandler {
             LupoBot.getInstance().getCommands().add(command);
             if (plugin != null) {
                 plugin.getCommands().add(command);
+                command.setPlugin(plugin);
             }
             LupoBot.getInstance().getLogger().info("Registered command " + command.getInfo().name());
         }
@@ -144,6 +155,46 @@ public class CommandHandler {
             LupoBot.getInstance().getCommands().remove(command);
             LupoBot.getInstance().getLogger().info("Unregistered command " + command.getInfo().name());
         }
+    }
+
+    public void registerSlashCommands() {
+        LupoBot.getInstance().getSelfUser().getJDA().updateCommands().complete();
+        CommandListUpdateAction commands = LupoBot.getInstance().getSelfUser().getJDA().updateCommands();
+
+        List<CommandData> commandData = new ArrayList<>();
+        for (LupoCommand command : LupoBot.getInstance().getCommands()) {
+            LanguageHandler handler = LupoBot.getInstance().getLanguageHandler();
+            String plugin = "core";
+            if (command.getPlugin() != null) plugin = command.getPlugin().getInfo().name();
+            if (command.getPlugin() != null) handler = command.getPlugin().getLanguageHandler();
+
+            String description = handler.translate("en_US", plugin + "_" + command.getInfo().name() + "-description");
+            if (description.length() > 100) description = description.substring(0, 100);
+
+            CommandData data = new CommandData(command.getInfo().name(), description);
+            for (SlashOption option : command.getSlashOptions()) {
+                String optionDesc = handler.translate("en_US", plugin + "_" + command.getInfo().name() + "-option-" + option.name());
+                if (optionDesc.length() > 100) optionDesc = optionDesc.substring(0, 100);
+                OptionData optionData = new OptionData(option.type(), option.name(), optionDesc, option.required());
+                for (String choice : option.choices()) {
+                    optionData.addChoice(choice, choice);
+                }
+                data.addOptions(optionData);
+            }
+            for (SlashSubCommand subCommand : command.getSlashSubCommands()) {
+                String subDesc = handler.translate("en_US", plugin + "_" + command.getInfo().name() + "-sub-" + subCommand.name());
+                if (subDesc.length() > 100) subDesc = subDesc.substring(0, 100);
+                SubcommandData subData = new SubcommandData(subCommand.name(), subDesc);
+                for (SlashOption option : subCommand.options()) {
+                    String subOptionDesc = handler.translate("en_US", plugin + "_" + command.getInfo().name() + "-sub-" + subCommand.name() + "-option-" + option.name());
+                    if (subOptionDesc.length() > 100) subOptionDesc = subOptionDesc.substring(0, 100);
+                    subData.addOption(option.type(), option.name(), subOptionDesc, option.required());
+                }
+                data.addSubcommands(subData);
+            }
+            commandData.add(data);
+        }
+        commands.addCommands(commandData).queue();
     }
 
     public void registerCommands(ClassLoader loader, String packageName) { // only for the core

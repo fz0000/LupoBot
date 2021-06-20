@@ -1,8 +1,6 @@
 package de.nickkel.lupobot.plugin.currency.commands;
 
-import de.nickkel.lupobot.core.command.CommandContext;
-import de.nickkel.lupobot.core.command.CommandInfo;
-import de.nickkel.lupobot.core.command.LupoCommand;
+import de.nickkel.lupobot.core.command.*;
 import de.nickkel.lupobot.core.pagination.Page;
 import de.nickkel.lupobot.core.pagination.Paginator;
 import de.nickkel.lupobot.core.pagination.RelatedPages;
@@ -12,22 +10,31 @@ import de.nickkel.lupobot.plugin.currency.data.CurrencyUser;
 import de.nickkel.lupobot.plugin.currency.entities.Item;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 @CommandInfo(name = "inventory", aliases = "inv", category = "items")
+@SlashSubCommand(name = "upgrade", options = {@SlashOption(name = "amount", type = OptionType.INTEGER, required = false)})
+@SlashSubCommand(name = "see")
 public class InventoryCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        if ((context.getArgs().length == 1 || context.getArgs().length == 2) && context.getArgs()[0].equalsIgnoreCase("upgrade")) {
-            long amount = 0;
-            if (context.getArgs().length == 1) {
+        if (((context.getArgs().length == 1 || context.getArgs().length == 2) && context.getArgs()[0].equalsIgnoreCase("upgrade")) ||
+                context.getSlash() != null && context.getSlash().getSubcommandName().equalsIgnoreCase("upgrade")) {
+            long amount;
+            if (context.getArgs().length == 1 || (context.getSlash() != null && context.getSlash().getOption("amount") == null)) {
                 amount = 1;
             } else {
                 try {
-                    amount = Long.parseLong(context.getArgs()[1]);
+                    if (context.getSlash() == null) {
+                        amount = Long.parseLong(context.getArgs()[1]);
+                    } else {
+                        amount = context.getSlash().getOption("amount").getAsLong();
+                    }
                 } catch (NumberFormatException e) {
                     sendSyntaxError(context, "currency_inventory-upgrade-invalid-amount");
                     return;
@@ -53,13 +60,13 @@ public class InventoryCommand extends LupoCommand {
             builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getIdLong() + ")", null, context.getMember().getUser().getAvatarUrl());
             builder.setDescription(context.getServer().translate(context.getPlugin(), "currency_inventory-upgrade",
                     context.getServer().formatLong(amount), context.getServer().formatLong(user.getInventorySlots())));
-            context.getChannel().sendMessage(builder.build()).queue();
+            send(context, builder);
         } else {
             ArrayList<Page> pages = new ArrayList<>();
             CurrencyUser user = LupoCurrencyPlugin.getInstance().getCurrencyUser(context.getMember());
 
             EmbedBuilder builder = new EmbedBuilder();
-            builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
+            builder.setTimestamp(context.getTime());
             builder.setColor(LupoColor.ORANGE.getColor());
             builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getIdLong() + ")", null, context.getMember().getUser().getAvatarUrl());
 
@@ -93,10 +100,15 @@ public class InventoryCommand extends LupoCommand {
             }
 
             if (pages.size() != 0) {
-                Paginator.paginate(context.getChannel(), pages, 60);
+                Paginator.paginate(context, pages, 60);
             } else {
-                context.getChannel().sendMessage(builder.build()).queue();
+                send(context, builder);
             }
         }
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+        onCommand(context);
     }
 }

@@ -4,25 +4,34 @@ import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
+import de.nickkel.lupobot.core.command.SlashOption;
 import de.nickkel.lupobot.core.pagination.Page;
 import de.nickkel.lupobot.core.pagination.Paginator;
 import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
 @CommandInfo(name = "language", aliases = "lang", permissions = Permission.ADMINISTRATOR, category = "core")
+@SlashOption(name = "language", type = OptionType.STRING, choices = {"English", "German"})
 public class LanguageCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        if (context.getArgs().length == 1) {
-            if (LupoBot.getInstance().getAvailableLanguages().contains(context.getArgs()[0]) || getLanguageCodeByName(context.getArgs()[0]) != null) {
-                String languageCode = context.getArgs()[0];
-                if (getLanguageCodeByName(context.getArgs()[0]) != null) {
-                    languageCode = getLanguageCodeByName(context.getArgs()[0]);
+        if (context.getArgs().length == 1 || context.getSlash() != null) {
+            String languageCode;
+            if (context.getSlash() != null) {
+                languageCode = context.getSlash().getOption("language").getAsString();
+            } else {
+                languageCode = context.getArgs()[0];
+            }
+            if (LupoBot.getInstance().getAvailableLanguages().contains(languageCode) || getLanguageCodeByName(languageCode) != null) {
+                if (getLanguageCodeByName(languageCode) != null) {
+                    languageCode = getLanguageCodeByName(languageCode);
                 }
                 Locale locale = new Locale(languageCode.split("_")[0]);
                 if (context.getServer().getLanguage().equals(languageCode)) {
@@ -35,7 +44,7 @@ public class LanguageCommand extends LupoCommand {
                 builder.setAuthor(LupoBot.getInstance().getSelfUser().getName() + " (" + context.getGuild().getId() + ")", null, LupoBot.getInstance().getSelfUser().getAvatarUrl());
                 builder.setDescription(context.getServer().translate(null, "core_language-changed", locale.getDisplayName(locale)));
                 builder.setTimestamp(context.getMessage().getTimeCreated());
-                context.getChannel().sendMessage(builder.build()).queue();
+                send(context, builder);
             } else {
                 sendSyntaxError(context, "core_language-not-exists");
             }
@@ -61,8 +70,13 @@ public class LanguageCommand extends LupoCommand {
             help.getWhitelist().add(context.getUser().getId());
             pages.add(help);
 
-            Paginator.paginate(context.getChannel(), pages, 120);
+            Paginator.paginate(context, pages, 120);
         }
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+        onCommand(context);
     }
 
     private String getLanguageCodeByName(String name) {

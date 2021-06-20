@@ -1,9 +1,7 @@
 package de.nickkel.lupobot.plugin.currency.commands;
 
 import de.nickkel.lupobot.core.LupoBot;
-import de.nickkel.lupobot.core.command.CommandContext;
-import de.nickkel.lupobot.core.command.CommandInfo;
-import de.nickkel.lupobot.core.command.LupoCommand;
+import de.nickkel.lupobot.core.command.*;
 import de.nickkel.lupobot.core.pagination.Page;
 import de.nickkel.lupobot.core.pagination.Paginator;
 import de.nickkel.lupobot.core.util.LupoColor;
@@ -12,19 +10,32 @@ import de.nickkel.lupobot.plugin.currency.data.CurrencyUser;
 import de.nickkel.lupobot.plugin.currency.entities.Item;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 @CommandInfo(name = "shop", category = "items")
+@SlashSubCommand(name = "see")
+@SlashSubCommand(name = "sellall")
+@SlashSubCommand(name = "sell", options = {
+        @SlashOption(name = "item", type = OptionType.STRING),
+        @SlashOption(name = "amount", type = OptionType.INTEGER, required = false)
+})
+@SlashSubCommand(name = "buy", options = {
+        @SlashOption(name = "item", type = OptionType.STRING),
+        @SlashOption(name = "amount", type = OptionType.INTEGER, required = false)
+})
 public class ShopCommand extends LupoCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        if (context.getArgs().length == 2 || context.getArgs().length == 3) {
+        if (context.getArgs().length == 2 || context.getArgs().length == 3 || context.getSlash() != null) {
             CurrencyUser user = LupoCurrencyPlugin.getInstance().getCurrencyUser(context.getMember());
 
-            if (context.getArgs()[0].equalsIgnoreCase("sell") && context.getArgs()[1].equalsIgnoreCase("all")) {
+            if ((context.getSlash() != null && context.getSlash().getSubcommandName().equalsIgnoreCase("sellall"))
+                    || (context.getArgs().length == 2 && context.getArgs()[0].equalsIgnoreCase("sell") && context.getArgs()[1].equalsIgnoreCase("all"))) {
                 long coins = 0;
                 long items = 0;
                 for (Item item : LupoCurrencyPlugin.getInstance().getItems()) {
@@ -42,29 +53,38 @@ public class ShopCommand extends LupoCommand {
                 user.addCoins(coins);
 
                 EmbedBuilder builder = new EmbedBuilder();
-                builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
+                builder.setTimestamp(context.getTime());
                 builder.setColor(LupoColor.GREEN.getColor());
                 builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getIdLong() + ")", null, context.getMember().getUser().getAvatarUrl());
                 builder.setDescription(context.getServer().translate(context.getPlugin(), "currency_shop-sell-all-success", items, context.getServer().formatLong(coins)));
-                context.getChannel().sendMessage(builder.build()).queue();
+                send(context, builder);
                 return;
             }
 
-            Item item = LupoCurrencyPlugin.getInstance().getItem(context.getArgs()[1]);
+            Item item;
+            if (context.getSlash() == null) {
+                item = LupoCurrencyPlugin.getInstance().getItem(context.getArgs()[1]);
+            } else {
+                item = LupoCurrencyPlugin.getInstance().getItem(context.getSlash().getOption("item").getAsString());
+            }
             if (item == null) {
                 sendSyntaxError(context, "currency_shop-invalid-item");
                 return;
             }
 
             long amount;
-            if (context.getArgs().length == 2) {
+            if (context.getArgs().length == 2 || (context.getSlash() != null && context.getSlash().getOption("amount") == null)) {
                 amount = 1;
             } else {
                 try {
-                    if (context.getArgs()[0].equalsIgnoreCase("sell") && context.getArgs()[2].equalsIgnoreCase("all")) {
-                        amount = user.getItem(item);
+                    if (context.getSlash() == null) {
+                        if (context.getArgs()[0].equalsIgnoreCase("sell") && context.getArgs()[2].equalsIgnoreCase("all")) {
+                            amount = user.getItem(item);
+                        } else {
+                            amount = Long.parseLong(context.getArgs()[2]);
+                        }
                     } else {
-                        amount = Long.parseLong(context.getArgs()[2]);
+                        amount = context.getSlash().getOption("amount").getAsLong();
                     }
                 } catch (NumberFormatException e) {
                     sendSyntaxError(context, "currency_shop-invalid-amount");
@@ -78,12 +98,13 @@ public class ShopCommand extends LupoCommand {
             }
 
             EmbedBuilder builder = new EmbedBuilder();
-            builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
+            builder.setTimestamp(context.getTime());
             builder.setColor(LupoColor.GREEN.getColor());
             builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getIdLong() + ")", null, context.getMember().getUser().getAvatarUrl());
 
             long coins = 0;
-            if (context.getArgs()[0].equalsIgnoreCase("buy")) {
+            if ((context.getArgs().length == 1 && context.getArgs()[0].equalsIgnoreCase("buy"))
+                    || (context.getSlash() != null && context.getSlash().getSubcommandName().equalsIgnoreCase("buy"))) {
                 coins = amount*item.getBuy();
                 if (user.getCoins()-coins < 0) {
                     sendSyntaxError(context, "currency_shop-buy-not-enough-coins", context.getServer().formatLong(user.getCoins()));
@@ -96,7 +117,8 @@ public class ShopCommand extends LupoCommand {
                 user.addCoins(-coins);
                 user.addItem(item, amount);
                 builder.setDescription(context.getServer().translate(context.getPlugin(), "currency_shop-buy"));
-            } else if (context.getArgs()[0].equalsIgnoreCase("sell")) {
+            } else if ((context.getArgs().length == 1 && context.getArgs()[0].equalsIgnoreCase("sell"))
+                    || (context.getSlash() != null && context.getSlash().getSubcommandName().equalsIgnoreCase("sell"))) {
                 if (user.getItem(item)-amount < 0) {
                     sendSyntaxError(context, "currency_shop-sell-not-enough-items", context.getServer().formatLong(user.getItem(item)));
                     return;
@@ -109,7 +131,7 @@ public class ShopCommand extends LupoCommand {
 
             builder.addField(context.getServer().translate(context.getPlugin(), "currency_shop-item"), context.getServer().formatLong(amount) + "x " + item.getName(), true);
             builder.addField(context.getServer().translate(context.getPlugin(), "currency_shop-coins"), context.getServer().formatLong(coins), true);
-            context.getChannel().sendMessage(builder.build()).queue();
+            send(context, builder);
         } else {
             ArrayList<Page> pages = new ArrayList<>();
 
@@ -132,7 +154,12 @@ public class ShopCommand extends LupoCommand {
                 }
             }
 
-            Paginator.paginate(context.getChannel(), pages, 90);
+            Paginator.paginate(context, pages, 90);
         }
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+        onCommand(context);
     }
 }

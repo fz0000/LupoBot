@@ -8,6 +8,7 @@ import de.nickkel.lupobot.core.util.LupoColor;
 import de.nickkel.lupobot.plugin.music.LupoMusicPlugin;
 import de.nickkel.lupobot.plugin.music.lavaplayer.MusicServer;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 @CommandInfo(name = "queue", category = "queue")
 public class QueueCommand extends LupoCommand {
@@ -20,7 +21,7 @@ public class QueueCommand extends LupoCommand {
             builder.setColor(LupoColor.ORANGE.getColor());
             builder.setAuthor(context.getServer().translate(context.getPlugin(), "music_queue-title"), null,
                     "https://cdn.pixabay.com/photo/2019/08/11/18/27/icon-4399630_960_720.png");
-            builder.setTimestamp(context.getMessage().getTimeCreated());
+            builder.setTimestamp(context.getTime());
 
             if (server.getScheduler().getQueue().size() == 0) {
                 builder.setDescription(context.getServer().translate(context.getPlugin(), "music_queue-nothing"));
@@ -31,7 +32,12 @@ public class QueueCommand extends LupoCommand {
                 }
                 builder.setDescription(description);
             }
-            context.getChannel().sendMessage(builder.build()).queue();
+            send(context, builder);
         }
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+        onCommand(context);
     }
 }

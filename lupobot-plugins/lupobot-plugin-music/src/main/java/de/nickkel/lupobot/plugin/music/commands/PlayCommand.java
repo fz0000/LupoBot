@@ -9,12 +9,15 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
+import de.nickkel.lupobot.core.command.SlashOption;
 import de.nickkel.lupobot.core.util.LupoColor;
 import de.nickkel.lupobot.plugin.music.LupoMusicPlugin;
 import de.nickkel.lupobot.plugin.music.lavaplayer.MusicServer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,21 +25,30 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @CommandInfo(name = "play", category = "player")
+@SlashOption(name = "input", type = OptionType.STRING)
 public class PlayCommand extends LupoCommand {
+
     @Override
     public void onCommand(CommandContext context) {
-        if (context.getArgs().length >= 1) {
-            String arg = context.getArgsAsString();
+        if (context.getArgs().length >= 1 || context.getSlash() != null) {
+            String arg;
+            if (context.getSlash() == null) {
+                arg = context.getArgsAsString();
+            } else {
+                arg = context.getSlash().getOption("input").getAsString();
+            }
             MusicServer server = LupoMusicPlugin.getInstance().getMusicServer(context.getGuild());
             if (!server.joinedVoiceChannel(context)) {
                 return;
             }
-            if (context.getArgs()[0].startsWith("http") && context.getArgs()[0].contains("/")) {
-                server.play(this, context, context.getArgs()[0]);
+            if (arg.startsWith("http") && arg.contains("/")) {
+                context.getSlash().deferReply().queue();
+                server.play(this, context, arg);
             } else {
                 LupoMusicPlugin.getInstance().getAudioPlayerManager().loadItemOrdered(server, "ytsearch: " + arg, new AudioLoadResultHandler() {
                     @Override
                     public void trackLoaded(AudioTrack audioTrack) {
+                        context.getSlash().deferReply().queue();
                         server.scheduler.queue(audioTrack);
                         server.onQueue(context, audioTrack);
                     }
@@ -67,8 +79,9 @@ public class PlayCommand extends LupoCommand {
                             }
                         }
                         builder.setDescription(description);
-                        builder.setTimestamp(context.getMessage().getTimeCreated());
-
+                        builder.setTimestamp(context.getTime());
+                        context.setEphemeral(false);
+                        context.getSlash().deferReply().queue();
                         context.getChannel().sendMessage(builder.build()).queue(success -> {
                             HashMap<String, ThrowingBiConsumer<Member, Message>> buttons = new HashMap<>();
                             for (int i = 1; i < consumers.size()+1; i++) {
@@ -92,6 +105,11 @@ public class PlayCommand extends LupoCommand {
         } else {
             sendHelp(context);
         }
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+        onCommand(context);
     }
 
     private String getEmoji(int number) {

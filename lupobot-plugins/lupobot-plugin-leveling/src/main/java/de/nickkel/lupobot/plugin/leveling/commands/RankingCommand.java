@@ -8,6 +8,7 @@ import de.nickkel.lupobot.core.data.LupoUser;
 import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.util.*;
 
@@ -45,11 +46,16 @@ public class RankingCommand extends LupoCommand {
         }
 
         EmbedBuilder builder = new EmbedBuilder();
-        builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
+        builder.setTimestamp(context.getTime());
         builder.setColor(LupoColor.BLUE.getColor());
         builder.setAuthor(guild.getName() + " (" + guild.getIdLong() + ")", null, guild.getIconUrl());
         builder.addField(context.getServer().translate(context.getPlugin(), "leveling_ranking-name"), userNames, true);
         builder.addField(context.getServer().translate(context.getPlugin(), "leveling_ranking-xp"), xp, true);
-        context.getChannel().sendMessage(builder.build()).queue();
+        send(context, builder);
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+        onCommand(context);
     }
 }

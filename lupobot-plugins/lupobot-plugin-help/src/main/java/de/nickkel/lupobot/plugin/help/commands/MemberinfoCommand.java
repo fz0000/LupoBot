@@ -8,8 +8,10 @@ import de.nickkel.lupobot.core.util.TimeUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 @CommandInfo(name = "memberinfo", category = "information")
+
 public class MemberinfoCommand extends LupoCommand {
 
     @Override
@@ -44,5 +46,10 @@ public class MemberinfoCommand extends LupoCommand {
         builder.addField(context.getServer().translate(context.getPlugin(), "help_memberinfo-joined"), TimeUtils.format(member.getTimeJoined()), false);
         builder.addField(context.getServer().translate(context.getPlugin(), "help_memberinfo-roles"), roles, false);
         context.getChannel().sendMessage(builder.build()).queue();
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+
     }
 }

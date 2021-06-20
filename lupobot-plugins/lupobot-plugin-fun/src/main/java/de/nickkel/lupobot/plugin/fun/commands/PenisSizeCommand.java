@@ -4,19 +4,32 @@ import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
+import de.nickkel.lupobot.core.command.SlashOption;
 import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 @CommandInfo(name = "penissize", aliases = "ps", category = "general")
+@SlashOption(name = "member", type = OptionType.USER, required = false)
 public class PenisSizeCommand extends LupoCommand {
     @Override
     public void onCommand(CommandContext context) {
-        if (context.getArgs().length == 1) {
-            context.getChannel().sendMessage(getEmbed(context, context.getServer().getMember(context.getArgs()[0])).build()).queue();
+        if (context.getArgs().length == 1 || (context.getSlash() != null && context.getSlash().getOption("member") != null)) {
+            if (context.getSlash() == null) {
+                send(context, getEmbed(context, context.getServer().getMember(context.getArgs()[0])));
+            } else {
+                send(context, getEmbed(context, context.getSlash().getOption("member").getAsMember()));
+            }
         } else {
-            context.getChannel().sendMessage(getEmbed(context, context.getMember()).build()).queue();
+            send(context, (getEmbed(context, context.getMember()).build()));
         }
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+        onCommand(context);
     }
 
     private EmbedBuilder getEmbed(CommandContext context, Member member) {

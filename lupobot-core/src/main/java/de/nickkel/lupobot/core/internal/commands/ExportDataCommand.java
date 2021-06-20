@@ -7,6 +7,7 @@ import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.util.LupoColor;
 import de.nickkel.lupobot.core.util.TimeUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -24,7 +25,7 @@ public class ExportDataCommand extends LupoCommand {
             builder.setColor(LupoColor.RED.getColor());
             builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null,
                     context.getMember().getUser().getAvatarUrl());
-            builder.setTimestamp(context.getMessage().getTimeCreated());
+            builder.setTimestamp(context.getTime());
             builder.setDescription(context.getServer().translate(context.getPlugin(), "core_exportdata-already-requested",
                     TimeUtils.format(context, lastDataExport+7776000000L-System.currentTimeMillis())));
             context.getChannel().sendMessage(builder.build()).queue();
@@ -35,8 +36,8 @@ public class ExportDataCommand extends LupoCommand {
         builder.setColor(LupoColor.ORANGE.getColor());
         builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null,
                 context.getMember().getUser().getAvatarUrl());
-        builder.setTimestamp(context.getMessage().getTimeCreated());
-        builder.setDescription(context.getServer().translate(context.getPlugin(), "core_exportdata-description"));
+        builder.setTimestamp(context.getTime());
+        builder.setDescription(context.getServer().translate(context.getPlugin(), "core_exportdata-channel-description"));
 
         builder.addField(context.getServer().translate(context.getPlugin(), "core_exportdata-user"),
                 context.getServer().translate(context.getPlugin(), "core_exportdata-user-description"), false);
@@ -50,7 +51,7 @@ public class ExportDataCommand extends LupoCommand {
         builder.addField(context.getServer().translate(context.getPlugin(), "core_exportdata-warning"),
                 context.getServer().translate(context.getPlugin(), "core_exportdata-warning-description"), false);
 
-        context.getChannel().sendMessage(builder.build()).queue();
+        send(context, builder);
 
         context.getMember().getUser().openPrivateChannel().queue((channel) -> {
             EmbedBuilder dataBuilder = new EmbedBuilder();
@@ -58,7 +59,7 @@ public class ExportDataCommand extends LupoCommand {
             dataBuilder.setAuthor(context.getServer().translate(context.getPlugin(), "core_exportdata-request"), null,
                     LupoBot.getInstance().getSelfUser().getAvatarUrl());
             dataBuilder.setDescription(context.getServer().translate(context.getPlugin(), "core_exportdata-request-description"));
-            dataBuilder.setTimestamp(context.getMessage().getTimeCreated());
+            dataBuilder.setTimestamp(context.getTime());
 
             String userContent = context.getUser().getData().toJson();
             String serverContent = context.getServer().getData().toJson();
@@ -90,5 +91,10 @@ public class ExportDataCommand extends LupoCommand {
             }
             context.getUser().getData().append("lastDataExport", System.currentTimeMillis());
         });
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+        onCommand(context);
     }
 }

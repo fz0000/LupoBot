@@ -5,6 +5,7 @@ import com.github.ygimenez.model.ThrowingBiConsumer;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.CommandInfo;
 import de.nickkel.lupobot.core.command.LupoCommand;
+import de.nickkel.lupobot.core.command.SlashOption;
 import de.nickkel.lupobot.core.pagination.Page;
 import de.nickkel.lupobot.core.pagination.Paginator;
 import de.nickkel.lupobot.plugin.fun.LupoFunPlugin;
@@ -12,6 +13,8 @@ import de.nickkel.lupobot.plugin.fun.game.TicTacToeGame;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.components.Button;
 
 import java.util.ArrayList;
@@ -21,11 +24,20 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 
 @CommandInfo(name = "tictactoe", aliases = "ttt", cooldown = 5, category = "game")
+@SlashOption(name = "member", type = OptionType.USER)
 public class TicTacToeCommand extends LupoCommand {
+
     @Override
     public void onCommand(CommandContext context) {
-        if (context.getArgs().length == 1) {
-            Member member = context.getServer().getMember(context.getArgs()[0]);
+        if (context.getArgs().length == 1 || context.getSlash() != null) {
+            context.setEphemeral(false);
+            Member member;
+            if (context.getSlash() != null) {
+                member = context.getServer().getMember(context.getArgs()[0]);
+            } else {
+                member = context.getSlash().getOption("member").getAsMember();
+            }
+
             if (member == null) {
                 sendSyntaxError(context, "fun_tictactoe-invalid-player");
                 return;
@@ -67,5 +79,11 @@ public class TicTacToeCommand extends LupoCommand {
         } else {
             sendSyntaxError(context, "fun_tictactoe-no-player");
         }
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+        slash.deferReply().queue();
+        onCommand(context);
     }
 }

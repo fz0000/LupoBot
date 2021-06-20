@@ -8,6 +8,7 @@ import de.nickkel.lupobot.plugin.currency.LupoCurrencyPlugin;
 import de.nickkel.lupobot.plugin.currency.data.CurrencyUser;
 import de.nickkel.lupobot.plugin.currency.entities.Item;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 @CommandInfo(name = "itemchest", category = "chest")
 public class ItemChestCommand extends LupoCommand {
@@ -34,6 +35,11 @@ public class ItemChestCommand extends LupoCommand {
         builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getIdLong() + ")", null, context.getMember().getUser().getAvatarUrl());
         builder.setDescription(context.getServer().translate(context.getPlugin(), "currency_itemchest-success", item1.getIcon() + " " + item1.getName(),
                 item1.getBuy(), item2.getIcon() + " " + item2.getName(), item2.getBuy()));
-        context.getChannel().sendMessage(builder.build()).queue();
+        send(context, builder);
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+        onCommand(context);
     }
 }

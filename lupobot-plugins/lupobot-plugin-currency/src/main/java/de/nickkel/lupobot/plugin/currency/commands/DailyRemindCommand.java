@@ -9,6 +9,7 @@ import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.util.LupoColor;
 import de.nickkel.lupobot.plugin.currency.LupoCurrencyPlugin;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 @CommandInfo(name = "dailyremind", category = "reward")
 public class DailyRemindCommand extends LupoCommand {
@@ -21,7 +22,7 @@ public class DailyRemindCommand extends LupoCommand {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null,
                 context.getMember().getUser().getAvatarUrl());
-        builder.setTimestamp(context.getMessage().getTimeCreated());
+        builder.setTimestamp(context.getTime());
         if (dbList.contains(context.getMember().getIdLong())) {
             dbList.remove(context.getMember().getIdLong());
             builder.setColor(LupoColor.RED.getColor());
@@ -33,6 +34,11 @@ public class DailyRemindCommand extends LupoCommand {
         }
         pluginObject.append("dailyReminds", dbList);
         LupoBot.getInstance().getData().append(LupoCurrencyPlugin.getInstance().getInfo().name(), pluginObject);
-        context.getChannel().sendMessage(builder.build()).queue();
+        send(context, builder);
+    }
+
+    @Override
+    public void onSlashCommand(CommandContext context, SlashCommandEvent slash) {
+        onCommand(context);
     }
 }
