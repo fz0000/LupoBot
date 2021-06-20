@@ -9,6 +9,9 @@ public class GuildMessageReceivedListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         LogMessage message = new LogMessage(event.getMessage().getIdLong(), true);
+        if (event.getMessage().getAuthor().isBot()) {
+            return;
+        }
         message.update(event.getMessage());
     }
 }
