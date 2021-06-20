@@ -11,7 +11,7 @@ import de.nickkel.lupobot.plugin.music.lavaplayer.MusicServer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
-@CommandInfo(name = "playing", category = "player")
+@CommandInfo(name = "playing", aliases = "nowplaying", category = "player")
 public class PlayingCommand extends LupoCommand {
 
     @Override
