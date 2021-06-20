@@ -74,7 +74,7 @@ public class CommandHandler {
         if (plugin != null && !server.getPlugins().contains(plugin)) {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null, context.getMember().getUser().getAvatarUrl());
-            builder.setDescription(server.translate(null, "core_command-no-plugin"));
+            builder.setDescription(server.translate(null, "core_command-no-plugin", plugin.getInfo().name()));
             builder.addField(server.translate(null, "core_command-plugin"), server.translatePluginName(plugin), false);
             builder.setColor(LupoColor.DARK_GRAY.getColor());
             builder.setFooter(server.translate(null, "core_used-command", server.getPrefix() + context.getLabel()));
