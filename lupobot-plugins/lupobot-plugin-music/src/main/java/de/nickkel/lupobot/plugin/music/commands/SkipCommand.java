@@ -51,10 +51,10 @@ public class SkipCommand extends LupoCommand {
                 if (server.getScheduler().getVoteSkip().size() == members) {
                     server.getScheduler().next();
                     builder.setDescription(context.getServer().translate(context.getPlugin(), "music_skip-success",
-                            server.getAudioPlayer().getPlayingTrack().getInfo().title, server.getScheduler().getVoteSkip().size(), members));
+                            server.getAudioPlayer().getPlayingTrack().getInfo().title, members, members));
                 } else {
                     builder.setDescription(context.getServer().translate(context.getPlugin(), "music_skip-voted",
-                            members, members));
+                            server.getScheduler().getVoteSkip().size(), members));
                 }
             }
         }
