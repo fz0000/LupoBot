@@ -51,6 +51,7 @@ public class MusicServer {
                 } else {
                     MusicServer.this.scheduler.queue(audioTrack);
                 }
+                context.getSlash().deferReply().queue();
                 onQueue(context, audioTrack);
             }
 
