@@ -15,15 +15,18 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class TrackScheduler extends AudioEventAdapter {
 
     @Getter
+    private final MusicServer server;
+    @Getter
     private final AudioPlayer player;
     @Getter
     private final BlockingQueue<AudioTrack> queue;
     @Getter
     private final List<Member> voteSkip = new ArrayList<>();
 
-    public TrackScheduler(AudioPlayer player) {
+    public TrackScheduler(AudioPlayer player, MusicServer server) {
         this.player = player;
         this.queue = new LinkedBlockingQueue<>();
+        this.server = server;
     }
 
     public void next() {
@@ -41,6 +44,8 @@ public class TrackScheduler extends AudioEventAdapter {
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         if (endReason.mayStartNext) {
             next();
+        } else {
+            this.server.getGuild().getAudioManager().closeAudioConnection();
         }
     }
 }

@@ -39,7 +39,7 @@ public class MusicServer {
         this.server = LupoServer.getByGuild(this.guild);
         this.audioPlayer = manager.createPlayer();
         this.audioPlayer.setVolume(getVolume());
-        this.scheduler = new TrackScheduler(this.audioPlayer);
+        this.scheduler = new TrackScheduler(this.audioPlayer, this);
         this.audioPlayer.addListener(this.scheduler);
         this.sendHandler = new AudioPlayerSendHandler(this.audioPlayer);
     }
