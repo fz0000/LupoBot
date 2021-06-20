@@ -47,7 +47,14 @@ public class VolumeCommand extends LupoCommand {
                 sendSyntaxError(context, "music_volume-only-numbers");
             }
         } else {
-            sendHelp(context);
+            MusicServer server = LupoMusicPlugin.getInstance().getMusicServer(context.getGuild());
+            EmbedBuilder builder = new EmbedBuilder();
+            builder.setColor(LupoColor.ORANGE.getColor());
+            builder.setAuthor(context.getServer().translate(context.getPlugin(), "music_volume-title"), null,
+                    "https://cdn.pixabay.com/photo/2019/08/11/18/27/icon-4399630_960_720.png");
+            builder.setDescription(context.getServer().translate(context.getPlugin(), "music_current-volume", server.getVolume()));
+            builder.setTimestamp(context.getTime());
+            send(context, builder);
         }
     }
 

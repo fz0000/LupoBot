@@ -6,6 +6,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.data.LupoServer;
@@ -37,9 +38,14 @@ public class MusicServer {
         this.guild = guild;
         this.server = LupoServer.getByGuild(this.guild);
         this.audioPlayer = manager.createPlayer();
+        this.audioPlayer.setVolume(getVolume());
         this.scheduler = new TrackScheduler(this.audioPlayer);
         this.audioPlayer.addListener(this.scheduler);
         this.sendHandler = new AudioPlayerSendHandler(this.audioPlayer);
+    }
+
+    public int getVolume() {
+        return Integer.parseInt(String.valueOf(this.server.getPluginLong(LupoBot.getInstance().getPlugin(LupoMusicPlugin.getInstance().getInfo().name()), "volume")));
     }
 
     public void play(LupoCommand command, CommandContext context, String trackUrl) {
