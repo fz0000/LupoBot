@@ -1,0 +1,26 @@
+name: Bug Report
+description: Create a bug report for LupoBot.
+labels: [bugreport]
+body:
+  - type: textarea
+    attributes:
+      label: How the bug can be reproduced?
+      description: 'Please describe the problem and the steps to reproduce the bug as detailed as possible.'
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: What behaviour would normally be expected?
+      description: 'Please describe what would or should happen if the problem would not exist.'
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: When did the problem occur?
+      description: 'For example: 01/01/2021 21:00'
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Additional information
+      description: 'This text area can be used for additional information which does not match the questions.'

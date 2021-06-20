@@ -1,0 +1,20 @@
+name: Suggestion
+description: Create a suggestion for LupoBot.
+labels: [suggestion]
+body:
+  - type: textarea
+    attributes:
+      label: What is the suggestion about?
+      description: 'Please describe the suggestion accurately. It is best to give as much information as possible so that we can implement the suggestion better.'
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Why should we add this feature?
+      description: 'Please describe what advantages your feature would have.'
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Additional information
+      description: 'This text area can be used for additional information which does not match the questions.'
