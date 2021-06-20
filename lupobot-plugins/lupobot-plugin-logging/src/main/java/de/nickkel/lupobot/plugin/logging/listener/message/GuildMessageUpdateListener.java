@@ -16,6 +16,9 @@ public class GuildMessageUpdateListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageUpdate(@NotNull GuildMessageUpdateEvent event) {
+        if (event.getMessage().getAuthor().isBot()) {
+            return;
+        }
         LogMessage message = new LogMessage(event.getMessage().getIdLong(), true);
         try {
             LupoServer server = LupoServer.getByGuild(event.getGuild());
