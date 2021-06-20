@@ -1,5 +1,6 @@
 package de.nickkel.lupobot.plugin.fun.game;
 
+import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.CommandContext;
 import de.nickkel.lupobot.core.util.LupoColor;
 import de.nickkel.lupobot.plugin.fun.LupoFunPlugin;
@@ -162,6 +163,7 @@ public class HangmanGame {
 
                 HangmanGame.this.getContext().getChannel().sendMessage(HangmanGame.this.context.getServer().translate(HangmanGame.this.getContext().getPlugin(),
                         "fun_hangman-no-response", HangmanGame.this.context.getMember().getAsMention())).queue();
+                LupoFunPlugin.getInstance().getHangmanGames().remove(HangmanGame.this);
             }
         }, 60*1000L);
     }
