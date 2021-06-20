@@ -28,8 +28,8 @@ public class CommandListener extends ListenerAdapter {
             return;
         }
 
-        String label = event.getMessage().getContentStripped().replaceFirst(prefix, "").split(" ")[0];
-        String message = event.getMessage().getContentRaw().replaceFirst(prefix, "").replaceFirst(label, "");
+        String label = event.getMessage().getContentStripped().replace(prefix, "").split(" ")[0];
+        String message = event.getMessage().getContentRaw().replace(prefix, "").replace(label, "");
         if (message.startsWith(" ")) {
             message = message.substring(1);
         }
