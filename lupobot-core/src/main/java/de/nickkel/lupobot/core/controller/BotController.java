@@ -18,6 +18,9 @@ public class BotController {
         app.routes(() -> {
             path("v1/bot", () -> {
                 get(this::getBot);
+                path("update-commands", () -> {
+                   post(this::updateCommands);
+                });
                 path("status", () -> {
                     get(this::getStatus);
                     path(":key", () -> {
@@ -48,6 +51,9 @@ public class BotController {
         ctx.status(201).result(new Document(jsonObject).convertToJson());
     }
 
+    public void updateCommands(Context ctx) {
+        LupoBot.getInstance().getCommandHandler().registerSlashCommands();
+    }
     public void getStatus(Context ctx) {
         ctx.status(201).result(new Document().append("status", LupoBot.getInstance().getSelfUser().getJDA().getPresence().getStatus().toString()).convertToJson());
     }
