@@ -111,7 +111,7 @@ public class RewardRoleCommand extends LupoCommand {
             BasicDBObject rewardObject = (BasicDBObject) pluginObject.get("rewardRoles");
 
             EmbedBuilder builder = new EmbedBuilder();
-            builder.setTimestamp(context.getMessage().getTimeCreated().toInstant());
+            builder.setTimestamp(context.getTime());
             builder.setColor(LupoColor.ORANGE.getColor());
             builder.setAuthor(context.getGuild().getName() + " (" + context.getGuild().getId() + ")", null, context.getGuild().getIconUrl());
 

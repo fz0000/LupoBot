@@ -22,7 +22,9 @@ public class LevelCommand extends LupoCommand {
             if (context.getSlash() == null) {
                 member = context.getServer().getMember(context.getArgs()[0]);
             } else {
-                member = context.getSlash().getOption("member").getAsMember();
+                if (context.getSlash().getOption("member") != null) {
+                    member = context.getSlash().getOption("member").getAsMember();
+                }
             }
             if (member == null) {
                 sendSyntaxError(context, "leveling_level-member-not-found");
