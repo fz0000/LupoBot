@@ -7,8 +7,10 @@ import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.config.Document;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
+import de.nickkel.lupobot.core.util.StaffGroup;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 
@@ -81,6 +83,16 @@ public class LupoUser {
         }
 
         LupoBot.getInstance().getUsers().put(this.id, this);
+    }
+
+    public boolean isStaff() {
+        return this.getStaffGroup().getPower() != 0;
+    }
+
+    public StaffGroup getStaffGroup() {
+        Member member = LupoBot.getInstance().getHub().retrieveMemberById(this.id).complete();
+        Role role = ((member.getRoles().size() > 0) ? member.getRoles().get(0) : null);
+        return new StaffGroup(role);
     }
 
     public void appendPluginData(LupoPlugin plugin, String key, Object val) {

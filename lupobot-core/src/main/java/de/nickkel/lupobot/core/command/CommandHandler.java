@@ -101,6 +101,21 @@ public class CommandHandler {
             }
         }
 
+        if (command.getInfo().staffPower() != -1) {
+            boolean error = user.getStaffGroup().getPower() <= command.getInfo().staffPower();
+            if (error) {
+                EmbedBuilder builder = new EmbedBuilder();
+                builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null, context.getMember().getUser().getAvatarUrl());
+                builder.setDescription(server.translate(null, "core_command-no-user-permission"));
+                builder.addField(server.translate(null, "core_command-staff-power-set"), server.formatLong(user.getStaffGroup().getPower()), false);
+                builder.addField(server.translate(null, "core_command-staff-power-needed"), command.getInfo().name(), false);
+                builder.setColor(LupoColor.DARK_GRAY.getColor());
+                builder.setFooter(server.translate(null, server.getPrefix() + "core_used-command", server.getPrefix() + context.getLabel()));
+                command.send(context, builder);
+                return;
+            }
+        }
+
         try {
             if (context.getSlash() != null) {
                 command.onSlashCommand(context, context.getSlash());
@@ -163,36 +178,38 @@ public class CommandHandler {
 
         List<CommandData> commandData = new ArrayList<>();
         for (LupoCommand command : LupoBot.getInstance().getCommands()) {
-            LanguageHandler handler = LupoBot.getInstance().getLanguageHandler();
-            String plugin = "core";
-            if (command.getPlugin() != null) plugin = command.getPlugin().getInfo().name();
-            if (command.getPlugin() != null) handler = command.getPlugin().getLanguageHandler();
+            if (!command.getInfo().hidden() || command.getInfo().staffPower() == -1) {
+                LanguageHandler handler = LupoBot.getInstance().getLanguageHandler();
+                String plugin = "core";
+                if (command.getPlugin() != null) plugin = command.getPlugin().getInfo().name();
+                if (command.getPlugin() != null) handler = command.getPlugin().getLanguageHandler();
 
-            String description = handler.translate("en_US", plugin + "_" + command.getInfo().name() + "-description");
-            if (description.length() > 100) description = description.substring(0, 100);
+                String description = handler.translate("en_US", plugin + "_" + command.getInfo().name() + "-description");
+                if (description.length() > 100) description = description.substring(0, 100);
 
-            CommandData data = new CommandData(command.getInfo().name(), description);
-            for (SlashOption option : command.getSlashOptions()) {
-                String optionDesc = handler.translate("en_US", plugin + "_" + command.getInfo().name() + "-option-" + option.name());
-                if (optionDesc.length() > 100) optionDesc = optionDesc.substring(0, 100);
-                OptionData optionData = new OptionData(option.type(), option.name(), optionDesc, option.required());
-                for (String choice : option.choices()) {
-                    optionData.addChoice(choice, choice);
+                CommandData data = new CommandData(command.getInfo().name(), description);
+                for (SlashOption option : command.getSlashOptions()) {
+                    String optionDesc = handler.translate("en_US", plugin + "_" + command.getInfo().name() + "-option-" + option.name());
+                    if (optionDesc.length() > 100) optionDesc = optionDesc.substring(0, 100);
+                    OptionData optionData = new OptionData(option.type(), option.name(), optionDesc, option.required());
+                    for (String choice : option.choices()) {
+                        optionData.addChoice(choice, choice);
+                    }
+                    data.addOptions(optionData);
                 }
-                data.addOptions(optionData);
-            }
-            for (SlashSubCommand subCommand : command.getSlashSubCommands()) {
-                String subDesc = handler.translate("en_US", plugin + "_" + command.getInfo().name() + "-sub-" + subCommand.name());
-                if (subDesc.length() > 100) subDesc = subDesc.substring(0, 100);
-                SubcommandData subData = new SubcommandData(subCommand.name(), subDesc);
-                for (SlashOption option : subCommand.options()) {
-                    String subOptionDesc = handler.translate("en_US", plugin + "_" + command.getInfo().name() + "-sub-" + subCommand.name() + "-option-" + option.name());
-                    if (subOptionDesc.length() > 100) subOptionDesc = subOptionDesc.substring(0, 100);
-                    subData.addOption(option.type(), option.name(), subOptionDesc, option.required());
+                for (SlashSubCommand subCommand : command.getSlashSubCommands()) {
+                    String subDesc = handler.translate("en_US", plugin + "_" + command.getInfo().name() + "-sub-" + subCommand.name());
+                    if (subDesc.length() > 100) subDesc = subDesc.substring(0, 100);
+                    SubcommandData subData = new SubcommandData(subCommand.name(), subDesc);
+                    for (SlashOption option : subCommand.options()) {
+                        String subOptionDesc = handler.translate("en_US", plugin + "_" + command.getInfo().name() + "-sub-" + subCommand.name() + "-option-" + option.name());
+                        if (subOptionDesc.length() > 100) subOptionDesc = subOptionDesc.substring(0, 100);
+                        subData.addOption(option.type(), option.name(), subOptionDesc, option.required());
+                    }
+                    data.addSubcommands(subData);
                 }
-                data.addSubcommands(subData);
+                commandData.add(data);
             }
-            commandData.add(data);
         }
         commands.addCommands(commandData).queue();
     }

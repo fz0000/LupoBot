@@ -18,5 +18,7 @@ public @interface CommandInfo {
 
     int cooldown() default 0;
 
+    int staffPower() default -1;
+
     boolean hidden() default false;
 }
