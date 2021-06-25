@@ -115,7 +115,11 @@ public class UserController {
         if (LupoUser.getById(Long.parseLong(ctx.pathParam("id"))) == null) {
             ctx.status(404).result("User not found");
         } else {
-            Document document = new Document(getUserObject(LupoUser.getById(Long.parseLong(ctx.pathParam("id")))));
+            LupoUser user = LupoUser.getById(Long.parseLong(ctx.pathParam("id")));
+            Document document = new Document(getUserObject(user));
+            if (user.getStaffGroup().getRole() != null) {
+                document.append("staffGroup", user.getStaffGroup().getRole().getName());
+            }
             ctx.status(201).result(document.convertToJson());
         }
     }

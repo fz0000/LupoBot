@@ -9,8 +9,11 @@ public class StaffGroup {
 
     @Getter
     private final long id;
+    @Getter
+    private final Role role;
 
     public StaffGroup(Role role) {
+        this.role = role;
         if (role != null) {
             this.id = role.getIdLong();
         } else {
