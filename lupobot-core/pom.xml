@@ -33,7 +33,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>4.3.0_280</version>
+            <version>4.3.0_283</version>
         </dependency>
         <dependency>
             <groupId>com.jagrosh</groupId>
@@ -72,7 +72,7 @@
         <dependency>
             <groupId>io.javalin</groupId>
             <artifactId>javalin</artifactId>
-            <version>3.13.7</version>
+            <version>3.13.8</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
