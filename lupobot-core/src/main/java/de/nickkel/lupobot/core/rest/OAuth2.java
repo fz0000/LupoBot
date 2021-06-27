@@ -63,11 +63,14 @@ public class OAuth2 {
 
                 LupoUser lupoUser = LupoUser.getById(user.getIdLong());
                 lupoUser.getData().append("cookiesToken", code);
+                if (lupoUser.getStaffGroup().getRole() != null) {
+                    document.append("staffGroup", lupoUser.getStaffGroup().getRole().getName());
+                }
 
                 return document.convertToJson();
             }
         } catch (Exception e) {
-            return e.getMessage();
+            return "Error: " + e.getMessage();
         }
 
         return "User not found";

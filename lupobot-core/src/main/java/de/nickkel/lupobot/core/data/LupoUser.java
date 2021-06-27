@@ -92,7 +92,12 @@ public class LupoUser {
     public StaffGroup getStaffGroup() {
         Member member = LupoBot.getInstance().getHub().retrieveMemberById(this.id).complete();
         Role role = ((member.getRoles().size() > 0) ? member.getRoles().get(0) : null);
-        return new StaffGroup(role);
+        Document groups = new Document(LupoBot.getInstance().getConfig().getJsonElement("staffGroups").getAsJsonObject());
+        if (role != null && groups.has(role.getId())) {
+            return new StaffGroup(role);
+        } else {
+            return new StaffGroup(null);
+        }
     }
 
     public void appendPluginData(LupoPlugin plugin, String key, Object val) {
@@ -138,6 +143,7 @@ public class LupoUser {
         try {
             discordUser = LupoBot.getInstance().getShardManager().retrieveUserById(id).complete();
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
 
