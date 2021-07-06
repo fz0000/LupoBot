@@ -58,7 +58,7 @@ public class LupoLauncher {
     public void startBot(String[] args) {
         Path path = null;
         for (File file : new File(".").listFiles()) {
-            if (file.getName().endsWith(".jar")) { //should be the core
+            if (file.getName().endsWith(".jar") && file.getName().contains("core")) { //should be the core
                 path = file.toPath();
             }
         }
