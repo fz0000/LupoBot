@@ -84,12 +84,7 @@ public class LupoCurrencyPlugin extends LupoPlugin {
     }
 
     public Item getItem(String name) {
-        for (Item item : this.items) {
-            if (item.getName().equalsIgnoreCase(name)) {
-                return item;
-            }
-        }
-        return null;
+        return this.items.stream().filter((item -> item.getName().equalsIgnoreCase(name))).findFirst().orElse(null);
     }
 
     public CurrencyUser getCurrencyUser(Member member) {

@@ -150,21 +150,11 @@ public class LupoBot {
     }
 
     public LupoCommand getCommand(String name) {
-        for (LupoCommand command : this.commands) {
-            if (command.getInfo().name().equalsIgnoreCase(name)) {
-                return command;
-            }
-        }
-        return null;
+        return this.commands.stream().filter((command -> command.getInfo().name().equalsIgnoreCase(name))).findFirst().orElse(null);
     }
 
     public LupoPlugin getPlugin(String name) {
-        for (LupoPlugin plugin : this.plugins) {
-            if (plugin.getInfo().name().equalsIgnoreCase(name)) {
-                return plugin;
-            }
-        }
-        return null;
+        return this.plugins.stream().filter((plugin -> plugin.getInfo().name().equalsIgnoreCase(name))).findFirst().orElse(null);
     }
 
     public SelfUser getSelfUser() {
