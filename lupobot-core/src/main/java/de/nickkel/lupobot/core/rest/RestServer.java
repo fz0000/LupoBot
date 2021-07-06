@@ -7,13 +7,14 @@ import lombok.Getter;
 public class RestServer {
 
     @Getter
-    private final Javalin app;
+    private Javalin app;
     @Getter
     private final OAuth2 oAuth2 = new OAuth2();
 
     public RestServer(int port) {
         if (port == -1) {
             LupoBot.getInstance().getLogger().error("Could not start RestServer! Please enter a valid port in the config.json");
+            return;
         }
 
         this.app = Javalin.create(config -> {
