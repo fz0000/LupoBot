@@ -82,8 +82,8 @@ public class LupoBot {
 
     public void run(String[] args) {
         instance = this;
-        if (new File("storage/config.json").exists()) {
-            this.config = new Document(new File("storage/config.json"));
+        if (new File("configs/config.json").exists()) {
+            this.config = new Document(new File("configs/config.json"));
         } else {
             this.config = new Document(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("config.json"));
         }

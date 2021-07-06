@@ -32,11 +32,11 @@ public class LupoLauncher {
         System.out.println();
 
         System.out.println("Starting launcher ...");
-        List<String> files = Arrays.asList("storage", "plugins");
+        List<String> files = Arrays.asList("configs", "plugins");
         for (String path : files) {
             File file = new File(path);
             if (!file.exists()) {
-                System.out.println("Could not found " + path + " file! Creating the file ...");
+                System.out.println("Could not find " + path + " file! Created file");
                 file.mkdirs();
             }
         }
@@ -57,14 +57,14 @@ public class LupoLauncher {
 
     public void startBot(String[] args) {
         Path path = null;
-        for (File file : new File("storage").listFiles()) {
+        for (File file : new File(".").listFiles()) {
             if (file.getName().endsWith(".jar")) { //should be the core
                 path = file.toPath();
             }
         }
 
         if (path == null) {
-            throw new NullPointerException("Could not find core in storage directory!");
+            throw new NullPointerException("Could not find core in default directory!");
         }
 
         try (JarFile jarFile = new JarFile(path.toFile())) {

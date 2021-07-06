@@ -39,13 +39,13 @@ public class LupoCurrencyPlugin extends LupoPlugin {
     public void onEnable() {
         instance = this;
         LupoBot.getInstance().getCommandHandler().registerCommands(this, "de.nickkel.lupobot.plugin.currency.commands");
-        if (new File("storage/items.json").exists()) {
-            this.itemConfig = new Document(new File("storage/items.json"));
+        if (new File("configs/items.json").exists()) {
+            this.itemConfig = new Document(new File("configs/items.json"));
         } else {
             this.itemConfig = new Document(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("configs/items.json"));
         }
-        if (new File("storage/jobs.json").exists()) {
-            this.jobConfig = new Document(new File("storage/jobs.json"));
+        if (new File("configs/jobs.json").exists()) {
+            this.jobConfig = new Document(new File("configs/jobs.json"));
         } else {
             this.jobConfig = new Document(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("configs/jobs.json"));
         }
