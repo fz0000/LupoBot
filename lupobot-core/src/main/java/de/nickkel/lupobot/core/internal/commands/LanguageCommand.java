@@ -43,7 +43,7 @@ public class LanguageCommand extends LupoCommand {
                 builder.setColor(LupoColor.GREEN.getColor());
                 builder.setAuthor(LupoBot.getInstance().getSelfUser().getName() + " (" + context.getGuild().getId() + ")", null, LupoBot.getInstance().getSelfUser().getAvatarUrl());
                 builder.setDescription(context.getServer().translate(null, "core_language-changed", locale.getDisplayName(locale)));
-                builder.setTimestamp(context.getMessage().getTimeCreated());
+                builder.setTimestamp(context.getTime());
                 send(context, builder);
             } else {
                 sendSyntaxError(context, "core_language-not-exists");
@@ -54,6 +54,7 @@ public class LanguageCommand extends LupoCommand {
             // Page with all languages listed
             EmbedBuilder builder = new EmbedBuilder();
             builder.setColor(LupoColor.YELLOW.getColor());
+            builder.setTimestamp(context.getTime());
             builder.setTitle(context.getServer().translate(null, "core_available-languages"));
             for (String language : LupoBot.getInstance().getAvailableLanguages()) {
                 Locale locale = new Locale(language.split("_")[0]);
