@@ -108,7 +108,7 @@ public class LupoBot {
         DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(this.config.getString("token"))
                 .setChunkingFilter(ChunkingFilter.ALL)
                 .addEventListeners(new CommandListener(), new PaginationListener())
-                .setActivity(Activity.watching("?help"));
+                .setActivity(Activity.watching(this.config.getString("activity")));
 
         this.languageHandler = new LanguageHandler(this.getClass());
         this.commandHandler = new CommandHandler();
