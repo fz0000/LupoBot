@@ -24,12 +24,13 @@ public class RestServer {
         try {
             this.start();
         } catch (Exception e) {
-            LupoBot.getInstance().getLogger().error("Could not start RestServer: " + e.getMessage());
+            LupoBot.getInstance().getLogger().error("Could not start RestServer!");
+            e.printStackTrace();
         }
     }
 
     public void start() {
-        this.config = new Document(new File("configs/rest-server.json"));
+        this.config = new Document(new File("configs/rest-server.json")).loadDocument();
         int port = this.config.getInt("port");
         List<String> ipWhitelist = this.config.getList("ipWhitelist");
 

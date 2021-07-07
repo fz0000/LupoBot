@@ -1,0 +1,18 @@
+{
+  "prefix": "?",
+  "token": "Discord Bot token",
+  "clientId": -1,
+  "clientSecret": "Discord Bot client secret",
+  "database": {
+    "name": "lupobot",
+    "clientUri": "mongodb://localhost:27017"
+  },
+  "staffGroups": {},
+  "activity": "?help",
+  "supportServer": -1,
+  "supportServerUrl": "https://discord.gg",
+  "inviteUrl": "https://discord.gg",
+  "githubUrl": "https://github.com/LupoBot/LupoBot",
+  "translateUrl": "https://crowdin.com/project/lupobot",
+  "voteUrl": "https://discord.gg"
+}
