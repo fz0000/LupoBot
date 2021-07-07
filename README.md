@@ -18,6 +18,46 @@
 
 ###
 
+## Summary
+This repository tracks bugreports and suggestions in the issue tab. You are free to contribute with a pull request. **If you have any questions etc., please join our [Discord server](https://discord.gg/SPezacNufS).**
+
+1. [REST API](#rest-api)
+
+## Installation
+### Setup
+Clone the repository.
+```shell
+git clone https://github.com/LupoBot/LupoBot.git
+```
+Build the project, requires [Java](https://www.java.com/de/) 14 and [Apache Maven](https://maven.apache.org):
+```shell
+mvn -B package --file pom.xml
+```
+Put the core and the launcher into the same directory. Then you can run the launcher and the directory structure should look like this:
+```bash
+├── configs
+│   └── ...
+├── logs
+│   └── ...
+├── plugins
+│   └── ...
+├── core.jar (file name can be different but must contain core)
+└── launchar.jar (file name can be different)
+```
+
+### Configuration
+Til LupoBot is not configured correctly, only the launcher and not the core will start. [MongoDB](https://www.mongodb.com) as database is required. Please note, that you have to create a Discord application in the [Discord Developer Portal](https://discord.com/developers/applications).
+After the configs are filled out correctly, the launcher can be started again and LupoBot should be running.
+
+## API
+Our core offers an API to create own plugins. Every plugin has its own language handler with the language files in the ``resources/locales`` directory of the plugin project. You can also create REST API controllers for the plugin and register them with
+``new Controller(LupoBot.getInstance().getRestServer().getApp())``
+
+### Main Class
+In the main class, you can run your code when the plugin is being enabled and disabled. There are also a few utils to register listeners and commands.
+- Register all command classes of a package: ``LupoBot.getInstance().getCommandHandler().registerCommands(this, "package")``
+- Register all listener classes of a package: ``new ListenerRegister(this, "package")``
+
 ## REST API
 LupoBot offers a RESTful API as interface for other services, like our website. The REST API (version: 1) has `GET` and `POST` http requests. By default, it is available on port 7000 (configurable) on the `/v1` path:
 
