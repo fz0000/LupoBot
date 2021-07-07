@@ -84,13 +84,9 @@ public class LupoBot {
 
     public void run(String[] args) {
         instance = this;
-        this.commandLineArgs = Arrays.asList(args);
 
-        if (new File("configs/config.json").exists()) {
-            this.config = new Document(new File("configs/config.json"));
-        } else {
-            this.config = new Document(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("config.json"));
-        }
+        this.commandLineArgs = Arrays.asList(args);
+        this.config = new Document(new File("configs/config.json"));
 
         if (StartArguments.MAINTENANCE) {
             DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(this.config.getString("token"))
@@ -129,12 +125,7 @@ public class LupoBot {
 
         this.shardManager.addEventListener(new CommandListener(), new PaginationListener());
         this.logger.info("LupoBot is running on " + this.shardManager.getGuilds().size() + " servers");
-
-        try {
-            this.restServer = new RestServer(this.config.getInt("restServerPort"));
-        } catch (Exception e) {
-            this.logger.error("Could not start RestServer: " + e.getMessage());
-        }
+        this.restServer = new RestServer();
     }
 
     private void login(DefaultShardManagerBuilder builder) {
