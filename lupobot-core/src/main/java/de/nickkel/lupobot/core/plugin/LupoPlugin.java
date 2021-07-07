@@ -56,7 +56,7 @@ import java.util.List;
         }
         try {
             this.botConfig = new Document(new FileResourcesUtils(this.resourcesClass).getFileFromResourceAsStream("bot.json"));
-            if (this.botConfig.convertToJsonString().equals(new Document(new FileResourcesUtils(LupoBot.getInstance().getClass()).getFileFromResourceAsStream("bot.json")).convertToJsonString())) {
+            if (this.botConfig.convertToJsonString().equals(new Document(new FileResourcesUtils(LupoBot.class).getFileFromResourceAsStream("bot.json")).convertToJsonString())) {
                 this.botConfig = null;
             }
         } catch (IllegalArgumentException e) {

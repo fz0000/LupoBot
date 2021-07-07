@@ -1,6 +1,5 @@
 package de.nickkel.lupobot.core.data;
 
-import com.google.gson.JsonObject;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
 import de.nickkel.lupobot.core.LupoBot;
@@ -12,7 +11,6 @@ import lombok.Getter;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,37 +44,30 @@ public class LupoUser {
         try {
             BasicDBObject dbObject = (BasicDBObject) JSON.parse(LupoBot.getInstance().getUserConfig().convertToJsonString());
             dbObject.append("_id", id);
-            // merge data file of all plugins into one file
-            for (LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
-                if (plugin.getUserConfig() != null) {
-                    Document document = new Document(new JsonObject());
-                    for (String key : plugin.getUserConfig().getJsonObject().keySet()) {
-                        document.append(key, plugin.getUserConfig().getJsonElement(key));
-                    }
-                    BasicDBObject basic = (BasicDBObject) JSON.parse(document.convertToJsonString());
-                    dbObject.append(plugin.getInfo().name(), basic);
-                }
-            }
             collection.insert(dbObject);
             this.data = dbObject;
         } catch (DuplicateKeyException e) {
             this.data = (BasicDBObject) cursor.one();
         }
 
-        // merge missing plugin or core data if missing
+        // merge missing core data
         for (String key : LupoBot.getInstance().getUserConfig().getJsonObject().keySet()) {
             if (!this.data.containsKey(key)) {
                 this.data.append(key, JSON.parse(new Document(LupoBot.getInstance().getUserConfig().getJsonElement(key).getAsJsonObject()).convertToJsonString()));
             }
         }
+
+        // merge missing plugin data
         for (LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
             if (plugin.getUserConfig() != null) {
-                for (String key : plugin.getUserConfig().getJsonObject().keySet()) {
+                if (!this.data.containsKey(plugin.getInfo().name())) {
+                    this.data.append(plugin.getInfo().name(), JSON.parse(new Document(plugin.getUserConfig().getJsonObject()).convertToJsonString()));
+                } else {
                     BasicDBObject dbObject = (BasicDBObject) this.data.get(plugin.getInfo().name());
-                    if (!dbObject.containsKey(key)) {
-                        BasicDBObject config = (BasicDBObject) JSON.parse(new Document(plugin.getUserConfig().getJsonObject()).convertToJsonString());
-                        dbObject.append(key, config.get(key));
-                        this.data.append(plugin.getInfo().name(), dbObject);
+                    for (String key : plugin.getUserConfig().getJsonObject().keySet()) {
+                        if (!dbObject.containsKey(key)) {
+                            dbObject.append(key, JSON.parse(new Document(plugin.getUserConfig().getJsonElement(key).getAsJsonObject()).convertToJsonString()));
+                        }
                     }
                 }
             }

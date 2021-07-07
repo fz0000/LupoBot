@@ -178,37 +178,30 @@ public class LupoBot {
         try {
             BasicDBObject dbObject = (BasicDBObject) JSON.parse(botConfig.convertToJsonString());
             dbObject.append("_id", this.getSelfUser().getIdLong());
-            // merge data file of all plugins into one file
-            for (LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
-                if (plugin.getBotConfig() != null) {
-                    Document document = new Document(new JsonObject());
-                    for (String key : plugin.getBotConfig().getJsonObject().keySet()) {
-                        document.append(key, plugin.getBotConfig().getJsonElement(key));
-                    }
-                    BasicDBObject basic = (BasicDBObject) JSON.parse(document.convertToJsonString());
-                    dbObject.append(plugin.getInfo().name(), basic);
-                }
-            }
             collection.insert(dbObject);
             this.data = dbObject;
         } catch(DuplicateKeyException e) {
             this.data = (BasicDBObject) cursor.one();
         }
 
-        // merge missing plugin or core data if missing
+        // merge missing core data
         for (String key : botConfig.getJsonObject().keySet()) {
             if (!this.data.containsKey(key)) {
                 this.data.append(key, JSON.parse(new Document(botConfig.getJsonElement(key).getAsJsonObject()).convertToJsonString()));
             }
         }
+
+        // merge missing plugin data
         for (LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
             if (plugin.getBotConfig() != null) {
-                for (String key : plugin.getBotConfig().getJsonObject().keySet()) {
+                if (!this.data.containsKey(plugin.getInfo().name())) {
+                    this.data.append(plugin.getInfo().name(), JSON.parse(new Document(plugin.getBotConfig().getJsonObject()).convertToJsonString()));
+                } else {
                     BasicDBObject dbObject = (BasicDBObject) this.data.get(plugin.getInfo().name());
-                    if (!dbObject.containsKey(key)) {
-                        BasicDBObject config = (BasicDBObject) JSON.parse(new Document(plugin.getBotConfig().getJsonObject()).convertToJsonString());
-                        dbObject.append(key, config.get(key));
-                        this.data.append(plugin.getInfo().name(), dbObject);
+                    for (String key : plugin.getBotConfig().getJsonObject().keySet()) {
+                        if (!dbObject.containsKey(key)) {
+                            dbObject.append(key, JSON.parse(new Document(plugin.getBotConfig().getJsonElement(key).getAsJsonObject()).convertToJsonString()));
+                        }
                     }
                 }
             }
