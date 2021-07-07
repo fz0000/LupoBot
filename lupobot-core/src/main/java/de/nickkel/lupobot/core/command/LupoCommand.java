@@ -29,6 +29,8 @@ public abstract class LupoCommand {
     private final SlashSubCommand[] slashSubCommands = this.getClass().getAnnotationsByType(SlashSubCommand.class);
     @Getter @Setter
     private LupoPlugin plugin;
+    @Getter
+    private boolean disabled;
 
     public abstract void onCommand(CommandContext context);
 
@@ -72,6 +74,14 @@ public abstract class LupoCommand {
         } else {
             context.getSlash().replyEmbeds(embed).setEphemeral(context.isEphemeral()).queue();
         }
+    }
+
+    public void enable() {
+        this.disabled = false;
+    }
+
+    public void disable() {
+        this.disabled = true;
     }
 
     public void sendHelp(CommandContext context) {

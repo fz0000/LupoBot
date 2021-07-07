@@ -35,5 +35,6 @@ public class RestServer {
         new GuildController(this.app);
         new BotController(this.app);
         new OAuth2Controller(this.app);
+        new CommandController(this.app);
     }
 }

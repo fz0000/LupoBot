@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
+import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
 import java.io.IOException;
@@ -110,13 +111,25 @@ public class CommandHandler {
                 builder.addField(server.translate(null, "core_command-staff-power-set"), server.formatLong(user.getStaffGroup().getPower()), false);
                 builder.addField(server.translate(null, "core_command-staff-power-needed"), command.getInfo().name(), false);
                 builder.setColor(LupoColor.DARK_GRAY.getColor());
-                builder.setFooter(server.translate(null, server.getPrefix() + "core_used-command", server.getPrefix() + context.getLabel()));
+                builder.setFooter(server.translate(null,  "core_used-command", server.getPrefix() + context.getLabel()));
                 command.send(context, builder);
                 return;
             }
         }
 
         try {
+            if (command.isDisabled()) {
+                EmbedBuilder builder = new EmbedBuilder();
+                builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null, context.getMember().getUser().getAvatarUrl());
+                builder.setDescription(server.translate(null, "core_command-disabled"));
+                builder.setColor(LupoColor.RED.getColor());
+                builder.setFooter(server.translate(null, "core_used-command", server.getPrefix() + context.getLabel()));
+                command.send(context, builder,
+                        Button.link(LupoBot.getInstance().getConfig().getString("supportServerUrl"), context.getServer().translate(context.getPlugin(), "core_command-disabled-link-support"))
+                );
+                return;
+            }
+
             if (context.getSlash() != null) {
                 command.onSlashCommand(context, context.getSlash());
             } else {
