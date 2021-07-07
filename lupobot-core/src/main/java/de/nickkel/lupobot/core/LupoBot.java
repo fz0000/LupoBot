@@ -107,7 +107,6 @@ public class LupoBot {
 
         DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(this.config.getString("token"))
                 .setChunkingFilter(ChunkingFilter.ALL)
-                .addEventListeners(new CommandListener(), new PaginationListener())
                 .setActivity(Activity.watching(this.config.getString("activity")));
 
         this.languageHandler = new LanguageHandler(this.getClass());
@@ -128,6 +127,7 @@ public class LupoBot {
         this.dataServer = new Timer("DataSaver");
         this.dataServer.schedule(new SaveDataTask(), 600*1000, 600*1000);
 
+        this.shardManager.addEventListener(new CommandListener(), new PaginationListener());
         this.logger.info("LupoBot is running on " + this.shardManager.getGuilds().size() + " servers");
 
         try {
