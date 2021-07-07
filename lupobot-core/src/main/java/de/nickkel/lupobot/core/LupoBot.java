@@ -54,6 +54,8 @@ public class LupoBot {
     @Getter
     private MongoClient mongoClient;
     @Getter
+    private List<String> commandLineArgs;
+    @Getter
     private BasicDBObject data;
     @Getter
     private final List<LupoPlugin> plugins = new ArrayList<>();
@@ -82,22 +84,22 @@ public class LupoBot {
 
     public void run(String[] args) {
         instance = this;
+        this.commandLineArgs = Arrays.asList(args);
+
         if (new File("configs/config.json").exists()) {
             this.config = new Document(new File("configs/config.json"));
         } else {
             this.config = new Document(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("config.json"));
         }
 
-        for (String arg : args) {
-            if (arg.equalsIgnoreCase("--maintenance")) {
-                DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(this.config.getString("token"))
-                        .addEventListeners(new MaintenanceListener())
-                        .setStatus(OnlineStatus.DO_NOT_DISTURB)
-                        .setActivity(Activity.watching("Maintenance"));
-                this.logger.info("Running in maintenance mode!");
-                this.login(builder);
-                return;
-            }
+        if (StartArguments.MAINTENANCE) {
+            DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(this.config.getString("token"))
+                    .addEventListeners(new MaintenanceListener())
+                    .setStatus(OnlineStatus.DO_NOT_DISTURB)
+                    .setActivity(Activity.watching("Maintenance"));
+            this.logger.info("Running in maintenance mode!");
+            this.login(builder);
+            return;
         }
 
         this.userConfig = new Document(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("user.json"));

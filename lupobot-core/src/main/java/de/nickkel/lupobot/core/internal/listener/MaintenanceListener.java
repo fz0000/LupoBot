@@ -18,7 +18,7 @@ public class MaintenanceListener extends ListenerAdapter {
             builder.addField("If you have any questions, feel free to join our Discord server:", LupoBot.getInstance().getConfig().getString("supportServerUrl"), false);
             builder.setColor(LupoColor.RED.getColor());
             builder.setTimestamp(event.getMessage().getTimeCreated());
-            event.getChannel().sendMessage(builder.build()).queue();
+            event.getChannel().sendMessageEmbeds(builder.build()).queue();
         }
     }
 }
