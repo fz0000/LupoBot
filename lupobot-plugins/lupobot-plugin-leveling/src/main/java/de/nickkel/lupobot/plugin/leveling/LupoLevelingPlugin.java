@@ -21,13 +21,13 @@ public class LupoLevelingPlugin extends LupoPlugin {
 
     @Getter
     public static LupoLevelingPlugin instance;
-    private Map<Long, Long> lastReceivedXP = new HashMap<>();
+    private final Map<Long, Long> lastReceivedXP = new HashMap<>();
 
     @Override
     public void onEnable() {
         instance = this;
-        LupoBot.getInstance().getCommandHandler().registerCommands(this, "de.nickkel.lupobot.plugin.leveling.commands");
-        new ListenerRegister(this, "de.nickkel.lupobot.plugin.leveling.listener");
+        this.registerCommands("de.nickkel.lupobot.plugin.leveling.commands");
+        this.registerListeners("de.nickkel.lupobot.plugin.leveling.listener");
     }
 
     @Override

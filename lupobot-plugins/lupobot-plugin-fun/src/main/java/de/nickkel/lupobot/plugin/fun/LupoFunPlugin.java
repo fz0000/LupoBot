@@ -24,8 +24,8 @@ public class LupoFunPlugin extends LupoPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        LupoBot.getInstance().getCommandHandler().registerCommands(this, "de.nickkel.lupobot.plugin.fun.commands");
-        new ListenerRegister(this, "de.nickkel.lupobot.plugin.fun.listener");
+        this.registerCommands("de.nickkel.lupobot.plugin.fun.commands");
+        this.registerListeners("de.nickkel.lupobot.plugin.fun.listener");
     }
 
     @Override

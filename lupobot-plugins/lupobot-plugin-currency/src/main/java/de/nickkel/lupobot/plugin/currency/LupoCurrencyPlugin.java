@@ -38,7 +38,8 @@ public class LupoCurrencyPlugin extends LupoPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        LupoBot.getInstance().getCommandHandler().registerCommands(this, "de.nickkel.lupobot.plugin.currency.commands");
+        this.registerCommands("de.nickkel.lupobot.plugin.currency.commands");
+
         if (new File("configs/items.json").exists()) {
             this.itemConfig = new Document(new File("configs/items.json")).loadDocument();
         } else {
@@ -49,8 +50,10 @@ public class LupoCurrencyPlugin extends LupoPlugin {
         } else {
             this.jobConfig = new Document(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("configs/jobs.json"));
         }
+
         this.loadItems();
         this.loadJobs();
+
         this.dailyRemindTask = new Timer("DailyReminder");
         this.dailyRemindTask.schedule(new DailyRemindTask(), 600*1000, 3600*1000);
         this.richestList = new RichestList();

@@ -28,7 +28,7 @@ public class LupoMusicPlugin extends LupoPlugin {
         this.audioPlayerManager = new DefaultAudioPlayerManager();
         AudioSourceManagers.registerRemoteSources(this.audioPlayerManager);
         AudioSourceManagers.registerLocalSource(this.audioPlayerManager);
-        LupoBot.getInstance().getCommandHandler().registerCommands(this, "de.nickkel.lupobot.plugin.music.commands");
+        this.registerCommands("de.nickkel.lupobot.plugin.music.commands");
     }
 
     @Override

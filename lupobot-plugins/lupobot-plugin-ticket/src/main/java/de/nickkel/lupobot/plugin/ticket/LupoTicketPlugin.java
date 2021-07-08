@@ -21,8 +21,8 @@ public class LupoTicketPlugin extends LupoPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        LupoBot.getInstance().getCommandHandler().registerCommands(this, "de.nickkel.lupobot.plugin.ticket.commands");
-        new ListenerRegister(this, "de.nickkel.lupobot.plugin.ticket.listener");
+        this.registerCommands("de.nickkel.lupobot.plugin.ticket.commands");
+        this.registerListeners("de.nickkel.lupobot.plugin.ticket.listener");
     }
 
     @Override

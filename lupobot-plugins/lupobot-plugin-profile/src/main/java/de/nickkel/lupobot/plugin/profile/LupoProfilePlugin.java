@@ -20,7 +20,7 @@ public class LupoProfilePlugin extends LupoPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        LupoBot.getInstance().getCommandHandler().registerCommands(this, "de.nickkel.lupobot.plugin.profile.commands");
+        this.registerCommands("de.nickkel.lupobot.plugin.profile.commands");
     }
 
     @Override

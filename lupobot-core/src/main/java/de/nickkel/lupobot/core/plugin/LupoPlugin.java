@@ -5,6 +5,7 @@ import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.config.Document;
 import de.nickkel.lupobot.core.language.LanguageHandler;
 import de.nickkel.lupobot.core.util.FileResourcesUtils;
+import de.nickkel.lupobot.core.util.ListenerRegister;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,6 +37,14 @@ import java.util.List;
     public abstract void onEnable();
 
     public abstract void onDisable();
+
+    public void registerCommands(String packageName) {
+        LupoBot.getInstance().getCommandHandler().registerCommands(this, packageName);
+    }
+
+    public void registerListeners(String packageName) {
+        new ListenerRegister(this, packageName);
+    }
 
     public void loadResources() {
         try {

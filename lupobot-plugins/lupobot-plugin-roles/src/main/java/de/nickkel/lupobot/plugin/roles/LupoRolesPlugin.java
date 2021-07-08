@@ -20,8 +20,8 @@ public class LupoRolesPlugin extends LupoPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        LupoBot.getInstance().getCommandHandler().registerCommands(this, "de.nickkel.lupobot.plugin.roles.commands");
-        new ListenerRegister(this, "de.nickkel.lupobot.plugin.roles.listener");
+        this.registerCommands("de.nickkel.lupobot.plugin.roles.commands");
+        this.registerListeners("de.nickkel.lupobot.plugin.roles.listener");
     }
 
     @Override

@@ -9,7 +9,7 @@ public class LupoHelpPlugin extends LupoPlugin {
 
     @Override
     public void onEnable() {
-        LupoBot.getInstance().getCommandHandler().registerCommands(this, "de.nickkel.lupobot.plugin.help.commands");
+        this.registerCommands("de.nickkel.lupobot.plugin.help.commands");
     }
 
     @Override
