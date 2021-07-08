@@ -24,8 +24,7 @@ public class RestServer {
         try {
             this.start();
         } catch (Exception e) {
-            LupoBot.getInstance().getLogger().error("Could not start RestServer!");
-            e.printStackTrace();
+            LupoBot.getInstance().getLogger().error("Could not start RestServer!", e);
         }
     }
 

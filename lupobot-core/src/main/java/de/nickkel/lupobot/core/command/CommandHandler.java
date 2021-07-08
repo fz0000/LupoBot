@@ -19,9 +19,18 @@ import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class CommandHandler {
+
+    private int commandThreadNumber = 0;
+    private final ExecutorService commandService = this.createCommandPool(r -> {
+       Thread thread = new Thread(r);
+       thread.setDaemon(false);
+       thread.setUncaughtExceptionHandler((t, e) -> LupoBot.getInstance().getLogger().error("An unexpected exception occurred in " + t.getName() + ":", e));
+       thread.setName("Command Thread #" + commandThreadNumber++);
+       return thread;
+    });
 
     public void runCommand(CommandContext context) {
         LupoServer server = LupoServer.getByGuild(context.getGuild());
@@ -130,14 +139,17 @@ public class CommandHandler {
                 return;
             }
 
-            if (context.getSlash() != null) {
-                command.onSlashCommand(context, context.getSlash());
-            } else {
-                command.onCommand(context);
-            }
-            if (command.getInfo().cooldown() != 0) {
-                user.getCooldowns().put(command, System.currentTimeMillis());
-            }
+            LupoCommand finalCommand = command;
+            this.commandService.execute(() -> {
+                if (context.getSlash() != null) {
+                    finalCommand.onSlashCommand(context, context.getSlash());
+                } else {
+                    finalCommand.onCommand(context);
+                }
+                if (finalCommand.getInfo().cooldown() != 0) {
+                    user.getCooldowns().put(finalCommand, System.currentTimeMillis());
+                }
+            });
         } catch (PermissionException permissionException) {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null, context.getMember().getUser().getAvatarUrl());
@@ -277,5 +289,9 @@ public class CommandHandler {
         } catch (IOException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    public ExecutorService createCommandPool(ThreadFactory factory) {
+        return new ThreadPoolExecutor(4, Runtime.getRuntime().availableProcessors() * 4, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), factory);
     }
 }
