@@ -87,7 +87,6 @@ public class LupoBot {
 
         this.commandLineArgs = Arrays.asList(args);
         this.config = new Document(new File("configs/config.json")).loadDocument();
-        System.out.println(Arrays.toString(Arrays.stream(new File("configs").listFiles()).toArray()));
 
         if (StartArguments.MAINTENANCE) {
             DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(this.config.getString("token"))

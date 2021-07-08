@@ -35,8 +35,7 @@ public class PluginLoader {
             try {
                 loadPlugin(path);
             } catch (Exception e) {
-                LupoBot.getInstance().getLogger().error("Failed to load plugin " + path.toString() + ": " + e.getMessage());
-                e.printStackTrace();
+                LupoBot.getInstance().getLogger().error("Failed to load plugin " + path.toString() + ":", e);
             }
         }
     }
