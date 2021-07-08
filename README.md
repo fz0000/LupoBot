@@ -19,9 +19,11 @@
 ###
 
 ## Summary
-This repository tracks bugreports and suggestions in the issue tab. You are free to contribute with a pull request. **If you have any questions etc., please join our [Discord server](https://discord.gg/SPezacNufS).**
+This repository tracks bugreports and suggestions in the issue tab. You are free to contribute with a Pull Request. **If you have any questions etc., please join our [Discord server](https://discord.gg/SPezacNufS).**
 
-1. [REST API](#rest-api)
+1. [Installation](#installation)
+2. [API](#api)
+3. [REST API](#rest-api)
 
 ## Installation
 ### Setup
@@ -50,13 +52,97 @@ Til LupoBot is not configured correctly, only the launcher and not the core will
 After the configs are filled out correctly, the launcher can be started again and LupoBot should be running.
 
 ## API
-Our core offers an API to create own plugins. Every plugin has its own language handler with the language files in the ``resources/locales`` directory of the plugin project. You can also create REST API controllers for the plugin and register them with
-``new Controller(LupoBot.getInstance().getRestServer().getApp())``
+Our core offers an API to create own plugins. All plugins can be found in the [lupobot-plugins](https://github.com/LupoBot/LupoBot/tree/master/lupobot-plugins) project in which each plugin has its own project. The ``pom.xml`` of the plugin project needs the core as dependency and should use the Maven Shade Plugin. [Click here for an example pom.xml.](https://github.com/LupoBot/LupoBot/blob/master/lupobot-plugins/lupobot-plugin-fun/pom.xml)
 
 ### Main Class
-In the main class, you can run your code when the plugin is being enabled and disabled. There are also a few utils to register listeners and commands.
-- Register all command classes of a package: ``LupoBot.getInstance().getCommandHandler().registerCommands(this, "package")``
-- Register all listener classes of a package: ``new ListenerRegister(this, "package")``
+The main class extends ``LupoPlugin`` and in it, you can run your code when the plugin is being enabled in the ``onEnable()`` and disabled in the ``onDisable()`` method. There are also a few util methods to register listeners with ``registerListeners("...")`` and commands with ``registerCommands("...")``.
+
+The ``@PluginInfo`` annotation needs to be applied to the class.
+
+**Example:**
+```java
+@PluginInfo(name = "logging", author = "Nickkel")
+public class LupoLoggingPlugin extends LupoPlugin {
+
+    @Getter
+    public static LupoLoggingPlugin instance;
+
+    @Override
+    public void onEnable() {
+        instance = this;
+        this.registerCommands("de.nickkel.lupobot.plugin.logging.commands");
+        this.registerListener("de.nickkel.lupobot.plugin.logging.listener");
+    }
+
+    @Override
+    public void onDisable() {
+
+    }
+}
+```
+
+### Plugin Data
+Each plugin can store data. There are different types of data which are stored in the database:
+- Bot (``LupoBot.getInstance().getData()``)
+- User (``LupoUser.getByMember(member)``)
+- Server (``LupoServer.getByGuild(guild)``)
+
+You can get the BascDBObject by using the ``getData()`` method of the LupoUser or LupoServer class. You can only get data which exists, otherwise it will be null. To store data for your plugin, you need to create a JSON file in the resources folder called ``bot.json`` (bot data), ``user.json`` (user data) or ``server.json``. In this JSON file, you can set data keys and their default values.
+
+**Example:**
+```json
+{
+  "lastTicketId": 0,
+  "supportTeamRoles": [],
+  "limitAmount": 1,
+  "visibleEveryone": false,
+  "creationMessage": -1,
+  "notifyChannel": -1,
+  "claimedCategory": -1,
+  "openedCategory": -1,
+  "closedCategory": -1,
+  "tickets": {}
+}
+```
+
+Each plugin data will be merged into one final data ``getData()`` file, which could look like this (the plugin data is in an object called like the plugin):
+```json
+{
+  "logging": {
+    "lastTicketId": 0,
+    "supportTeamRoles": [],
+    "limitAmount": 1,
+    "visibleEveryone": false,
+    "creationMessage": -1,
+    "notifyChannel": -1,
+    "claimedCategory": -1,
+    "openedCategory": -1,
+    "closedCategory": -1,
+    "tickets": {}
+  },
+  "tickets": {
+    "...": "..."
+  }
+}
+```
+To get the plugin data directly, you can use the ``getPluginData(plugin, "key")`` method in each of these classes instead of ``getData()``.
+
+### Localization
+It is important to localize your plugin. The strings and the language files should be found in the ``resources/locales`` folder of the plugin project. As source language, we use English so that there should be a ``en_US.properties`` file. You can use ``%prefix%`` as variable for the server prefix.
+
+The locale names start with the plugin name, it has the following schema:
+```properties
+<plugin-name>_your-locale-name = Your string
+```
+Please note, that each command needs at least three locales with general information.
+
+**Example:**
+```properties
+fun_eightball-description = Get an answer to your question
+fun_eightball-usage = %prefix%eightball <question>
+fun_eightball-example = %prefix%eightball Do you like LupoBot?
+```
+To get a locale, simply get the server with ``LupoServer.getByGuild(guild)`` and use the ``translate(plugin, "locale", params...)`` method.
 
 ## REST API
 LupoBot offers a RESTful API as interface for other services, like our website. The REST API (version: 1) has `GET` and `POST` http requests. By default, it is available on port 7000 (configurable) on the `/v1` path:
