@@ -13,7 +13,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import java.util.HashMap;
 import java.util.Map;
 
-@PluginInfo(name = "music", version = "1.0.0", author = "Nickkel")
+@PluginInfo(name = "music", author = "Nickkel")
 public class LupoMusicPlugin extends LupoPlugin {
 
     @Getter

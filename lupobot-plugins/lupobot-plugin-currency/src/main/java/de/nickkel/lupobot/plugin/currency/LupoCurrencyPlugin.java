@@ -19,7 +19,7 @@ import net.dv8tion.jda.api.entities.Member;
 import java.io.File;
 import java.util.*;
 
-@PluginInfo(name = "currency", version = "1.0.0", author = "Nickkel")
+@PluginInfo(name = "currency", author = "Nickkel")
 public class LupoCurrencyPlugin extends LupoPlugin {
 
     @Getter

@@ -64,12 +64,12 @@ public class PluginLoader {
             plugin.setResourcesClass(resourcesClass);
             plugin.loadResources();
             LupoBot.getInstance().getPlugins().add(plugin);
-            LupoBot.getInstance().getLogger().info("Loaded plugin " + plugin.getInfo().name() + " version " + plugin.getInfo().version() + " by " + plugin.getInfo().author());
+            LupoBot.getInstance().getLogger().info("Loaded plugin " + plugin.getInfo().name() + " version " + plugin.getResourcesClass().getPackage().getImplementationVersion() + " by " + plugin.getInfo().author());
 
             if (!plugin.isEnabled()) {
                 plugin.onEnable();
                 plugin.setEnabled(true);
-                LupoBot.getInstance().getLogger().info("Enabled plugin " + plugin.getInfo().name() + " version " + plugin.getInfo().version());
+                LupoBot.getInstance().getLogger().info("Enabled plugin " + plugin.getInfo().name() + " version " + plugin.getResourcesClass().getPackage().getImplementationVersion());
             }
 
         } catch (IOException | ReflectiveOperationException e) {
@@ -92,7 +92,7 @@ public class PluginLoader {
             }
             plugin.onDisable();
         }
-        LupoBot.getInstance().getLogger().info("Unloaded plugin " + plugin.getInfo().name() + " version " + plugin.getInfo().version());
+        LupoBot.getInstance().getLogger().info("Unloaded plugin " + plugin.getInfo().name() + " version " + plugin.getResourcesClass().getPackage().getImplementationVersion());
         LupoBot.getInstance().getPlugins().remove(plugin);
     }
 

@@ -4,7 +4,7 @@ import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.plugin.PluginInfo;
 
-@PluginInfo(name = "help", version = "1.0.0", author = "Nickkel")
+@PluginInfo(name = "help", author = "Nickkel")
 public class LupoHelpPlugin extends LupoPlugin {
 
     @Override

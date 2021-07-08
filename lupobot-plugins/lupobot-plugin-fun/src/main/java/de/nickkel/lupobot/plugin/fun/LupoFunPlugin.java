@@ -11,7 +11,7 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.List;
 
-@PluginInfo(name = "fun", version = "1.0.0", author = "Nickkel")
+@PluginInfo(name = "fun", author = "Nickkel")
 public class LupoFunPlugin extends LupoPlugin {
 
     @Getter

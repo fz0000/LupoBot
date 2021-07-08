@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 
-@PluginInfo(name = "logging", version = "1.0.0", author = "Nickkel")
+@PluginInfo(name = "logging", author = "Nickkel")
 public class LupoLoggingPlugin extends LupoPlugin {
 
     @Getter

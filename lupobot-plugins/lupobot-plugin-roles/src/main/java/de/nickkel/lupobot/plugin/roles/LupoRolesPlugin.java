@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import java.util.HashMap;
 import java.util.Map;
 
-@PluginInfo(name = "roles", version = "1.0.0", author = "Nickkel")
+@PluginInfo(name = "roles", author = "Nickkel")
 public class LupoRolesPlugin extends LupoPlugin {
 
     @Getter

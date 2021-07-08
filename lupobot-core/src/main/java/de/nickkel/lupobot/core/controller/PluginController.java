@@ -71,7 +71,7 @@ public class PluginController {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("name", plugin.getInfo().name());
         jsonObject.addProperty("author", plugin.getInfo().author());
-        jsonObject.addProperty("version", plugin.getInfo().version());
+        jsonObject.addProperty("version", plugin.getResourcesClass().getPackage().getImplementationVersion());
         jsonObject.add("commands", new Gson().toJsonTree(commands));
         jsonObject.add("guildWhitelist", new Gson().toJsonTree(plugin.getInfo().guildWhitelist()));
         Document translatedNames = new Document();

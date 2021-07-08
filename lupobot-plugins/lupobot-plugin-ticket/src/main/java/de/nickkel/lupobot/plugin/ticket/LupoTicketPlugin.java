@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-@PluginInfo(name = "ticket", version = "1.0.0", author = "Nickkel")
+@PluginInfo(name = "ticket", author = "Nickkel")
 public class LupoTicketPlugin extends LupoPlugin {
 
     @Getter

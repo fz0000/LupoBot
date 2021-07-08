@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-@PluginInfo(name = "leveling", version = "1.0.0", author = "Nickkel")
+@PluginInfo(name = "leveling", author = "Nickkel")
 public class LupoLevelingPlugin extends LupoPlugin {
 
     @Getter
