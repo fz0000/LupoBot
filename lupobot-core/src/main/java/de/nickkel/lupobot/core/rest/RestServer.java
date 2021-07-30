@@ -36,7 +36,7 @@ public class RestServer {
         this.app = Javalin.create(config -> {
             config.enableCorsForAllOrigins();
             config.accessManager((handler, ctx, permittedRoles) -> {
-                if (ctx.host().equals("localhost") || ipWhitelist.contains(ctx.ip())) {
+                if (ctx.host().startsWith("localhost") || ipWhitelist.contains(ctx.ip())) {
                     handler.handle(ctx);
                 } else {
                     ctx.status(401).result("Access denied");

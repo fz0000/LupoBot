@@ -46,6 +46,11 @@ import java.util.List;
         new ListenerRegister(this, packageName);
     }
 
+    public void registenerListener(Object listener) {
+        LupoBot.getInstance().getShardManager().addEventListener(listener);
+        this.listeners.add((ListenerAdapter) listener);
+    }
+
     public void loadResources() {
         try {
             this.userConfig = new Document(new FileResourcesUtils(this.resourcesClass).getFileFromResourceAsStream("user.json"));

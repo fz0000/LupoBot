@@ -1,6 +1,5 @@
 package de.nickkel.lupobot.core.data;
 
-import com.google.gson.JsonObject;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
 import de.nickkel.lupobot.core.LupoBot;
@@ -85,6 +84,7 @@ public class LupoServer {
             }
         }
 
+        this.saveData();
         LupoBot.getInstance().getServers().put(this.guild, this);
     }
 

@@ -49,12 +49,11 @@ public class OAuth2 {
                     jsonObject.addProperty("iconUrl", guild.getIconUrl());
                     jsonObject.add("permissions", new Gson().toJsonTree(permissions));
                     jsonObject.addProperty("permissionsRaw", guild.getPermissionsRaw());
-                    jsonObject.addProperty("timeCreated", TimeUtils.format(guild.getTimeCreated()));
                     guilds.add(guild.getId(), jsonObject);
                 }
 
                 Document document = new Document();
-                document.append("id", user.getIdLong());
+                document.append("id", user.getId());
                 document.append("name", user.getName());
                 document.append("discriminator", user.getDiscriminator());
                 document.append("asMention", user.getAsMention());

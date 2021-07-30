@@ -1,6 +1,8 @@
 package de.nickkel.lupobot.core.controller;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.jagrosh.jdautilities.oauth2.entities.OAuth2Guild;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -8,8 +10,16 @@ import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.config.Document;
 import de.nickkel.lupobot.core.data.LupoUser;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
+import de.nickkel.lupobot.core.util.TimeUtils;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
 
@@ -117,9 +127,30 @@ public class UserController {
         } else {
             LupoUser user = LupoUser.getById(Long.parseLong(ctx.pathParam("id")));
             Document document = new Document(getUserObject(user));
+
+            User discordUser = LupoBot.getInstance().getShardManager().retrieveUserById(user.getId()).complete();
+            document.append("name", discordUser.getName());
+            document.append("asTag", discordUser.getAsTag());
+            document.append("discriminator", discordUser.getDiscriminator());
+            document.append("avatarUrl", discordUser.getAvatarUrl());
             if (user.getStaffGroup().getRole() != null) {
                 document.append("staffGroup", user.getStaffGroup().getRole().getName());
             }
+            JsonObject guilds = new JsonObject();
+            for (Guild guild : discordUser.getMutualGuilds()) {
+                Member member = guild.retrieveMember(discordUser).complete();
+                List<String> permissions = new ArrayList<>();
+                for (Permission permission : member.getPermissions()) {
+                    permissions.add(permission.toString());
+                }
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("id", guild.getIdLong());
+                jsonObject.addProperty("name", guild.getName());
+                jsonObject.addProperty("iconUrl", guild.getIconUrl());
+                jsonObject.add("permissions", new Gson().toJsonTree(permissions));
+                guilds.add(guild.getId(), jsonObject);
+            }
+            document.append("guilds", guilds);
             ctx.status(201).result(document.convertToJson());
         }
     }
