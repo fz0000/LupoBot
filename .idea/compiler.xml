@@ -15,6 +15,7 @@
         <module name="roles" />
         <module name="logging" />
         <module name="currency" />
+        <module name="issuetracker" />
         <module name="leveling" />
         <module name="fun" />
         <module name="launcher" />

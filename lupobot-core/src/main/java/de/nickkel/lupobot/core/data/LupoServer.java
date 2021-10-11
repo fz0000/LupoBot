@@ -84,7 +84,6 @@ public class LupoServer {
             }
         }
 
-        this.saveData();
         LupoBot.getInstance().getServers().put(this.guild, this);
     }
 

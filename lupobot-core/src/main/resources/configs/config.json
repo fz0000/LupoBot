@@ -1,6 +1,7 @@
 {
   "prefix": "?",
   "token": "Discord Bot token",
+  "gitHubToken": "GitHub OAuth token",
   "clientId": -1,
   "clientSecret": "Discord Bot client secret",
   "database": {

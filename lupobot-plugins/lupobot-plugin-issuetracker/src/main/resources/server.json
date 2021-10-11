@@ -1,0 +1,10 @@
+{
+  "gitHubToken": "GitHub OAuth token",
+  "gitHubRepository": "GitHub Repository name",
+  "lastIssueId": 0,
+  "neededVotes": 3,
+  "creationChannel": -1,
+  "types": {},
+  "components": [],
+  "issues": {}
+}

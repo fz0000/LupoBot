@@ -2,23 +2,5 @@ export_languages: ["de_DE"]
 append_commit_message: false
 commit_message: 'New translations from Crowdin'
 files:
-  - source: /lupobot-core/src/main/resources/locales/en_US.properties
-    translation: /lupobot-core/src/main/resources/locales/%locale_with_underscore%.properties
-  - source: /lupobot-plugins/lupobot-plugin-help/src/main/resources/locales/en_US.properties
-    translation: /lupobot-plugins/lupobot-plugin-help/src/main/resources/locales/%locale_with_underscore%.properties
-  - source: /lupobot-plugins/lupobot-plugin-music/src/main/resources/locales/en_US.properties
-    translation: /lupobot-plugins/lupobot-plugin-music/src/main/resources/locales/%locale_with_underscore%.properties
-  - source: /lupobot-plugins/lupobot-plugin-fun/src/main/resources/locales/en_US.properties
-    translation: /lupobot-plugins/lupobot-plugin-fun/src/main/resources/locales/%locale_with_underscore%.properties
-  - source: /lupobot-plugins/lupobot-plugin-logging/src/main/resources/locales/en_US.properties
-    translation: /lupobot-plugins/lupobot-plugin-logging/src/main/resources/locales/%locale_with_underscore%.properties
-  - source: /lupobot-plugins/lupobot-plugin-ticket/src/main/resources/locales/en_US.properties
-    translation: /lupobot-plugins/lupobot-plugin-ticket/src/main/resources/locales/%locale_with_underscore%.properties
-  - source: /lupobot-plugins/lupobot-plugin-leveling/src/main/resources/locales/en_US.properties
-    translation: /lupobot-plugins/lupobot-plugin-leveling/src/main/resources/locales/%locale_with_underscore%.properties
-  - source: /lupobot-plugins/lupobot-plugin-currency/src/main/resources/locales/en_US.properties
-    translation: /lupobot-plugins/lupobot-plugin-currency/src/main/resources/locales/%locale_with_underscore%.properties
-  - source: /lupobot-plugins/lupobot-plugin-profile/src/main/resources/locales/en_US.properties
-    translation: /lupobot-plugins/lupobot-plugin-profile/src/main/resources/locales/%locale_with_underscore%.properties
-  - source: /lupobot-plugins/lupobot-plugin-roles/src/main/resources/locales/en_US.properties
-    translation: /lupobot-plugins/lupobot-plugin-roles/src/main/resources/locales/%locale_with_underscore%.properties
+  - source: /**/en_US.properties
+    translation: /**/%locale_with_underscore%.properties
