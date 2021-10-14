@@ -6,6 +6,7 @@ import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.LupoCommand;
 import de.nickkel.lupobot.core.config.Document;
 import de.nickkel.lupobot.core.language.Language;
+import de.nickkel.lupobot.core.language.LanguageHandler;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
@@ -80,6 +81,31 @@ public class CommandController {
         jsonObject.addProperty("staffPower", command.getInfo().staffPower());
         jsonObject.add("aliases", new Gson().toJsonTree(command.getInfo().aliases()));
         jsonObject.add("permissions", new Gson().toJsonTree(permissions));
+
+        LanguageHandler handler = LupoBot.getInstance().getLanguageHandler();
+        if (command.getPlugin() != null) {
+            handler = command.getPlugin().getLanguageHandler();
+        }
+        String pluginName = "core";
+        if (command.getPlugin() != null) {
+            pluginName = command.getPlugin().getInfo().name();
+        }
+
+        Document translatedDescriptions = new Document();
+        for (Language language : handler.getLanguages().values()) {
+            translatedDescriptions.append(language.getName(), handler.translate(language.getName(), pluginName + "_" + command.getInfo().name() + "-description"));
+        }
+        jsonObject.add("translatedDescriptions", translatedDescriptions.getJsonObject());
+        Document translatedUsages = new Document();
+        for (Language language : handler.getLanguages().values()) {
+            translatedUsages.append(language.getName(), handler.translate(language.getName(), pluginName + "_" + command.getInfo().name() + "-usage"));
+        }
+        jsonObject.add("translatedUsages", translatedUsages.getJsonObject());
+        Document translatedExamples = new Document();
+        for (Language language : handler.getLanguages().values()) {
+            translatedExamples.append(language.getName(), handler.translate(language.getName(), pluginName + "_" + command.getInfo().name() + "-example"));
+        }
+        jsonObject.add("translatedExamples", translatedExamples.getJsonObject());
         return jsonObject;
     }
 }

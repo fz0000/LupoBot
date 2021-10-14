@@ -54,6 +54,7 @@ public class BotController {
     public void updateCommands(Context ctx) {
         LupoBot.getInstance().getCommandHandler().registerSlashCommands();
     }
+
     public void getStatus(Context ctx) {
         ctx.status(201).result(new Document().append("status", LupoBot.getInstance().getSelfUser().getJDA().getPresence().getStatus().toString()).convertToJson());
     }

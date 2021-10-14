@@ -69,6 +69,7 @@ public class GuildController {
             jsonObject.addProperty("roleCount", guild.getRoles().size());
             jsonObject.addProperty("memberCount", guild.getMemberCount());
             jsonObject.addProperty("channelCount", guild.getChannels().size());
+            ctx.result(new Document(jsonObject).convertToJson());
         }
     }
 
