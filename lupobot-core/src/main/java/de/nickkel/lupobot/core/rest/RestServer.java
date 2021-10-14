@@ -37,6 +37,7 @@ public class RestServer {
             config.enableCorsForAllOrigins();
             config.accessManager((handler, ctx, permittedRoles) -> {
                 if (ctx.host().startsWith("localhost") || ipWhitelist.contains(ctx.ip())) {
+                    LupoBot.getInstance().getLogger().info("Received API request from " + ctx.ip() + ": " + ctx.path());
                     handler.handle(ctx);
                 } else {
                     ctx.status(401).result("Access denied");

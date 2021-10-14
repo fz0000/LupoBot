@@ -32,12 +32,13 @@ POST | /bot/update-commands | Update all Slash Commands (register them again if 
 GET | /commands | Get all loaded commands
 POST | /commands/:name | Enable or disable a command. The query param `type` is required (the type can be "disable" or "enable")
 GET | /commands/:name | Get a specific command by its name
+GET | /guilds/:id | Get a specific guild by id
 POST | /guilds/:id/messages | Create or edit a message on a guild. The query params `id` (= guild id) and `channelId` are required, the param `messageId` is optional if you want to edit a message and don't want to create a new one. Optional params to build the message or embed: `content, description, thumbnail, authorName, authorIconUrl, authorUrl, title, titleUrl, footer, footerIconUrl, image, color` (as int)
 GET | /guilds/:id/channels | Get all channels on a guild by guild id
 GET | /guilds/:id/channels/:channel | Get a specific channel on a guild by guild id and channel id
 GET | /guilds/:id/roles | Get all roles on a guild by guild id
 GET | /guilds/:id/roles/:role | Get a specific role on a guild by guild id and role id
-GET | /guilds/members/:member | Get a specific role on a guild by member id
+GET | /guilds/members/:member | Get a specific member on a guild by member id
 GET | /oauth2 | Get information about the user and the guilds which the has joined. The query params `code` (of Discord OAuth2) and `redirect` (redirect url after auth) are required
 GET | /plugins | Get all loaded plugins
 POST | /plugins/:name | Unload or reload a plugin by name. The query param `type` is required (the type can be "reload" or "unload")

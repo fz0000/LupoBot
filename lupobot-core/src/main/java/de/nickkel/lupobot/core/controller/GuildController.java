@@ -22,6 +22,7 @@ public class GuildController {
     public GuildController(Javalin app) {
         app.routes(() -> {
             path("v1/guilds/:id", () -> {
+                get(this::getGuild);
                 path("messages", () -> {
                     post(this::createMessage);
                 });
@@ -42,6 +43,33 @@ public class GuildController {
                 });
             });
         });
+    }
+
+    public void getGuild(Context ctx) {
+        Guild guild;
+        try {
+            guild = LupoBot.getInstance().getShardManager().getGuildById(ctx.pathParam("id"));
+        } catch (NumberFormatException e) {
+            ctx.status(404).result("Guild not found");
+            return;
+        }
+
+        if (guild == null) {
+            ctx.status(404).result("Guild not found");
+        } else {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("id", guild.getIdLong());
+            jsonObject.addProperty("owner", guild.getOwnerIdLong());
+            if (guild.getOwner() != null) {
+                jsonObject.addProperty("ownerName", guild.getOwner().getUser().getName());
+            }
+            jsonObject.addProperty("name", guild.getName());
+            jsonObject.addProperty("bannerUrl", guild.getBannerUrl());
+            jsonObject.addProperty("boosterCount", guild.getBoostCount());
+            jsonObject.addProperty("roleCount", guild.getRoles().size());
+            jsonObject.addProperty("memberCount", guild.getMemberCount());
+            jsonObject.addProperty("channelCount", guild.getChannels().size());
+        }
     }
 
     public void getMember(Context ctx) {

@@ -2,8 +2,6 @@ package de.nickkel.lupobot.core.controller;
 
 import com.google.gson.JsonObject;
 import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.config.Document;
 import de.nickkel.lupobot.core.data.LupoServer;
@@ -104,7 +102,7 @@ public class ServerController {
     }
 
     public void getServer(Context ctx) {
-        if (LupoBot.getInstance().getShardManager().getGuildById(ctx.pathParam("key")) == null) {
+        if (LupoBot.getInstance().getShardManager().getGuildById(ctx.pathParam("id")) == null) {
             ctx.status(404).result("Server not found");
         } else {
             Document document = new Document(getServerObject(LupoServer.getById(Long.parseLong(ctx.pathParam("id")))));
