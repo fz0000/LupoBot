@@ -31,7 +31,10 @@ public class GuildMessageUpdateListener extends ListenerAdapter {
                     + " (" + event.getChannel().getId() + ")", false);
             builder.addField(server.translate(plugin, "logging_message-id"), event.getMessageId(), false);
             builder.addField(server.translate(plugin, "logging_message-old"), message.get("content"), false);
-            builder.addField(server.translate(plugin, "logging_message-new"), event.getMessage().getContentDisplay(), false);
+            builder.addField(server.translate(plugin, "logging_message-new"), event.getMessage().getContentRaw(), false);
+
+
+
             builder.setColor(LupoColor.GREEN.getColor());
 
             LupoLoggingPlugin.getInstance().sendLog(LogEvent.MESSAGE_UPDATE, event.getGuild(), builder);
