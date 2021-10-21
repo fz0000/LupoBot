@@ -1,5 +1,6 @@
 package de.nickkel.lupobot.plugin.fun.commands;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.command.CommandContext;
@@ -18,22 +19,23 @@ public class MemeCommand extends LupoCommand {
     @Override
     public void onCommand(CommandContext context) {
         try {
-            Document document = new Document(("https://apis.duncte123.me/meme?nsfw=false"));
-            if (!document.getBoolean("success")) {
-                failure(context);
-            } else {
-                JsonObject jsonObject = document.getJsonElement("data").getAsJsonObject();
-                EmbedBuilder builder = new EmbedBuilder();
-                builder.setColor(LupoColor.ORANGE.getColor());
-                builder.setTitle(jsonObject.get("title").getAsString(), jsonObject.get("url").getAsString());
-                builder.setImage(jsonObject.get("image").getAsString());
-                builder.setFooter(context.getServer().translate(context.getPlugin(), "fun_meme-footer"));
-                send(context, builder);
+            Document document = new Document("https://meme-api.herokuapp.com/gimme/10");
+            JsonArray jsonArray = document.getJsonElement("memes").getAsJsonArray();
+
+            for (int i = 0; i < jsonArray.size(); i++) {
+                if (!jsonArray.get(i).getAsJsonObject().get("nsfw").getAsBoolean()) {
+                    EmbedBuilder builder = new EmbedBuilder();
+                    builder.setColor(LupoColor.ORANGE.getColor());
+                    builder.setTitle(jsonArray.get(i).getAsJsonObject().get("title").getAsString(), jsonArray.get(i).getAsJsonObject().get("postLink").getAsString());
+                    builder.setImage(jsonArray.get(i).getAsJsonObject().get("url").getAsString());
+                    builder.setFooter(context.getServer().translate(context.getPlugin(), "fun_meme-footer"));
+                    send(context, builder);
+                    break;
+                }
             }
         } catch (Exception e) {
             failure(context);
         }
-
     }
 
     @Override
