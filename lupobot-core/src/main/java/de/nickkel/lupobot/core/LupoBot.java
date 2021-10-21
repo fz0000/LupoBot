@@ -3,7 +3,6 @@ package de.nickkel.lupobot.core;
 import com.github.ygimenez.exception.InvalidHandlerException;
 import com.github.ygimenez.method.Pages;
 import com.github.ygimenez.model.PaginatorBuilder;
-import com.google.gson.JsonObject;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
 import de.nickkel.lupobot.core.command.CommandHandler;
@@ -18,7 +17,7 @@ import de.nickkel.lupobot.core.pagination.PaginationListener;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.plugin.PluginLoader;
 import de.nickkel.lupobot.core.rest.RestServer;
-import de.nickkel.lupobot.core.tasks.SaveDataTask;
+import de.nickkel.lupobot.core.tasks.DataSaverTask;
 import de.nickkel.lupobot.core.util.FileResourcesUtils;
 import lombok.Getter;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -76,7 +75,7 @@ public class LupoBot {
     @Getter
     private RestServer restServer;
     @Getter
-    private Timer dataServer;
+    private Timer dataSaver;
 
     public static void main(String[] args) {
         new LupoBot().run(args);
@@ -128,12 +127,20 @@ public class LupoBot {
         this.pluginLoader = new PluginLoader();
         this.loadBotData();
 
-        this.dataServer = new Timer("DataSaver");
-        this.dataServer.schedule(new SaveDataTask(), 600*1000, 600*1000);
+        this.dataSaver = new Timer("DataSaver");
+        this.dataSaver.schedule(new DataSaverTask(), 3600*1000, 1800*1000);
 
         this.shardManager.addEventListener(new CommandListener(), new PaginationListener());
         this.logger.info("LupoBot is running on " + this.shardManager.getGuilds().size() + " servers");
         this.restServer = new RestServer();
+
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                new DataSaverTask().run();
+                LupoBot.this.logger.info("LupoBot has been killed");
+            }
+        });
     }
 
     private void login(DefaultShardManagerBuilder builder) {
