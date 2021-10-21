@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 public class CommandListener extends ListenerAdapter {
 
@@ -29,7 +30,8 @@ public class CommandListener extends ListenerAdapter {
         }
 
         String label = event.getMessage().getContentStripped().replace(prefix, "").split(" ")[0];
-        String message = event.getMessage().getContentRaw().replace(prefix, "").replace(label, "");
+        String message = event.getMessage().getContentRaw().replaceFirst(Pattern.quote(prefix), "").replaceFirst(label, "");
+
         if (message.startsWith(" ")) {
             message = message.substring(1);
         }
