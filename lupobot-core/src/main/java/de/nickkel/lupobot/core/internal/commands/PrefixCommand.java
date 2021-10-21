@@ -25,7 +25,7 @@ public class PrefixCommand extends LupoCommand {
                     return;
                 }
             }
-            if(context.getServer().getPrefix().equals(prefix)) {
+            if (context.getServer().getPrefix().equals(prefix)) {
                 sendSyntaxError(context, "core_prefix-already-using", prefix);
                 return;
             }

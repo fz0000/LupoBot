@@ -1,6 +1,7 @@
 package de.nickkel.lupobot.core.command;
 
 import com.google.common.reflect.ClassPath;
+import com.mongodb.BasicDBList;
 import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.data.LupoServer;
 import de.nickkel.lupobot.core.data.LupoUser;
@@ -67,8 +68,18 @@ public class CommandHandler {
             }
         }
         context.setPlugin(plugin);
-
         context.setEphemeral(server.isSlashInvisible());
+
+        if (((BasicDBList) server.getData().get("disabledCommands")).contains(command.getInfo().name())) {
+            EmbedBuilder builder = new EmbedBuilder();
+            builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null, context.getMember().getUser().getAvatarUrl());
+            builder.setDescription(server.translate(null, "core_command-toggled", command.getInfo().name()));
+            builder.setColor(LupoColor.DARK_GRAY.getColor());
+            builder.setFooter(server.translate(null, "core_used-command", server.getPrefix() + context.getLabel()));
+            command.send(context, builder);
+            return;
+        }
+
         for (Permission permission : command.getInfo().permissions()) {
             if (!context.getMember().getPermissions().contains(permission)) {
                 EmbedBuilder builder = new EmbedBuilder();

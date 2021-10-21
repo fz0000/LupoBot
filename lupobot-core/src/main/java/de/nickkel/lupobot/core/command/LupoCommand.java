@@ -95,7 +95,7 @@ public abstract class LupoCommand {
 
         // Error page
         EmbedBuilder builder = new EmbedBuilder();
-        builder.setColor(LupoColor.RED.getColor());
+        builder.setColor(LupoColor.DARK_GRAY.getColor());
         builder.setAuthor(context.getMember().getUser().getAsTag() + " (" + context.getMember().getId() + ")", null, context.getMember().getUser().getAvatarUrl());
         builder.setFooter(server.translate(null, "core_used-command", server.getPrefix() + context.getLabel()));
         builder.setDescription(server.translate(plugin, errorKey, params));

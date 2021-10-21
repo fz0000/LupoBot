@@ -2,5 +2,6 @@
   "prefix": "?",
   "language": "en_US",
   "plugins": ["help"],
-  "slashInvisible": true
+  "slashInvisible": true,
+  "disabledCommands": []
 }

@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import java.util.ArrayList;
 import java.util.List;
 
-@CommandInfo(name = "uninstallplugin", permissions = Permission.ADMINISTRATOR, cooldown = 5, category = "core")
+@CommandInfo(name = "uninstallplugin", aliases = "up", permissions = Permission.ADMINISTRATOR, cooldown = 5, category = "core")
 @SlashOption(name = "plugin", type = OptionType.STRING)
 public class UninstallPluginCommand extends LupoCommand {
 
