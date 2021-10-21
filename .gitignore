@@ -1,6 +1,8 @@
 # Default ignored files
 .idea/shelf/
 .idea/workspace.xml
+.idea/discord.xml
+.idea/runConfigurations.xml
 lupobot-core/target/
 lupobot-launcher/target/
 lupobot-plugins/target/
