@@ -18,7 +18,11 @@ public class PenisSizeCommand extends LupoCommand {
     public void onCommand(CommandContext context) {
         if (context.getArgs().length == 1 || (context.getSlash() != null && context.getSlash().getOption("member") != null)) {
             if (context.getSlash() == null) {
-                send(context, getEmbed(context, context.getServer().getMember(context.getArgs()[0])));
+                if (context.getServer().getMember(context.getArgs()[0]) != null) {
+                    send(context, getEmbed(context, context.getServer().getMember(context.getArgs()[0])));
+                } else {
+                    sendSyntaxError(context, "fun_penissize-invalid-member");
+                }
             } else {
                 send(context, getEmbed(context, context.getSlash().getOption("member").getAsMember()));
             }
