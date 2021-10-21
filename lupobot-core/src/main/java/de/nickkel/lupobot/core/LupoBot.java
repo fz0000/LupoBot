@@ -108,7 +108,15 @@ public class LupoBot {
         this.languageHandler = new LanguageHandler(this.getClass());
         this.commandHandler = new CommandHandler();
 
-        this.mongoClient = new MongoClient(new MongoClientURI((LupoBot.getInstance().getConfig().getJsonElement("database").getAsJsonObject()).get("clientUri").getAsString()));
+        try {
+            this.mongoClient = new MongoClient(new MongoClientURI((LupoBot.getInstance().getConfig().getJsonElement("database").getAsJsonObject()).get("clientUri").getAsString()));
+            this.mongoClient.getAddress();
+        } catch (Exception e) {
+            LupoBot.getInstance().getLogger().error("Could not connect to database! Starting process aborted", e);
+            this.mongoClient.close();
+            return;
+        }
+
         this.login(builder);
 
         try {
