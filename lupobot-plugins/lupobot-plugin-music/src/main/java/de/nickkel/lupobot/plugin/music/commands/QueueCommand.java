@@ -20,36 +20,34 @@ public class QueueCommand extends LupoCommand {
     @Override
     public void onCommand(CommandContext context) {
         MusicServer server = LupoMusicPlugin.getInstance().getMusicServer(context.getGuild());
-        if (server.joinedVoiceChannel(context)) {
-            ArrayList<Page> pages = new ArrayList<>();
+        ArrayList<Page> pages = new ArrayList<>();
 
-            EmbedBuilder builder = new EmbedBuilder();
-            builder.setColor(LupoColor.ORANGE.getColor());
-            builder.setAuthor(context.getServer().translate(context.getPlugin(), "music_queue-title"), null,
-                    "https://cdn.pixabay.com/photo/2019/08/11/18/27/icon-4399630_960_720.png");
-            builder.setTimestamp(context.getTime());
+        EmbedBuilder builder = new EmbedBuilder();
+        builder.setColor(LupoColor.ORANGE.getColor());
+        builder.setAuthor(context.getServer().translate(context.getPlugin(), "music_queue-title"), null,
+                "https://cdn.pixabay.com/photo/2019/08/11/18/27/icon-4399630_960_720.png");
+        builder.setTimestamp(context.getTime());
 
-            if (server.getScheduler().getQueue().size() == 0) {
-                builder.setDescription(context.getServer().translate(context.getPlugin(), "music_queue-nothing"));
-            } else {
-                int i = 0;
-                for (AudioTrack track : server.getScheduler().getQueue()) {
-                    builder.setDescription(builder.getDescriptionBuilder() + "- " + track.getInfo().title + "\n");
-                    if (String.valueOf(i).length() != 1 && (String.valueOf(i).endsWith("0") || i == server.getScheduler().getQueue().size()-1)) {
-                        Page page = new Page(builder.build());
-                        page.getWhitelist().add(context.getMember().getIdLong());
-                        pages.add(page);
-                        builder.setDescription("");
-                    }
-                    i++;
+        if (server.getScheduler().getQueue().size() == 0) {
+            builder.setDescription(context.getServer().translate(context.getPlugin(), "music_queue-nothing"));
+        } else {
+            int i = 0;
+            for (AudioTrack track : server.getScheduler().getQueue()) {
+                builder.setDescription(builder.getDescriptionBuilder() + "- " + track.getInfo().title + "\n");
+                if (String.valueOf(i).length() != 1 && (String.valueOf(i).endsWith("0") || i == server.getScheduler().getQueue().size()-1)) {
+                    Page page = new Page(builder.build());
+                    page.getWhitelist().add(context.getMember().getIdLong());
+                    pages.add(page);
+                    builder.setDescription("");
                 }
+                i++;
             }
+        }
 
-            if (pages.size() != 0) {
-                Paginator.paginate(context, pages, 60);
-            } else {
-                send(context, builder);
-            }
+        if (pages.size() != 0) {
+            Paginator.paginate(context, pages, 60);
+        } else {
+            send(context, builder);
         }
     }
 
