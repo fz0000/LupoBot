@@ -32,7 +32,7 @@ public class TicTacToeCommand extends LupoCommand {
         if (context.getArgs().length == 1 || context.getSlash() != null) {
             context.setEphemeral(false);
             Member member;
-            if (context.getSlash() != null) {
+            if (context.getSlash() == null) {
                 member = context.getServer().getMember(context.getArgs()[0]);
             } else {
                 member = context.getSlash().getOption("member").getAsMember();
