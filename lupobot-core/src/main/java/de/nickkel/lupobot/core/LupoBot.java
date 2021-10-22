@@ -128,25 +128,33 @@ public class LupoBot {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                LupoBot.this.saveData();
-                LupoBot.this.logger.info("Saved bot data");
+                // Save bot data
+                saveData();
+                logger.info("Saved bot data");
+
+                // Sava cached server data (to be sure for servers which do not get uncached because of their high activity)
+                logger.info("Saving data of all cached servers ...");
+                for (LupoServer server : serverCache.asMap().values()) {
+                    server.saveData();
+                }
+                logger.info("Successfully saved all cached servers");
             }
-        }, 1800*1000L);
+        }, 3600*1000L);
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                LupoBot.this.logger.info("Invalidating " + LupoBot.this.serverCache.size() + " servers and " + LupoBot.this.userCache.size() + " users in cache");
-                LupoBot.this.serverCache.invalidateAll();
-                LupoBot.this.userCache.invalidateAll();
-                LupoBot.this.logger.info("Cache size after invalidation: " + LupoBot.this.serverCache.size() + " servers and " + LupoBot.this.userCache.size() + " users");
+                logger.info("Invalidating " + LupoBot.this.serverCache.size() + " servers and " + LupoBot.this.userCache.size() + " users in cache");
+                serverCache.invalidateAll();
+                userCache.invalidateAll();
+                logger.info("Cache size after invalidation: " + LupoBot.this.serverCache.size() + " servers and " + LupoBot.this.userCache.size() + " users");
 
-                LupoBot.this.logger.info("Cleaning up cache ...");
-                LupoBot.this.serverCache.cleanUp();
-                LupoBot.this.userCache.cleanUp();
-                LupoBot.this.logger.info("Cleaned cache up!");
+                logger.info("Cleaning up cache ...");
+                serverCache.cleanUp();
+                userCache.cleanUp();
+                logger.info("Cleaned cache up!");
 
-                LupoBot.this.logger.info("LupoBot has been killed");
+                logger.info("LupoBot has been killed");
             }
         });
     }
@@ -236,6 +244,7 @@ public class LupoBot {
                 @Override
                 public void onRemoval(RemovalNotification<Guild, LupoServer> notify) {
                     notify.getValue().saveData();
+                    logger.info("Removed server " + notify.getValue().getId() + " from cache (" + notify.getCause().name() + ")");
                 }
             }).build();
 
@@ -245,6 +254,7 @@ public class LupoBot {
                 @Override
                 public void onRemoval(RemovalNotification<Long, LupoUser> notify) {
                     notify.getValue().saveData();
+                    logger.info("Removed user " + notify.getValue().getId() + " from cache (" + notify.getCause().name() + ")");
                 }
             }).build();
 }
