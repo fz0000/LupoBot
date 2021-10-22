@@ -95,7 +95,7 @@ public class ServerController {
 
     public void getServers(Context ctx) {
         Document document = new Document();
-        for (LupoServer server : LupoBot.getInstance().getServers().values()) {
+        for (LupoServer server : LupoBot.getInstance().getServerCache().asMap().values()) {
             document.append(server.getGuild().getId(), getServerObject(server));
         }
         ctx.status(201).result(document.convertToJson());

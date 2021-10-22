@@ -3,7 +3,10 @@ package de.nickkel.lupobot.core;
 import com.github.ygimenez.exception.InvalidHandlerException;
 import com.github.ygimenez.method.Pages;
 import com.github.ygimenez.model.PaginatorBuilder;
-import com.google.gson.JsonObject;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.RemovalListener;
+import com.google.common.cache.RemovalNotification;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
 import de.nickkel.lupobot.core.command.CommandHandler;
@@ -18,7 +21,6 @@ import de.nickkel.lupobot.core.pagination.PaginationListener;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.plugin.PluginLoader;
 import de.nickkel.lupobot.core.rest.RestServer;
-import de.nickkel.lupobot.core.tasks.SaveDataTask;
 import de.nickkel.lupobot.core.util.FileResourcesUtils;
 import lombok.Getter;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -34,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class LupoBot {
 
@@ -58,25 +61,15 @@ public class LupoBot {
     @Getter
     private BasicDBObject data;
     @Getter
-    private final List<LupoPlugin> plugins = new ArrayList<>();
+    private final Set<LupoPlugin> plugins = new HashSet<>();
     @Getter
-    private final List<LupoCommand> commands = new ArrayList<>();
+    private final Set<LupoCommand> commands = new HashSet<>();
     @Getter
-    private final Map<Guild, LupoServer> servers = new HashMap<>();
-    @Getter
-    private final Map<Long, LupoUser> users = new HashMap<>();
-    @Getter
-    private final List<LupoServer> saveQueuedServers = new ArrayList<>();
-    @Getter
-    private final List<LupoUser> saveQueuedUsers = new ArrayList<>();
-    @Getter
-    private final List<String> availableLanguages = new ArrayList<>();
+    private final Set<String> availableLanguages = new HashSet<>();
     @Getter
     private final long startMillis = System.currentTimeMillis();
     @Getter
     private RestServer restServer;
-    @Getter
-    private Timer dataServer;
 
     public static void main(String[] args) {
         new LupoBot().run(args);
@@ -128,12 +121,34 @@ public class LupoBot {
         this.pluginLoader = new PluginLoader();
         this.loadBotData();
 
-        this.dataServer = new Timer("DataSaver");
-        this.dataServer.schedule(new SaveDataTask(), 600*1000, 600*1000);
-
         this.shardManager.addEventListener(new CommandListener(), new PaginationListener());
         this.logger.info("LupoBot is running on " + this.shardManager.getGuilds().size() + " servers");
         this.restServer = new RestServer();
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                LupoBot.this.saveData();
+                LupoBot.this.logger.info("Saved bot data");
+            }
+        }, 1800*1000L);
+
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                LupoBot.this.logger.info("Invalidating " + LupoBot.this.serverCache.size() + " servers and " + LupoBot.this.userCache.size() + " users in cache");
+                LupoBot.this.serverCache.invalidateAll();
+                LupoBot.this.userCache.invalidateAll();
+                LupoBot.this.logger.info("Cache size after invalidation: " + LupoBot.this.serverCache.size() + " servers and " + LupoBot.this.userCache.size() + " users");
+
+                LupoBot.this.logger.info("Cleaning up cache ...");
+                LupoBot.this.serverCache.cleanUp();
+                LupoBot.this.userCache.cleanUp();
+                LupoBot.this.logger.info("Cleaned cache up!");
+
+                LupoBot.this.logger.info("LupoBot has been killed");
+            }
+        });
     }
 
     private void login(DefaultShardManagerBuilder builder) {
@@ -168,7 +183,7 @@ public class LupoBot {
     }
 
     private void loadBotData() {
-        DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
+        DB database = this.getMongoClient().getDB(this.getConfig().getJsonElement("database")
                 .getAsJsonObject().get("name").getAsString());
         DBCollection collection = database.getCollection("bot");
         DBObject query = new BasicDBObject("_id", this.getSelfUser().getIdLong());
@@ -191,7 +206,7 @@ public class LupoBot {
         }
 
         // merge missing plugin data
-        for (LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
+        for (LupoPlugin plugin : this.getPlugins()) {
             if (plugin.getBotConfig() != null) {
                 if (!this.data.containsKey(plugin.getInfo().name())) {
                     this.data.append(plugin.getInfo().name(), JSON.parse(new Document(plugin.getBotConfig().getJsonObject()).convertToJsonString()));
@@ -208,10 +223,28 @@ public class LupoBot {
     }
 
     public void saveData() {
-        DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
+        DB database = this.getMongoClient().getDB(this.getConfig().getJsonElement("database")
                 .getAsJsonObject().get("name").getAsString());
         DBCollection collection = database.getCollection("bot");
         DBObject query = new BasicDBObject("_id", this.getSelfUser().getIdLong());
         collection.update(query, this.data);
     }
+
+    @Getter
+    private final Cache<Guild, LupoServer> serverCache =
+            CacheBuilder.newBuilder().concurrencyLevel(10).expireAfterAccess(10, TimeUnit.MINUTES).removalListener(new RemovalListener<Guild, LupoServer>() {
+                @Override
+                public void onRemoval(RemovalNotification<Guild, LupoServer> notify) {
+                    notify.getValue().saveData();
+                }
+            }).build();
+
+    @Getter
+    private final Cache<Long, LupoUser> userCache =
+            CacheBuilder.newBuilder().concurrencyLevel(10).expireAfterAccess(5, TimeUnit.MINUTES).removalListener(new RemovalListener<Long, LupoUser>() {
+                @Override
+                public void onRemoval(RemovalNotification<Long, LupoUser> notify) {
+                    notify.getValue().saveData();
+                }
+            }).build();
 }

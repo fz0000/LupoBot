@@ -49,7 +49,7 @@ public class UserController {
 
     public void getUsers(Context ctx) {
         Document document = new Document();
-        for (LupoUser user : LupoBot.getInstance().getUsers().values()) {
+        for (LupoUser user : LupoBot.getInstance().getUserCache().asMap().values()) {
             document.append(String.valueOf(user.getId()), getUserObject(user));
         }
         ctx.status(201).result(document.convertToJson());

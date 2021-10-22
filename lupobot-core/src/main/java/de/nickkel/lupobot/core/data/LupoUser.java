@@ -73,7 +73,8 @@ public class LupoUser {
             }
         }
 
-        LupoBot.getInstance().getUsers().put(this.id, this);
+        LupoBot.getInstance().getUserCache().put(this.id, this);
+        LupoBot.getInstance().getLogger().info("Successfully loaded user " + discordUser.getAsTag() + " (" + id + ")");
     }
 
     public boolean isStaff() {
@@ -106,22 +107,13 @@ public class LupoUser {
         return dbObject.getLong(key);
     }
 
-    public void saveData() {
-        DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
-                .getAsJsonObject().get("name").getAsString());
-        DBCollection collection = database.getCollection("users");
-        DBObject query = new BasicDBObject("_id", this.id);
-        collection.update(query, this.data);
-    }
-
     public static LupoUser getByDiscordUser(User discordUser) {
         LupoUser user;
-        if (LupoBot.getInstance().getUsers().containsKey(discordUser.getIdLong())) {
-            user = LupoBot.getInstance().getUsers().get(discordUser.getIdLong());
+        if (LupoBot.getInstance().getUserCache().asMap().containsKey(discordUser.getIdLong())) {
+            user = LupoBot.getInstance().getUserCache().getIfPresent(discordUser.getIdLong());
         } else {
             user = new LupoUser(discordUser.getIdLong());
         }
-        saveQueue(user);
         return user;
     }
 
@@ -141,9 +133,13 @@ public class LupoUser {
         return getByDiscordUser(discordUser);
     }
 
-    public static void saveQueue(LupoUser user) {
-        if (!LupoBot.getInstance().getSaveQueuedUsers().contains(user)) {
-            LupoBot.getInstance().getSaveQueuedUsers().add(user);
-        }
+    public void saveData() {
+        DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
+                .getAsJsonObject().get("name").getAsString());
+        DBCollection collection = database.getCollection("users");
+        DBObject query = new BasicDBObject("_id", this.id);
+        collection.update(query, this.data);
+
+        LupoBot.getInstance().getLogger().info("Saved data of user " + this.id);
     }
 }

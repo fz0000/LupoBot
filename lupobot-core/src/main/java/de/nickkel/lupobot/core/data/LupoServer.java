@@ -20,6 +20,8 @@ import java.util.Locale;
 public class LupoServer {
 
     @Getter
+    private final long id;
+    @Getter
     private final Guild guild;
     @Getter
     private final List<LupoPlugin> plugins = new ArrayList<>();
@@ -32,6 +34,7 @@ public class LupoServer {
 
     public LupoServer(Guild guild) {
         LupoBot.getInstance().getLogger().info("Loading server " + guild.getName() + " (" + guild.getIdLong() + ") " + "with " + guild.getMembers().size() + " members ...");
+        this.id = guild.getIdLong();
         this.guild = guild;
 
         DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
@@ -84,7 +87,8 @@ public class LupoServer {
             }
         }
 
-        LupoBot.getInstance().getServers().put(this.guild, this);
+        LupoBot.getInstance().getServerCache().put(this.guild, this);
+        LupoBot.getInstance().getLogger().info("Successfully loaded server " + guild.getName() + " (" + guild.getIdLong() + ")");
     }
 
     public void appendPluginData(LupoPlugin plugin, String key, Object val) {
@@ -129,14 +133,6 @@ public class LupoServer {
     public void setSlashInvisible(Boolean visible) {
         this.slashInvisible = visible;
         this.data.append("slashVisible", visible);
-    }
-
-    public void saveData() {
-        DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
-                .getAsJsonObject().get("name").getAsString());
-        DBCollection collection = database.getCollection("servers");
-        DBObject query = new BasicDBObject("_id", guild.getIdLong());
-        collection.update(query, this.data);
     }
 
     public String translate(LupoPlugin plugin, String key, Object... params) {
@@ -202,14 +198,26 @@ public class LupoServer {
         }
     }
 
+    public String formatLong(Long value) {
+        Locale locale = new Locale(this.language.split("_")[0]);
+        NumberFormat anotherFormat = NumberFormat.getNumberInstance(locale);
+
+        if (anotherFormat instanceof DecimalFormat) {
+            DecimalFormat anotherDFormat = (DecimalFormat) anotherFormat;
+            anotherDFormat.setGroupingUsed(true);
+            anotherDFormat.setGroupingSize(3);
+            return anotherDFormat.format(value);
+        }
+        return String.valueOf(value);
+    }
+
     public static LupoServer getByGuild(Guild guild) {
         LupoServer server;
-        if (LupoBot.getInstance().getServers().containsKey(guild)) {
-            server = LupoBot.getInstance().getServers().get(guild);
+        if (LupoBot.getInstance().getServerCache().asMap().containsKey(guild)) {
+            server = LupoBot.getInstance().getServerCache().getIfPresent(guild);
         } else {
             server = new LupoServer(guild);
         }
-        saveQueue(server);
         return server;
     }
 
@@ -224,22 +232,13 @@ public class LupoServer {
         return getByGuild(guild);
     }
 
-    public String formatLong(Long value) {
-        Locale locale = new Locale(this.language.split("_")[0]);
-        NumberFormat anotherFormat = NumberFormat.getNumberInstance(locale);
+    public void saveData() {
+        DB database = LupoBot.getInstance().getMongoClient().getDB(LupoBot.getInstance().getConfig().getJsonElement("database")
+                .getAsJsonObject().get("name").getAsString());
+        DBCollection collection = database.getCollection("servers");
+        DBObject query = new BasicDBObject("_id", guild.getIdLong());
+        collection.update(query, this.data);
 
-        if (anotherFormat instanceof DecimalFormat) {
-            DecimalFormat anotherDFormat = (DecimalFormat) anotherFormat;
-            anotherDFormat.setGroupingUsed(true);
-            anotherDFormat.setGroupingSize(3);
-            return anotherDFormat.format(value);
-        }
-        return String.valueOf(value);
-    }
-
-    public static void saveQueue(LupoServer server) {
-        if (!LupoBot.getInstance().getSaveQueuedServers().contains(server)) {
-            LupoBot.getInstance().getSaveQueuedServers().add(server);
-        }
+        LupoBot.getInstance().getLogger().info("Saved data of server " + this.id);
     }
 }
