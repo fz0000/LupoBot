@@ -33,7 +33,7 @@ public class LupoServer {
     private BasicDBObject data;
 
     public LupoServer(Guild guild) {
-        LupoBot.getInstance().getLogger().info("Loading server " + guild.getName() + " (" + guild.getIdLong() + ") " + "with " + guild.getMembers().size() + " members ...");
+        LupoBot.getInstance().getLogger().info("Loading server " + guild.getName() + " (" + guild.getIdLong() + ") " + "with " + guild.getMemberCache().size() + " members ...");
         this.id = guild.getIdLong();
         this.guild = guild;
 

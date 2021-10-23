@@ -27,9 +27,11 @@ import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.SelfUser;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,7 +97,9 @@ public class LupoBot {
         this.serverConfig = new Document(new FileResourcesUtils(this.getClass()).getFileFromResourceAsStream("server.json"));
 
         DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(this.config.getString("token"))
+                .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES)
                 .setChunkingFilter(ChunkingFilter.ALL)
+                .disableCache(CacheFlag.ONLINE_STATUS)
                 .setActivity(Activity.watching(this.config.getString("activity")));
 
         this.languageHandler = new LanguageHandler(this.getClass());
