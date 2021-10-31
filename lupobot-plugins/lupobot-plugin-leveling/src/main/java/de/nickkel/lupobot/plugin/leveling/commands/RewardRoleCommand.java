@@ -59,7 +59,6 @@ public class RewardRoleCommand extends LupoCommand {
             rewardObject.append(String.valueOf(level), role.getIdLong());
 
             pluginObject.append("rewardRoles", rewardObject);
-            server.getData().append(LupoLevelingPlugin.getInstance().getInfo().name(), pluginObject);
 
             EmbedBuilder builder = new EmbedBuilder();
             builder.setTimestamp(context.getTime());
@@ -93,7 +92,6 @@ public class RewardRoleCommand extends LupoCommand {
             if (rewardObject.containsKey(String.valueOf(level))) {
                 rewardObject.remove(String.valueOf(level));
                 pluginObject.append("rewardRoles", rewardObject);
-                server.getData().append(this.getInfo().name(), pluginObject);
 
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setTimestamp(context.getTime());

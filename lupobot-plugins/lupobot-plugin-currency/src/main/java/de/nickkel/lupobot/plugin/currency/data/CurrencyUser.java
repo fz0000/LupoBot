@@ -41,7 +41,6 @@ public class CurrencyUser {
 
         itemObject.append(item.getName(), getItem(item)+amount);
         pluginObject.append("inventory", itemObject);
-        this.user.getData().append(LupoCurrencyPlugin.getInstance().getInfo().name(), pluginObject);
     }
 
     public Long getItem(Item item) {

@@ -72,7 +72,6 @@ public class LupoLevelingPlugin extends LupoPlugin {
         data.append("level", level);
 
         pluginObject.append("xp", xpObject);
-        server.getData().append(this.getInfo().name(), pluginObject);
         this.lastReceivedXP.put(server.getGuild().getIdLong()+user.getId(), System.currentTimeMillis()+60000);
 
         BasicDBObject rewardObject = (BasicDBObject) pluginObject.get("rewardRoles");
@@ -134,7 +133,6 @@ public class LupoLevelingPlugin extends LupoPlugin {
         data.append("xp", getXP(server, user)+xp);
 
         pluginObject.append("xp", xpObject);
-        server.getData().append(this.getInfo().name(), pluginObject);
         this.lastReceivedXP.put(server.getGuild().getIdLong()+user.getId(), System.currentTimeMillis()+60000);
     }
 
@@ -145,7 +143,6 @@ public class LupoLevelingPlugin extends LupoPlugin {
             if (server.getGuild().getRoleById(rewardObject.getLong(String.valueOf(level))) == null) {
                 rewardObject.remove(String.valueOf(level));
                 pluginObject.append("rewardRoles", rewardObject);
-                server.getData().append(this.getInfo().name(), pluginObject);
                 return false;
             }
         }
@@ -159,7 +156,6 @@ public class LupoLevelingPlugin extends LupoPlugin {
         if (!xpObject.containsKey(String.valueOf(user.getId()))) {
             xpObject.append(String.valueOf(user.getId()), new BasicDBObject().append("level", 0).append("xp", 0));
             pluginObject.append("xp", xpObject);
-            server.getData().append(this.getInfo().name(), pluginObject);
         }
     }
 
