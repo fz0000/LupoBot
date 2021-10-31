@@ -50,28 +50,7 @@ public class LupoUser {
             this.data = (BasicDBObject) cursor.one();
         }
 
-        // merge missing core data
-        for (String key : LupoBot.getInstance().getUserConfig().getJsonObject().keySet()) {
-            if (!this.data.containsKey(key)) {
-                this.data.append(key, JSON.parse(new Document(LupoBot.getInstance().getUserConfig().getJsonElement(key).getAsJsonObject()).convertToJsonString()));
-            }
-        }
-
-        // merge missing plugin data
-        for (LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
-            if (plugin.getUserConfig() != null) {
-                if (!this.data.containsKey(plugin.getInfo().name())) {
-                    this.data.append(plugin.getInfo().name(), JSON.parse(new Document(plugin.getUserConfig().getJsonObject()).convertToJsonString()));
-                } else {
-                    BasicDBObject dbObject = (BasicDBObject) this.data.get(plugin.getInfo().name());
-                    for (String key : plugin.getUserConfig().getJsonObject().keySet()) {
-                        if (!dbObject.containsKey(key)) {
-                            dbObject.append(key, JSON.parse(new Document(plugin.getUserConfig().getJsonElement(key).getAsJsonObject()).convertToJsonString()));
-                        }
-                    }
-                }
-            }
-        }
+        this.mergeMissingData();
 
         LupoBot.getInstance().getUserCache().put(this.id, this);
         LupoBot.getInstance().getLogger().info("Successfully loaded user " + discordUser.getAsTag() + " (" + id + ")");
@@ -131,6 +110,31 @@ public class LupoUser {
         }
 
         return getByDiscordUser(discordUser);
+    }
+
+    public void mergeMissingData() {
+        // merge missing core data
+        for (String key : LupoBot.getInstance().getUserConfig().getJsonObject().keySet()) {
+            if (!this.data.containsKey(key)) {
+                this.data.append(key, JSON.parse(LupoBot.getInstance().getUserConfig().getJsonElement(key).toString()));
+            }
+        }
+
+        // merge missing plugin data
+        for (LupoPlugin plugin : LupoBot.getInstance().getPlugins()) {
+            if (plugin.getUserConfig() != null) {
+                if (!this.data.containsKey(plugin.getInfo().name())) {
+                    this.data.append(plugin.getInfo().name(), JSON.parse(plugin.getUserConfig().getJsonObject().toString()));
+                } else {
+                    BasicDBObject dbObject = (BasicDBObject) this.data.get(plugin.getInfo().name());
+                    for (String key : plugin.getUserConfig().getJsonObject().keySet()) {
+                        if (!dbObject.containsKey(key)) {
+                            dbObject.append(key, JSON.parse(plugin.getUserConfig().getJsonElement(key).toString()));
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void saveData() {
