@@ -32,6 +32,8 @@ public class LupoServer {
     private BasicDBObject data;
 
     public LupoServer(Guild guild) {
+        boolean newlyCreated = false;
+
         LupoBot.getInstance().getLogger().info("Loading server " + guild.getName() + " (" + guild.getIdLong() + ") " + "with " + guild.getMemberCache().size() + " members ...");
         this.id = guild.getIdLong();
         this.guild = guild;
@@ -47,6 +49,7 @@ public class LupoServer {
             dbObject.append("_id", guild.getIdLong());
             collection.insert(dbObject);
             this.data = dbObject;
+            newlyCreated = true;
         } catch (DuplicateKeyException e) {
             this.data = (BasicDBObject) cursor.one();
         }
@@ -57,13 +60,11 @@ public class LupoServer {
         for (Object name : dbList) {
             if (LupoBot.getInstance().getPlugin((String) name) != null) {
                 this.plugins.add(LupoBot.getInstance().getPlugin((String) name));
-            } else { // remove plugin if it doesn't exist anymore
-                dbList.remove(name);
-                this.data.append("plugins", dbList);
             }
         }
 
         this.mergeMissingData();
+        if (newlyCreated) saveData();
 
         LupoBot.getInstance().getServerCache().put(this.guild, this);
         LupoBot.getInstance().getLogger().info("Successfully loaded server " + guild.getName() + " (" + guild.getIdLong() + ")");

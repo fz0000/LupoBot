@@ -29,6 +29,8 @@ public class LupoUser {
     private BasicDBObject data;
 
     public LupoUser(long id) {
+        boolean newlyCreated = false;
+
         this.id = id;
         User discordUser = LupoBot.getInstance().getShardManager().retrieveUserById(id).complete();
         this.asMention = discordUser.getAsMention();
@@ -46,11 +48,13 @@ public class LupoUser {
             dbObject.append("_id", id);
             collection.insert(dbObject);
             this.data = dbObject;
+            newlyCreated = true;
         } catch (DuplicateKeyException e) {
             this.data = (BasicDBObject) cursor.one();
         }
 
         this.mergeMissingData();
+        if (newlyCreated) saveData();
 
         LupoBot.getInstance().getUserCache().put(this.id, this);
         LupoBot.getInstance().getLogger().info("Successfully loaded user " + discordUser.getAsTag() + " (" + id + ")");
