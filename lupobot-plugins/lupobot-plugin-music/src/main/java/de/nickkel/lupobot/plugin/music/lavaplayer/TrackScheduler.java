@@ -44,7 +44,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        if (endReason.mayStartNext) {
+        if (endReason.mayStartNext || endReason == AudioTrackEndReason.REPLACED) {
             next();
         } else {
             this.server.getGuild().getAudioManager().closeAudioConnection();
