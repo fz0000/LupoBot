@@ -31,7 +31,9 @@ public class TrackScheduler extends AudioEventAdapter {
 
     public void next() {
         this.voteSkip.clear();
-        this.player.startTrack(this.queue.poll().makeClone(), false);
+        if(!this.queue.isEmpty()) {
+            this.player.startTrack(this.queue.poll().makeClone(), false);
+        }
     }
 
     public void queue(AudioTrack track) {
