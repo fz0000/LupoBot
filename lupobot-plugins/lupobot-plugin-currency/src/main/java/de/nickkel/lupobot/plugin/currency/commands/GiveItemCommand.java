@@ -72,7 +72,7 @@ public class GiveItemCommand extends LupoCommand {
             receiveUser.addItem(item, amount);
 
             if (receiveUser.getUsedInventorySlots()+amount > receiveUser.getInventorySlots()) {
-                sendSyntaxError(context, "currency_giveitem-receiver-no-space", giveMember.getAsMention(), context.getServer().formatLong(receiveUser.getInventorySlots()), context.getServer().formatLong(amount));
+                sendSyntaxError(context, "currency_giveitem-receiver-no-space", giveMember.getAsMention(), context.getServer().formatLong(amount), context.getServer().formatLong(receiveUser.getInventorySlots()-receiveUser.getUsedInventorySlots()));
                 return;
             }
 
