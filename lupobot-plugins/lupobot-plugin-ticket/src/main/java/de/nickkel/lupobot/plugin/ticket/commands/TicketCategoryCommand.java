@@ -41,7 +41,7 @@ public class TicketCategoryCommand extends LupoCommand {
 
             EmbedBuilder builder = new EmbedBuilder();
             Category category = context.getChannel().getParent();
-            if (context.getSlash().getOption("category") != null &&
+            if (context.getSlash() != null && context.getSlash().getOption("category") != null &&
                     context.getSlash().getOption("category").getAsGuildChannel() instanceof Category) {
                 category = (Category) context.getSlash().getOption("category").getAsGuildChannel();
             }
