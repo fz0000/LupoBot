@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-import java.nio.file.Path;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,11 +26,13 @@ import java.util.List;
     @Getter @Setter
     private boolean enabled;
     @Getter @Setter
-    private Path path;
-    @Getter @Setter
     private List<ListenerAdapter> listeners = new ArrayList<>();
     @Getter @Setter
     private List<LupoCommand> commands = new ArrayList<>();
+    @Getter
+    private PluginHelper helper;
+    @Getter
+    private File file;
     @Getter
     private Document userConfig, serverConfig, botConfig;
 
@@ -43,12 +45,13 @@ import java.util.List;
     }
 
     public void registerListeners(String packageName) {
-        new ListenerRegister(this, packageName);
+        new ListenerRegister(this.getClass().getClassLoader(), packageName, this);
     }
 
-    public void registenerListener(Object listener) {
+    public void registerListener(Object listener) {
         LupoBot.getInstance().getShardManager().addEventListener(listener);
         this.listeners.add((ListenerAdapter) listener);
+        LupoBot.getInstance().getLogger().info("Registered listener " + listener.getClass().getSimpleName());
     }
 
     public void loadResources() {

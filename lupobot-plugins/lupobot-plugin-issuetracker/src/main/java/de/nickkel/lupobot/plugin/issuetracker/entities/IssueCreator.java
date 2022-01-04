@@ -40,7 +40,7 @@ public class IssueCreator extends ListenerAdapter {
         this.channel = channel;
         this.member = member;
 
-        LupoIssueTrackerPlugin.getInstance().registenerListener(this);
+        LupoIssueTrackerPlugin.getInstance().registerListener(this);
         this.server = LupoIssueTrackerPlugin.getInstance().getIssueServer(channel.getGuild());
         this.server.getCreators().put(member.getIdLong(), this);
 

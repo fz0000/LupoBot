@@ -7,72 +7,76 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
+import java.util.concurrent.*;
 import java.util.jar.JarFile;
 
 public class PluginLoader {
 
+    private int pluginThreadNumber = 0;
+    private final ExecutorService pluginService = this.createPluginPool(r -> {
+        Thread thread = new Thread(r);
+        thread.setDaemon(false);
+        thread.setUncaughtExceptionHandler((t, e) -> LupoBot.getInstance().getLogger().error("An unexpected exception occurred in " + t.getName() + ":", e));
+        thread.setName("Plugin Thread #" + pluginThreadNumber++);
+        return thread;
+    });
+
     public PluginLoader() {
-        List<Path> pluginPaths = new ArrayList<>();
+        int plugins = 0;
         for (File file : new File("plugins").listFiles()) {
             if (file.getName().endsWith(".jar")) {
                 LupoBot.getInstance().getLogger().info("Found plugin " + file.getName().replace(".jar", "") + "! Trying to load it ...");
-                pluginPaths.add(file.toPath());
+                loadPlugin(file);
+                plugins++;
             }
         }
 
-        if (pluginPaths.size() == 0) {
-            LupoBot.getInstance().getLogger().warn("Could not found any plugin!");
-            return;
-        }
-
-        for (Path path : pluginPaths) {
-            try {
-                loadPlugin(path);
-            } catch (Exception e) {
-                LupoBot.getInstance().getLogger().error("Failed to load plugin " + path.toString() + ":", e);
-            }
+        if (plugins == 0) {
+            LupoBot.getInstance().getLogger().error("Could not find any plugins!");
         }
     }
 
-    public void loadPlugin(Path path) {
-        if (path == null) {
-            throw new NullPointerException("Could not find plugin jar path!");
+    public void loadPlugin(File file) {
+        LupoPlugin plugin = null;
+        PluginHelper pluginHelper = new PluginHelper(file);
+        URLClassLoader classLoader = pluginHelper.getPluginClassLoader();
+        String main = null;
+        try {
+            main = new JarFile(file).getManifest().getMainAttributes().getValue("Main-Class");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Class<? extends LupoPlugin> mainClass;
+        Class resourcesClass = null;
+        try {
+            mainClass = (Class<? extends LupoPlugin>) classLoader.loadClass(main);
+            plugin = mainClass.newInstance();
+            resourcesClass = new URLClassLoader(new URL[]{file.toURI().toURL()}).loadClass(main);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | MalformedURLException e) {
+            e.printStackTrace();
         }
 
-        try (JarFile jarFile = new JarFile(path.toFile())) {
-            String mainClass = jarFile.getManifest().getMainAttributes().getValue("Main-Class");
-            Class resourcesClass = new URLClassLoader(new URL[]{path.toFile().toURI().toURL()}).loadClass(mainClass);
-            Class clazz = new URLClassLoader(new URL[]{path.toFile().toURI().toURL()}, this.getClass().getClassLoader()).loadClass(mainClass);
-            if (!clazz.isAnnotationPresent(PluginInfo.class)) {
-                throw new NullPointerException("PluginInfo annotation is missing!");
-            }
-            Object object = clazz.newInstance();
-            if (!(object instanceof LupoPlugin)) {
-                throw new NullPointerException("Plugin main class is not an instance of LupoPlugin!");
-            }
+        if (plugin == null) {
+            LupoBot.getInstance().getLogger().error("While plugin loading no class extending " + LupoPlugin.class.getSimpleName() + " was found in file " + file.getName() + "!");
+            return;
+        }
 
-            LupoPlugin plugin = (LupoPlugin) object;
-            plugin.setPath(path);
-            plugin.setLanguageHandler(new LanguageHandler(resourcesClass));
-            plugin.setResourcesClass(resourcesClass);
-            plugin.loadResources();
-            LupoBot.getInstance().getPlugins().add(plugin);
-            LupoBot.getInstance().getLogger().info("Loaded plugin " + plugin.getInfo().name() + " version " + plugin.getResourcesClass().getPackage().getImplementationVersion() + " by " + plugin.getInfo().author());
+        plugin.setHelper(pluginHelper);
+        plugin.setResourcesClass(resourcesClass);
+        plugin.setLanguageHandler(new LanguageHandler(resourcesClass));
+        plugin.setFile(file);
+        plugin.loadResources();
+        LupoBot.getInstance().getPlugins().add(plugin);
+        LupoBot.getInstance().getLogger().info("Loaded plugin " + plugin.getInfo().name() + " version " + plugin.getInfo().version() + " by " + plugin.getInfo().author());
 
-            if (!plugin.isEnabled()) {
-                plugin.onEnable();
-                plugin.setEnabled(true);
-                LupoBot.getInstance().getLogger().info("Enabled plugin " + plugin.getInfo().name() + " version " + plugin.getResourcesClass().getPackage().getImplementationVersion());
-            }
-
-        } catch (IOException | ReflectiveOperationException e) {
-            throw new RuntimeException(e.getMessage());
+        if (!plugin.isEnabled()) {
+            plugin.onEnable();
+            plugin.setEnabled(true);
+            LupoBot.getInstance().getLogger().info("Enabled plugin " + plugin.getInfo().name() + " version " + plugin.getInfo().version());
         }
     }
 
@@ -91,14 +95,31 @@ public class PluginLoader {
             }
             plugin.onDisable();
         }
-        LupoBot.getInstance().getLogger().info("Unloaded plugin " + plugin.getInfo().name() + " version " + plugin.getResourcesClass().getPackage().getImplementationVersion());
-        LupoBot.getInstance().getPlugins().remove(plugin);
+        LupoBot.getInstance().getPlugins().removeIf(all -> all.getInfo().name().equalsIgnoreCase(plugin.getInfo().name()));
+        LupoBot.getInstance().getLogger().info("Unloaded plugin " + plugin.getInfo().name() + " version " + plugin.getInfo().version());
+
+        URLClassLoader classLoader = plugin.getHelper().getPluginClassLoader();
+        try {
+            classLoader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void reloadPlugin(LupoPlugin plugin) {
-        LupoBot.getInstance().getLogger().info("Reloading plugin " + plugin.getInfo().name() + " ...");
-        Path path = plugin.getPath();
-        unloadPlugin(plugin);
-        loadPlugin(path);
+        this.pluginService.execute(() -> {
+            try {
+                LupoBot.getInstance().getLogger().info("Reloading plugin " + plugin.getInfo().name() + " ...");
+                unloadPlugin(plugin);
+                Thread.sleep(1000L);
+                loadPlugin(plugin.getFile());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public ExecutorService createPluginPool(ThreadFactory factory) {
+        return new ThreadPoolExecutor(4, Runtime.getRuntime().availableProcessors() * 4, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), factory);
     }
 }

@@ -10,6 +10,8 @@ public @interface PluginInfo {
 
     String author() default "Unknown";
 
+    String version() default "1.0.0-SNAPSHOT";
+
     long[] guildWhitelist() default {};
 
     boolean hidden() default false;

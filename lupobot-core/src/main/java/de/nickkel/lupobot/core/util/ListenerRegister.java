@@ -11,16 +11,11 @@ import java.util.List;
 
 public class ListenerRegister {
 
-    private List<ListenerAdapter> listeners = new ArrayList<>();
+    private final List<ListenerAdapter> listeners = new ArrayList<>();
 
-    public ListenerRegister(LupoPlugin plugin, String packageName) {
-        new ListenerRegister(plugin.getClass().getClassLoader(), packageName);
-        plugin.setListeners(this.listeners);
-    }
 
     @Deprecated // should only be used for the core, in no case for a plugin
-    public ListenerRegister(ClassLoader loader, String packageName) {
-        List<ListenerAdapter> listeners = new ArrayList<>();
+    public ListenerRegister(ClassLoader loader, String packageName, LupoPlugin plugin) {
         try {
             for (final ClassPath.ClassInfo info : ClassPath.from(loader).getTopLevelClasses()) {
                 if (info.getName().startsWith(packageName)) {
@@ -28,13 +23,14 @@ public class ListenerRegister {
                     Object object = clazz.newInstance();
                     ListenerAdapter listener = (ListenerAdapter) object;
                     LupoBot.getInstance().getShardManager().addEventListener(listener);
-                    listeners.add(listener);
+                    if (plugin != null) {
+                        plugin.getListeners().add(listener);
+                    }
                     LupoBot.getInstance().getLogger().info("Registered listener " + listener.getClass().getSimpleName());
                 }
             }
         } catch (IOException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
-        this.listeners = listeners;
     }
 }
