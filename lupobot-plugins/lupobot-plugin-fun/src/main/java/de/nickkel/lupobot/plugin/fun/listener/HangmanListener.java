@@ -21,7 +21,7 @@ public class HangmanListener extends ListenerAdapter {
 
         if (event.getChannel() == game.getMessage().getTextChannel() && event.getMember() == game.getContext().getMember() && game.isActive()) {
             if (event.getMessage().getContentRaw().length() == 1 && event.getMessage().getContentRaw().chars().allMatch(Character::isLetter)) {
-                game.tryCharacter(event.getMessage().getContentRaw());
+                game.tryCharacter(event.getMessage().getContentRaw().toLowerCase());
             } else {
                 if (event.getMessage().getContentRaw().equalsIgnoreCase(game.getWord())) {
                     for (String key : game.getSortedCharacters()) {
