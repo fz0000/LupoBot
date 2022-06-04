@@ -61,7 +61,7 @@ import java.util.List;
 
     public List<String> getGuildWhitelist() {
         if (this.guildWhitelist.has(this.getInfo().name())) {
-            return LupoBot.getInstance().getConfig().getList(this.getInfo().name());
+            return this.guildWhitelist.getList(this.getInfo().name());
         }
         return new ArrayList<>();
     }
