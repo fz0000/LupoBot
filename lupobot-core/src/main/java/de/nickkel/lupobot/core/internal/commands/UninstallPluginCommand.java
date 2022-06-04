@@ -9,6 +9,7 @@ import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.util.LupoColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
@@ -39,8 +40,8 @@ public class UninstallPluginCommand extends LupoCommand {
                 plugins++;
                 if (name.equalsIgnoreCase(plugin.getInfo().name()) || name.equalsIgnoreCase(context.getServer().translatePluginName(plugin))) {
                     List<Long> guilds = new ArrayList<>();
-                    for (long l : plugin.getInfo().guildWhitelist()) {
-                        guilds.add(l);
+                    for (String id : plugin.getGuildWhitelist()) {
+                        guilds.add(Long.valueOf(id));
                     }
                     if (guilds.size() == 0 || guilds.contains(context.getGuild().getIdLong())) {
                         match = true;

@@ -35,10 +35,15 @@ import java.util.List;
     private File file;
     @Getter
     private Document userConfig, serverConfig, botConfig;
+    private Document guildWhitelist;
 
     public abstract void onEnable();
 
     public abstract void onDisable();
+
+    public LupoPlugin() {
+        this.guildWhitelist = new Document(new File("configs/guild-whitelist.json")).loadDocument();;
+    }
 
     public void registerCommands(String packageName) {
         LupoBot.getInstance().getCommandHandler().registerCommands(this, packageName);
@@ -52,6 +57,13 @@ import java.util.List;
         LupoBot.getInstance().getShardManager().addEventListener(listener);
         this.listeners.add((ListenerAdapter) listener);
         LupoBot.getInstance().getLogger().info("Registered listener " + listener.getClass().getSimpleName());
+    }
+
+    public List<String> getGuildWhitelist() {
+        if (this.guildWhitelist.has(this.getInfo().name())) {
+            return LupoBot.getInstance().getConfig().getList(this.getInfo().name());
+        }
+        return new ArrayList<>();
     }
 
     public void loadResources() {

@@ -23,9 +23,44 @@ public class ServerController {
                 path(":id", () -> {
                     get(this::getServer);
                     post(this::editServer);
+                    path("toggle-plugin", () -> {
+                        post(this::togglePlugin);
+                    });
                 });
             });
         });
+    }
+
+    public void togglePlugin(Context ctx) {
+        String id = ctx.pathParam("id"), name, action;
+        if (ctx.queryParam("plugin") != null) {
+            name = ctx.queryParam("plugin");
+        } else {
+            ctx.status(404).result("Query param plugin is missing");
+            return;
+        }
+        if (ctx.queryParam("action") != null) {
+            action = ctx.queryParam("action");
+        } else {
+            ctx.status(404).result("Query param action is missing");
+            return;
+        }
+
+        LupoServer server = LupoServer.getById(Long.parseLong(id));
+        if (server != null) {
+            LupoPlugin plugin = LupoBot.getInstance().getPlugin(name);
+            if (plugin != null) {
+                if (action.equals("install")){
+                    server.installPlugin(plugin);
+                } else if (action.equals("uninstall")) {
+                    server.uninstallPlugin(plugin);
+                }
+            } else {
+                ctx.status(404).result("Plugin not found");
+            }
+        } else {
+            ctx.status(404).result("Server not found");
+        }
     }
 
     public void getTotalServers(Context ctx) {

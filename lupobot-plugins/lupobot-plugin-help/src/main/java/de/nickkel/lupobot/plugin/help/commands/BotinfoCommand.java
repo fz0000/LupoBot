@@ -24,8 +24,8 @@ public class BotinfoCommand extends LupoCommand {
                 .addField(context.getServer().translate(context.getPlugin(), "help_botinfo-stats"),
                         context.getServer().translate(context.getPlugin(), "help_botinfo-stats-value",
                                 LupoBot.getInstance().getShardManager().getGuilds().size(), LupoBot.getInstance().getShardManager().getShardsTotal()), false)
-                .addField(context.getServer().translate(context.getPlugin(), "help_botinfo-version"),
-                        LupoBot.getInstance().getClass().getPackage().getImplementationVersion(), false)
+                /*.addField(context.getServer().translate(context.getPlugin(), "help_botinfo-version"),
+                        LupoBot.getInstance().getClass().getPackage().getImplementationVersion(), false)*/
                 .addField(context.getServer().translate(context.getPlugin(), "help_botinfo-support"),
                         LupoBot.getInstance().getConfig().getString("supportServerUrl"), false)
                 .addField(context.getServer().translate(context.getPlugin(), "help_botinfo-invite"),

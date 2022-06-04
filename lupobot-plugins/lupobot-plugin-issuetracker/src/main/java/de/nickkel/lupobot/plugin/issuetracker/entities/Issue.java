@@ -71,8 +71,8 @@ public class Issue {
         approvalObject.append(member.getId(), priority.name());
 
         if (approvalObject.keySet().size() == this.server.getNeededVotes() || master) {
-            moveMessage(this.server.getChannel(IssueState.APPROVED, this.type), LupoColor.GREEN);
             createOnGitHub();
+            moveMessage(this.server.getChannel(IssueState.APPROVED, this.type), LupoColor.GREEN);
         }
     }
 

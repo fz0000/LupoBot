@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import java.util.HashMap;
 import java.util.Map;
 
-@PluginInfo(name = "issuetracker", hidden = true, guildWhitelist = {352896116812939264L, 803268941144915978L}, author = "Nickkel")
+@PluginInfo(name = "issuetracker", hidden = true, author = "Nickkel")
 public class LupoIssueTrackerPlugin extends LupoPlugin {
 
     @Getter

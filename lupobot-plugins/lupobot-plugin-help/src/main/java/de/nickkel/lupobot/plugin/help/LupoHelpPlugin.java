@@ -1,6 +1,5 @@
 package de.nickkel.lupobot.plugin.help;
 
-import de.nickkel.lupobot.core.LupoBot;
 import de.nickkel.lupobot.core.plugin.LupoPlugin;
 import de.nickkel.lupobot.core.plugin.PluginInfo;
 

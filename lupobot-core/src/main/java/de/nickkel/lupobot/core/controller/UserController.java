@@ -139,16 +139,18 @@ public class UserController {
             JsonObject guilds = new JsonObject();
             for (Guild guild : discordUser.getMutualGuilds()) {
                 Member member = guild.retrieveMember(discordUser).complete();
-                List<String> permissions = new ArrayList<>();
-                for (Permission permission : member.getPermissions()) {
-                    permissions.add(permission.toString());
+                if (member.getPermissions().contains(Permission.MANAGE_SERVER) || member.getPermissions().contains(Permission.ADMINISTRATOR) || member.isOwner()) {
+                    List<String> permissions = new ArrayList<>();
+                    for (Permission permission : member.getPermissions()) {
+                        permissions.add(permission.toString());
+                    }
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty("id", guild.getIdLong());
+                    jsonObject.addProperty("name", guild.getName());
+                    jsonObject.addProperty("iconUrl", guild.getIconUrl());
+                    jsonObject.add("permissions", new Gson().toJsonTree(permissions));
+                    guilds.add(guild.getId(), jsonObject);
                 }
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("id", guild.getIdLong());
-                jsonObject.addProperty("name", guild.getName());
-                jsonObject.addProperty("iconUrl", guild.getIconUrl());
-                jsonObject.add("permissions", new Gson().toJsonTree(permissions));
-                guilds.add(guild.getId(), jsonObject);
             }
             document.append("guilds", guilds);
             ctx.status(201).result(document.convertToJson());

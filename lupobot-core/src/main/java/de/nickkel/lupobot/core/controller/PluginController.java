@@ -72,8 +72,9 @@ public class PluginController {
         jsonObject.addProperty("name", plugin.getInfo().name());
         jsonObject.addProperty("author", plugin.getInfo().author());
         jsonObject.addProperty("version", plugin.getInfo().version());
+        jsonObject.addProperty("hidden", plugin.getInfo().hidden());
         jsonObject.add("commands", new Gson().toJsonTree(commands));
-        jsonObject.add("guildWhitelist", new Gson().toJsonTree(plugin.getInfo().guildWhitelist()));
+        jsonObject.add("guildWhitelist", new Gson().toJsonTree(plugin.getGuildWhitelist()));
         Document translatedNames = new Document();
         for (Language language : plugin.getLanguageHandler().getLanguages().values()) {
             translatedNames.append(language.getName(), plugin.getLanguageHandler().translate(language.getName(), plugin.getInfo().name() + "_display-name"));

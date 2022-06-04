@@ -39,8 +39,8 @@ public class InstallPluginCommand extends LupoCommand {
                 plugins++;
                 if (name.equalsIgnoreCase(plugin.getInfo().name()) || name.equalsIgnoreCase(context.getServer().translatePluginName(plugin))) {
                     List<Long> guilds = new ArrayList<>();
-                    for (long l : plugin.getInfo().guildWhitelist()) {
-                        guilds.add(l);
+                    for (String id : plugin.getGuildWhitelist()) {
+                        guilds.add(Long.valueOf(id));
                     }
                     if (guilds.size() == 0 || guilds.contains(context.getGuild().getIdLong())) {
                         match = true;

@@ -46,6 +46,7 @@ GET | /plugins/:name | Get a specific plugin by its name
 GET | /servers | Get all cached servers
 GET | /servers/total | Get the total server count (also uncached servers)
 POST | /servers/:id | Edit server data by guild id. The params `key` and `value` are required, `plugin` (= plugin name) is optional. If the param plugin is not given, the data will be set as core data (e.g. the prefix). Only the value of keys which exist in the server data can be edited!
+POST | /servers/:id/toggle-plugin | Install or uninstall a plugin by guild id. The params `action` ("uninstall" or "install") and `plugin` (= plugin name) are required
 GET | /servers/:id | Get a specific server by guild id (if it is not cached, it will be loaded)
 GET | /shards | Get all shards
 GET | /shards/total | Get the total shard count
