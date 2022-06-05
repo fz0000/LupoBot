@@ -37,7 +37,7 @@ public abstract class LupoCommand {
 
     public void send(CommandContext context, EmbedBuilder builder, Component... components) {
         if (context.getSlash() == null) {
-            context.getChannel().sendMessage(builder.build()).setActionRow(components).queue();
+            context.getChannel().sendMessageEmbeds(builder.build()).setActionRow(components).queue();
         } else {
             context.getSlash().replyEmbeds(builder.build()).addActionRow(components).setEphemeral(context.isEphemeral()).queue();
         }
@@ -45,7 +45,7 @@ public abstract class LupoCommand {
 
     public void send(CommandContext context, EmbedBuilder builder) {
         if (context.getSlash() == null) {
-            context.getChannel().sendMessage(builder.build()).queue();
+            context.getChannel().sendMessageEmbeds(builder.build()).queue();
         } else {
             context.getSlash().replyEmbeds(builder.build()).setEphemeral(context.isEphemeral()).queue();
         }
@@ -69,7 +69,7 @@ public abstract class LupoCommand {
 
     public void send(CommandContext context, MessageEmbed embed) {
         if (context.getSlash() == null) {
-            context.getChannel().sendMessage(embed).queue();
+            context.getChannel().sendMessageEmbeds(embed).queue();
         } else {
             context.getSlash().replyEmbeds(embed).setEphemeral(context.isEphemeral()).queue();
         }

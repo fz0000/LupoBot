@@ -74,7 +74,7 @@ public class TicTacToeGame {
         }
 
         if (end) {
-            this.message.editMessage(builder.build()).queue();
+            this.message.editMessageEmbeds(builder.build()).queue();
             return;
         }
 
@@ -116,7 +116,7 @@ public class TicTacToeGame {
 
 
         if (this.message == null) {
-            this.context.getChannel().sendMessage(builder.build()).queue(success -> {
+            this.context.getChannel().sendMessageEmbeds(builder.build()).queue(success -> {
                 this.message = success;
                 HashMap<String, ThrowingBiConsumer<Member, Message>> buttons = new HashMap<>();
                 for (int i = 1; i < 10; i++) {
@@ -132,7 +132,7 @@ public class TicTacToeGame {
                     this.message.removeReaction(getEmoji(i)).queue();
                 }
             }
-            this.message.editMessage(builder.build()).queue(success -> {
+            this.message.editMessageEmbeds(builder.build()).queue(success -> {
                 HashMap<String, ThrowingBiConsumer<Member, Message>> buttons = new HashMap<>();
                 for (int i = 1; i < 10; i++) {
                     if (!this.field.get(i).equals(":x:") && !this.field.get(i).equals(":o:")) {

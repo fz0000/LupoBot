@@ -56,7 +56,7 @@ public class CommandHandler {
             builder.setDescription(server.translate(null, "core_command-not-found"));
             builder.setColor(LupoColor.DARK_GRAY.getColor());
             builder.setFooter(server.translate(null, "core_tried-command", server.getPrefix() + context.getLabel()));
-            context.getChannel().sendMessage(builder.build()).queue();
+            context.getChannel().sendMessageEmbeds(builder.build()).queue();
             return;
         }
         context.setCommand(command);

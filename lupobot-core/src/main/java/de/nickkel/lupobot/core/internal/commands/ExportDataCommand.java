@@ -28,7 +28,7 @@ public class ExportDataCommand extends LupoCommand {
             builder.setTimestamp(context.getTime());
             builder.setDescription(context.getServer().translate(context.getPlugin(), "core_exportdata-already-requested",
                     TimeUtils.format(context, lastDataExport+7776000000L-System.currentTimeMillis())));
-            context.getChannel().sendMessage(builder.build()).queue();
+            context.getChannel().sendMessageEmbeds(builder.build()).queue();
             return;
         }
 
@@ -83,10 +83,10 @@ public class ExportDataCommand extends LupoCommand {
             }
 
             if (context.getMember().isOwner()) {
-                channel.sendMessage(dataBuilder.build()).addFile(userFile).addFile(serverFile).queue();
+                channel.sendMessageEmbeds(dataBuilder.build()).addFile(userFile).addFile(serverFile).queue();
                 userFile.deleteOnExit();
             } else {
-                channel.sendMessage(dataBuilder.build()).addFile(userFile).queue();
+                channel.sendMessageEmbeds(dataBuilder.build()).addFile(userFile).queue();
                 serverFile.deleteOnExit();
             }
             context.getUser().getData().append("lastDataExport", System.currentTimeMillis());

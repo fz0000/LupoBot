@@ -20,7 +20,7 @@ public class VoteCommand extends LupoCommand {
         builder.setDescription(context.getServer().translate(context.getPlugin(), "help_vote-message"));
         builder.addField(context.getServer().translate(context.getPlugin(), "help_vote-link"),
                 LupoBot.getInstance().getConfig().getString("voteUrl"), false);
-        context.getChannel().sendMessage(builder.build()).queue();
+        context.getChannel().sendMessageEmbeds(builder.build()).queue();
     }
 
     @Override

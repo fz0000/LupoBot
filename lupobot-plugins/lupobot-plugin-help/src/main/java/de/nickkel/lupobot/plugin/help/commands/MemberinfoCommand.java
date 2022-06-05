@@ -45,7 +45,7 @@ public class MemberinfoCommand extends LupoCommand {
         builder.addField(context.getServer().translate(context.getPlugin(), "help_memberinfo-creation"), TimeUtils.format(member.getUser().getTimeCreated()), false);
         builder.addField(context.getServer().translate(context.getPlugin(), "help_memberinfo-joined"), TimeUtils.format(member.getTimeJoined()), false);
         builder.addField(context.getServer().translate(context.getPlugin(), "help_memberinfo-roles"), roles, false);
-        context.getChannel().sendMessage(builder.build()).queue();
+        context.getChannel().sendMessageEmbeds(builder.build()).queue();
     }
 
     @Override

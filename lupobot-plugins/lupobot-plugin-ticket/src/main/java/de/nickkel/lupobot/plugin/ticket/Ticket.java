@@ -33,7 +33,7 @@ public class Ticket {
     public void sendNotify(EmbedBuilder builder) {
         if (this.getNotifyChannel() != null) {
             builder.setTimestamp(OffsetDateTime.now());
-            this.getNotifyChannel().sendMessage(builder.build()).queue();
+            this.getNotifyChannel().sendMessageEmbeds(builder.build()).queue();
         }
     }
 
@@ -54,7 +54,7 @@ public class Ticket {
                 channel.getManager().setParent(this.server.getCategory(TicketState.CLOSED)).complete();
                 channel.getManager().sync().queue();
             }
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setColor(LupoColor.RED.getColor())
                     .setDescription(this.server.getServer().translate(this.server.getPlugin(), "ticket_close-description", member.getAsMention()))
                     .setFooter(member.getUser().getAsTag() + " (" + member.getId() + ")", member.getUser().getAvatarUrl())
@@ -89,7 +89,7 @@ public class Ticket {
                     channel.getManager().getChannel().createPermissionOverride(member).setAllow(Permission.VIEW_CHANNEL).queue();
                 }
                 channel.getManager().setTopic(this.server.getServer().translate(this.server.getPlugin(), "ticket_assignee", member.getAsMention())).queue();
-                channel.sendMessage(new EmbedBuilder()
+                channel.sendMessageEmbeds(new EmbedBuilder()
                         .setColor(LupoColor.BLUE.getColor())
                         .setDescription(this.server.getServer().translate(this.server.getPlugin(), "ticket_assign-description", member.getAsMention()))
                         .setFooter(member.getUser().getAsTag() + " (" + member.getId() + ")", member.getUser().getAvatarUrl())

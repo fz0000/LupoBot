@@ -57,7 +57,7 @@ public class ReactionRolesCommand extends LupoCommand {
         }
 
         if (message == null) {
-            message = context.getChannel().sendMessage(builder.build()).complete();
+            message = context.getChannel().sendMessageEmbeds(builder.build()).complete();
         }
 
         RolesServer server = LupoRolesPlugin.getInstance().getRolesServer(context.getGuild());

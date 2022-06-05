@@ -135,11 +135,11 @@ public class HangmanGame {
         builder.addField(this.context.getServer().translate(context.getPlugin(), "fun_hangman-current-word"), currentWord, false);
 
         if (this.message == null) {
-            this.context.getChannel().sendMessage(builder.build()).queue(success -> {
+            this.context.getChannel().sendMessageEmbeds(builder.build()).queue(success -> {
                 this.message = success;
             });
         } else {
-            this.message.editMessage(builder.build()).queue();
+            this.message.editMessageEmbeds(builder.build()).queue();
         }
 
         if (this.result == HangmanResult.WIN) {

@@ -20,7 +20,7 @@ public class TranslateCommand extends LupoCommand {
         builder.setDescription(context.getServer().translate(context.getPlugin(), "help_translate-message"));
         builder.addField(context.getServer().translate(context.getPlugin(), "help_translate-link"),
                 LupoBot.getInstance().getConfig().getString("translateUrl"), false);
-        context.getChannel().sendMessage(builder.build()).queue();
+        context.getChannel().sendMessageEmbeds(builder.build()).queue();
     }
 
     @Override

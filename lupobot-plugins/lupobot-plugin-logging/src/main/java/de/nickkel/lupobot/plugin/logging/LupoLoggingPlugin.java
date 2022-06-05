@@ -34,7 +34,7 @@ public class LupoLoggingPlugin extends LupoPlugin {
         if (channelId != -1) {
             TextChannel channel = guild.getTextChannelById(channelId);
             builder.setDescription(LupoServer.getByGuild(guild).translate(LupoBot.getInstance().getPlugin(this.getInfo().name()), event.getLocale()));
-            channel.sendMessage(builder.build()).queue();
+            channel.sendMessageEmbeds(builder.build()).queue();
         }
     }
 

@@ -88,7 +88,7 @@ public class PlayCommand extends LupoCommand {
                         if (context.getSlash() != null) {
                             context.getSlash().deferReply().queue();
                         }
-                        context.getChannel().sendMessage(builder.build()).queue(success -> {
+                        context.getChannel().sendMessageEmbeds(builder.build()).queue(success -> {
                             HashMap<String, ThrowingBiConsumer<Member, Message>> buttons = new HashMap<>();
                             for (int i = 1; i < consumers.size()+1; i++) {
                                 buttons.put(getEmoji(i), consumers.get(i));

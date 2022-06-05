@@ -29,14 +29,14 @@ public class PaginationListener extends ListenerAdapter {
                             if (event.getMessage() == null) {
                                 event.getHook().editOriginalEmbeds(pages.getPages().get(pages.getCurrentPage()+1).getEmbed()).queue();
                             } else {
-                                event.getMessage().editMessage(pages.getPages().get(pages.getCurrentPage()+1).getEmbed()).queue();
+                                event.getMessage().editMessageEmbeds(pages.getPages().get(pages.getCurrentPage()+1).getEmbed()).queue();
                             }
                             pages.increaseCurrentPage();
                         } else if(type.equals("LAST") && pages.getCurrentPage() != 0) {
                             if (event.getMessage() == null) {
                                 event.getHook().editOriginalEmbeds(pages.getPages().get(pages.getCurrentPage()-1).getEmbed()).queue();
                             } else {
-                                event.getMessage().editMessage(pages.getPages().get(pages.getCurrentPage()-1).getEmbed()).queue();
+                                event.getMessage().editMessageEmbeds(pages.getPages().get(pages.getCurrentPage()-1).getEmbed()).queue();
                             }
                             pages.decreaseCurrentPage();
                         }
@@ -56,7 +56,7 @@ public class PaginationListener extends ListenerAdapter {
                         if (event.getMessage() == null) {
                             event.getHook().editOriginalEmbeds(page.getEmbed()).queue();
                         } else {
-                            event.getMessage().editMessage(page.getEmbed()).queue();
+                            event.getMessage().editMessageEmbeds(page.getEmbed()).queue();
                         }
                     }
                     if (page.getConsumer() != null) {

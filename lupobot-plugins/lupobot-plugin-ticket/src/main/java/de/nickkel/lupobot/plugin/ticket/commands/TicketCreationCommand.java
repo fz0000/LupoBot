@@ -37,7 +37,7 @@ public class TicketCreationCommand extends LupoCommand {
             builder.setFooter(context.getServer().translate(context.getPlugin(), "ticket_ticketcreation-footer"));
             builder.setColor(LupoColor.BLUE.getColor());
 
-            channel.sendMessage(builder.build())
+            channel.sendMessageEmbeds(builder.build())
                     .setActionRow(Button.primary("TICKET;CREATE", context.getServer().translate(context.getPlugin(), "ticket_button-create")).withEmoji(Emoji.fromUnicode("📩")))
                     .queue(success -> {
                         context.getServer().appendPluginData(context.getPlugin(), "creationMessage", success.getIdLong());

@@ -64,7 +64,7 @@ public class JobCommand extends LupoCommand {
             builder.setThumbnail(job.getImage());
             builder.setDescription(context.getServer().translate(context.getPlugin(), "currency_job-started"));
             builder.addField(job.getTranslatedName(context.getServer()), job.getTranslatedDescription(context.getServer()), false);
-            context.getChannel().sendMessage(builder.build()).queue();
+            context.getChannel().sendMessageEmbeds(builder.build()).queue();
 
             new Timer().schedule(new TimerTask() {
                 @Override
@@ -80,7 +80,7 @@ public class JobCommand extends LupoCommand {
                         builder.setDescription(context.getServer().translate(context.getPlugin(), "currency_job-done",
                                 TimeUtils.format(context, job.getDuration()*1000L), context.getServer().formatLong(job.getCoins())));
                         builder.addField(job.getTranslatedName(context.getServer()), job.getTranslatedDescription(context.getServer()), false);
-                        success.sendMessage(builder.build()).queue();
+                        success.sendMessageEmbeds(builder.build()).queue();
                     });
                 }
             }, job.getDuration()*1000L);

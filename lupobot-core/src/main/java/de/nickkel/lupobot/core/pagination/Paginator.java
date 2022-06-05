@@ -30,7 +30,7 @@ public class Paginator {
 
         if (timeout == 0) {
             if (context.getSlash() == null) {
-                context.getChannel().sendMessage(pages.getPages().get(0).getEmbed()).setActionRow(last, next).queue();
+                context.getChannel().sendMessageEmbeds(pages.getPages().get(0).getEmbed()).setActionRow(last, next).queue();
             } else {
                 context.getSlash().replyEmbeds(pages.getPages().get(0).getEmbed()).addActionRow(last, next).setEphemeral(context.isEphemeral()).queue();
             }
@@ -38,7 +38,7 @@ public class Paginator {
         }
 
         if (context.getSlash() == null) {
-            context.getChannel().sendMessage(pages.getPages().get(0).getEmbed()).setActionRow(last, next)
+            context.getChannel().sendMessageEmbeds(pages.getPages().get(0).getEmbed()).setActionRow(last, next)
                     .delay(timeout, TimeUnit.SECONDS)
                     .flatMap((it) -> it.editMessage(it).setActionRow(last.asDisabled(), next.asDisabled()))
                     .queue();
@@ -58,11 +58,11 @@ public class Paginator {
         Paginator.relatedPages.put(pages.getIdentifier(), pages);
 
         if (timeout == 0) {
-            channel.sendMessage(pages.getPages().get(0).getEmbed()).setActionRow(last, next).queue();
+            channel.sendMessageEmbeds(pages.getPages().get(0).getEmbed()).setActionRow(last, next).queue();
             return;
         }
 
-        channel.sendMessage(pages.getPages().get(0).getEmbed()).setActionRow(last, next)
+        channel.sendMessageEmbeds(pages.getPages().get(0).getEmbed()).setActionRow(last, next)
                 .delay(timeout, TimeUnit.SECONDS)
                 .flatMap((it) -> it.editMessage(it).setActionRow(last.asDisabled(), next.asDisabled()))
                 .queue();
@@ -76,11 +76,11 @@ public class Paginator {
         Paginator.relatedPages.put(pages.getIdentifier(), pages);
 
         if (timeout == 0) {
-            message.editMessage(pages.getPages().get(0).getEmbed()).setActionRow(last, next).queue();
+            message.editMessageEmbeds(pages.getPages().get(0).getEmbed()).setActionRow(last, next).queue();
             return;
         }
 
-        message.editMessage(pages.getPages().get(0).getEmbed()).setActionRow(last, next)
+        message.editMessageEmbeds(pages.getPages().get(0).getEmbed()).setActionRow(last, next)
                 .delay(timeout, TimeUnit.SECONDS)
                 .flatMap((it) -> it.editMessage(it).setActionRow(last.asDisabled(), next.asDisabled()))
                 .queue();
@@ -95,7 +95,7 @@ public class Paginator {
 
         if (timeout == 0) {
             if (context.getSlash() == null) {
-                context.getChannel().sendMessage(pages.get(0).getEmbed()).setActionRow(buttons).queue();
+                context.getChannel().sendMessageEmbeds(pages.get(0).getEmbed()).setActionRow(buttons).queue();
             } else {
                 context.getSlash().replyEmbeds(pages.get(0).getEmbed()).addActionRows(ActionRow.of(buttons)).setEphemeral(context.isEphemeral()).queue();
             }
@@ -104,7 +104,7 @@ public class Paginator {
 
         List<Button> disabledButtons = buttons.stream().map(Button::asDisabled).collect(Collectors.toList());
         if (context.getSlash() == null) {
-            context.getChannel().sendMessage(pages.get(0).getEmbed()).setActionRow(buttons)
+            context.getChannel().sendMessageEmbeds(pages.get(0).getEmbed()).setActionRow(buttons)
                     .delay(timeout, TimeUnit.SECONDS)
                     .flatMap((it) -> it.editMessage(it).setActionRow(disabledButtons))
                     .queue();
@@ -143,12 +143,12 @@ public class Paginator {
         }
 
         if (timeout == 0) {
-            channel.sendMessage(pages.get(0).getEmbed()).setActionRow(buttons).queue();
+            channel.sendMessageEmbeds(pages.get(0).getEmbed()).setActionRow(buttons).queue();
             return;
         }
 
         List<Button> disabledButtons = buttons.stream().map(Button::asDisabled).collect(Collectors.toList());
-        channel.sendMessage(pages.get(0).getEmbed()).setActionRow(buttons)
+        channel.sendMessageEmbeds(pages.get(0).getEmbed()).setActionRow(buttons)
                 .delay(timeout, TimeUnit.SECONDS)
                 .flatMap((it) -> it.editMessage(it).setActionRow(disabledButtons))
                 .queue();
