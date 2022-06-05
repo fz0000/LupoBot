@@ -31,7 +31,12 @@ public class HangmanListener extends ListenerAdapter {
                     game.setResult(HangmanResult.WIN);
                     game.build();
                 } else {
-                    if(event.getMessage().getContentRaw().length() != 1) {
+                    if (event.getMessage().getContentRaw().length() == game.getWord().length()) {
+                        event.getChannel().sendMessage(game.getContext().getServer().translate(game.getContext().getPlugin(), "fun_hangman-wrong-word",
+                                event.getMember().getAsMention())).queue();
+                        game.setChances(game.getChances()+1);
+                        game.build();
+                    } else if (event.getMessage().getContentRaw().length() != 1) {
                         event.getChannel().sendMessage(game.getContext().getServer().translate(game.getContext().getPlugin(), "fun_hangman-word-length",
                                 event.getMember().getAsMention(), game.getWord().length())).queue();
                     } else {
